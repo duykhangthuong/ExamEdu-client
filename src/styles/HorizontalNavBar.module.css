@@ -1,0 +1,51 @@
+.avatar {
+    width: 35px;
+    height: 35px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid white;
+}
+
+.avatar_container {
+    border-radius: 50%;
+}
+
+.icon_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 35px;
+    height: 35px;
+    background-color: var(--color-silver-medal);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.icon_container.bell_container {
+    position: relative;
+    color: var(--color-gray);
+    font-size: 1.25rem;
+}
+
+.notif_dot {
+    content: "";
+    width: 9px;
+    height: 9px;
+    background-color: var(--color-orange);
+    border-radius: 50%;
+    position: absolute;
+    left: 1.6rem;
+    bottom: 1.6rem;
+}
+
+.log_out_btn {
+    color: var(--color-orange);
+}
+
+/* Hover animations */
+.icon_container:hover {
+    transition: 0.2s linear;
+    background-color: var(--color-gray);
+    color: var(--color-silver-medal);
+}

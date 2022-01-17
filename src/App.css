@@ -1,3 +1,42 @@
 .App {
     text-align: center;
 }
+
+.txt-light-gray {
+    color: var(--color-silver-medal);
+}
+
+.txt-gray {
+    color: var(--color-gray);
+}
+
+.shadow-heavy {
+    box-shadow: 0px 5px 7px rgba(0, 0, 0, 0.16);
+}
+
+.shadow-light {
+    box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.16);
+}
+
+/* Border radius for big element: navbar,... */
+.b-radius-12 {
+    border-radius: 12px !important;
+}
+
+/* Border radius for medium element: component, item, card,... */
+.b-radius-8 {
+    border-radius: 8px !important;
+}
+
+/* Border radius for smol element: input, button,... */
+.b-radius-6 {
+    border-radius: 6px !important;
+}
+
+/* Thematic color */
+.bg-orange {
+    background-color: var(--color-orange);
+}
+.bg-dark-blue {
+    background-color: var(--color-dark-blue);
+}
