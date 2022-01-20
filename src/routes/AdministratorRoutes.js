@@ -7,11 +7,14 @@ import DeactivatedAccountList from "pages/Administrator/DeactivatedAccountList";
 import { Route } from "react-router-dom";
 import { Switch } from "react-router-dom";
 import HorizontalNavBar from "components/HorizontalNavBar";
+import VerticalNavBar from "components/VerticalNavBar";
 
 const AdministratorRoutes = () => {
     return (
         <>
             <HorizontalNavBar />
+            <VerticalNavBar />
+
             <Switch>
                 <Route path="/administrator/accounts/create">
                     <CreateAccount />
