@@ -8,6 +8,8 @@
 
 .avatar_container {
     border-radius: 50%;
+    width: 35px;
+    height: 35px;
 }
 
 .icon_container {
@@ -48,4 +50,35 @@
     transition: 0.2s linear;
     background-color: var(--color-gray);
     color: var(--color-silver-medal);
+}
+
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 9;
+    background-color: var(--nav-bar);
+
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+}
+
+.grid_c23 {
+    grid-column: 2/3;
+}
+
+.logo {
+    width: 40px;
+    height: 40px;
+}
+
+.teal {
+    color: #61d2dc;
+}
+
+@media screen and (min-width: 768px) {
+    .navbar {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+    }
 }
