@@ -1,0 +1,41 @@
+.main {
+    padding-top: 4.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-bottom: 1.5rem;
+    /* background-color: var(--bg) !important; */
+    /* color: var(--text) !important; */
+}
+
+.company {
+    padding-top: 4.5rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-bottom: 1.5rem;
+    /* background-color: var(--bg) !important; */
+    /* color: var(--text) !important; */
+}
+
+@media only screen and (min-width: 769px) {
+    .main {
+        padding-left: 17.5rem;
+        padding-right: 1.5rem;
+    }
+
+    .company {
+        padding-left: 8.7rem;
+        padding-right: 8.7rem;
+    }
+}
+
+@media only screen and (min-width: 1367px) {
+    .main {
+        padding-left: calc(17.5rem + 12.5%);
+        padding-right: calc(1.5rem + 12.5%);
+    }
+
+    .company {
+        padding-left: calc(1.5rem + 12.5%);
+        padding-right: calc(1.5rem + 12.5%);
+    }
+}

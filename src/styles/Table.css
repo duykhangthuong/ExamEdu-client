@@ -1,0 +1,168 @@
+.datatable {
+    border-collapse: collapse;
+    vertical-align: middle;
+    /* box shadow */
+    box-shadow: 0px 4px 13px rgba(0, 0, 0, 0.16);
+    border-radius: 12px;
+    margin-bottom: 1rem;
+}
+thead {
+    background-color: var(--color-blue);
+    color: white;
+}
+/* Sizing */
+.datatable td {
+    min-width: 150px;
+}
+/* spacing */
+/* td { this not working 🤬
+    padding: 10rem;
+} */
+/* Why doing this, because we have to play the browser's rule ¯\_(ツ)_/¯ */
+.datatable th:first-child,
+td:first-child {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+.datatable th:not(:first-child),
+td:not(:first-child) {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+/* Border radius */
+/* top-left border-radius  */
+.datatable tr:first-child th:first-child,
+.datatable.Info tr:first-child td:first-child {
+    border-top-left-radius: 12px;
+}
+
+/* top-right border-radius */
+.datatable tr:first-child th:last-child,
+.datatable.Info tr:first-child td:last-child {
+    border-top-right-radius: 12px;
+}
+
+/* bottom-left border-radius */
+.datatable tr:last-child td:first-child {
+    border-bottom-left-radius: 12px;
+}
+
+/* bottom-right border-radius */
+.datatable tr:last-child td:last-child {
+    border-bottom-right-radius: 12px;
+}
+
+th:last-child {
+    border-radius: 0 12px 0 0;
+}
+
+.datatable td {
+    /* vertical align */
+    vertical-align: middle;
+    background-color: var(--nav-bg) !important;
+    color: var(--text) !important;
+}
+
+/* table striped */
+.datatable tr:nth-child(odd) td {
+    background-color: white !important;
+}
+.datatable tr:nth-child(even) td {
+    background-color: #e4e2f5 !important;
+}
+/* hover table row */
+.selectable *:hover {
+    cursor: pointer;
+}
+
+/* freezing when table too long  */
+/* freeze only table header */
+.sticky-head thead th {
+    position: sticky;
+    top: 3;
+    background-color: var(--nav-bg) !important;
+}
+/* table freezing */
+.sticky-col th:first-child,
+td:first-child {
+    left: -1px;
+    position: sticky;
+    z-index: 2;
+    background-color: var(--nav-bg) !important;
+}
+
+.sticky-col th:last-child,
+td:last-child {
+    right: -1px;
+    position: sticky;
+    z-index: 2;
+    background-color: var(--nav-bg) !important;
+}
+
+/* hide scrollbar */
+* {
+    -ms-overflow-style: none;
+}
+::-webkit-scrollbar {
+    display: none;
+}
+
+/* hover style */
+.datatable tbody tr:hover td {
+    /* border-left: 2px solid #00ff3c; */
+    background-color: var(--table-selected) !important;
+}
+
+/* custom table mobile ver render */
+.mobile {
+    display: none;
+}
+@media screen and (max-width: 1200px) {
+    .datatable thead {
+        display: none;
+    }
+    /* custom table mobile ver render */
+    .mobile {
+        display: inline;
+    }
+    .datatable tr,
+    .datatable td {
+        display: block;
+    }
+    .datatable td {
+        border-bottom: none;
+    }
+    .datatable tr:first-child {
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+    }
+    .datatable tr td:first-child {
+        font-weight: bold;
+    }
+
+    /* top-right border-radius */
+    .datatable tr:first-child td:first-child {
+        border-top-right-radius: 12px;
+        border-top-left-radius: 12px;
+    }
+
+    /* bottom-left border-radius */
+    .datatable tr:last-child td:first-child {
+        border-bottom-left-radius: 0px;
+    }
+    /* bottom-right border-radius */
+    .datatable tr:last-child td:last-child {
+        border-bottom-right-radius: 12px;
+        border-bottom-left-radius: 12px;
+    }
+    /* // Set border-radius on the top-left and bottom-left of the first table data on the table row */
+    .datatable td:first-child {
+        border-radius: 0px;
+    }
+
+    /* // Set border-radius on the top-right and bottom-right of the last table data on the table row */
+    .datatable td:last-child {
+        border-radius: 0px;
+    }
+}
