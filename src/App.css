@@ -10,8 +10,16 @@
     color: var(--color-gray);
 }
 
+.txt-blue {
+    color: var(--color-blue);
+}
+
 .shadow-heavy {
     box-shadow: 0px 5px 7px rgba(0, 0, 0, 0.16);
+}
+
+.shadow-center-medium {
+    box-shadow: 0px 0px 9px rgba(0, 0, 0, 0.16);
 }
 
 .shadow-light {
