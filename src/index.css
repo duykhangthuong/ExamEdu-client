@@ -13,6 +13,11 @@ html {
     --color-orange: #ff2d2d;
     --color-silver-medal: #d6d6d6;
     --color-lavender-light: #e4e2f5;
+
+    /* Shadows */
+    --shadow-light: 0px 0px 7px rgba(0, 0, 0, 0.16);
+    --shadow-medium: 0px 2px 5px rgba(0, 0, 0, 0.16);
+    --shadow-heavy: 0px 5px 7px rgba(0, 0, 0, 0.16);
 }
 
 body {
