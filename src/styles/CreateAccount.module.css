@@ -1,0 +1,88 @@
+.horizontal_line {
+    content: "";
+    background-color: black;
+
+    height: 1px;
+    align-self: stretch;
+}
+
+.select {
+    border: none;
+    border-radius: 8px;
+    height: 2.25rem;
+
+    box-shadow: var(--shadow-medium);
+
+    outline: none;
+    color: var(--color-blue);
+    align-self: stretch;
+    width: 100%;
+}
+
+.btn_submit {
+    background-color: var(--color-blue);
+    color: white;
+
+    border-radius: 8px;
+    border: none;
+    padding: 0.35rem 0;
+    box-shadow: var(--shadow-medium);
+}
+
+.page_container {
+    width: 100%;
+}
+
+@media screen and (min-width: 768px) {
+    .page_container {
+        width: 82%;
+        min-width: 670px;
+    }
+
+    .select_container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .select_container label {
+        color: var(--color-blue);
+    }
+
+    .select_container .grid_container {
+        width: 70%;
+    }
+
+    .grid_container {
+        display: grid;
+
+        grid-template-rows: 1fr 1fr;
+    }
+
+    .selector {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        box-shadow: var(--shadow-light);
+        height: 3rem;
+        width: 7.25rem;
+        padding: 0 0.5rem;
+        border-radius: 8px;
+
+        margin-right: 1.5rem;
+        cursor: pointer;
+    }
+
+    .selector.selected {
+        /* Is still blue but in rgb */
+        background-color: rgba(61, 90, 241, 0.25);
+        color: var(--color-blue);
+    }
+
+    .selector:hover {
+        background-color: rgba(61, 90, 241, 0.25);
+        color: var(--color-blue);
+        transform: 0.1s linear;
+    }
+}
