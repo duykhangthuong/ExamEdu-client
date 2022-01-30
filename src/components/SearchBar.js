@@ -51,48 +51,54 @@ const SearchBar = ({
                 }}
             >
                 {/* Search account */}
-                <input
-                    type="text"
-                    id="search"
-                    value={keyWord}
-                    onChange={(event) => setKeyWord(event.target.value)}
-                    className={`flex-grow-1 shadow-light me-2 me-md-3 ${styles.input}`}
-                    placeholder={`Search account`}
-                ></input>
-                {/* The search Icon */}
-                <Icon
-                    icon="search"
-                    style={{
-                        color: "var(--color-gray)",
-                        cursor: "pointer",
-                    }}
-                    className={styles.search_icon}
-                    onClick={(e) => {
-                        e.preventDefault();
-                        onSubmit();
-                    }}
-                />
+                {keyWord && (
+                    <>
+                        <input
+                            type="text"
+                            id="search"
+                            value={keyWord}
+                            onChange={(event) => setKeyWord(event.target.value)}
+                            className={`flex-grow-1 shadow-light me-2 me-md-3 ${styles.input}`}
+                            placeholder={`Search account`}
+                        ></input>
+                        {/* The search Icon */}
+                        <Icon
+                            icon="search"
+                            style={{
+                                color: "var(--color-gray)",
+                                cursor: "pointer",
+                            }}
+                            className={styles.search_icon}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                onSubmit();
+                            }}
+                        />{" "}
+                    </>
+                )}
                 {/* Filter */}
-                <select
-                    className={`shadow-light ${styles.input} ${styles.select}`}
-                    value={filterValue}
-                    onChange={(e) => setFilterValue(e.target.value)}
-                    defaultValue={{
-                        label: filterOptions[0].label,
-                        value: filterOptions[0].value,
-                    }}
-                >
-                    {filterOptions.map((filterOption) => {
-                        return (
-                            <option
-                                value={filterOption.value}
-                                key={filterOption.value}
-                            >
-                                {filterOption.label}
-                            </option>
-                        );
-                    })}
-                </select>
+                {filterValue && (
+                    <select
+                        className={`shadow-light ${styles.input} ${styles.select}`}
+                        value={filterValue}
+                        onChange={(e) => setFilterValue(e.target.value)}
+                        defaultValue={{
+                            label: filterOptions[0].label,
+                            value: filterOptions[0].value,
+                        }}
+                    >
+                        {filterOptions.map((filterOption) => {
+                            return (
+                                <option
+                                    value={filterOption.value}
+                                    key={filterOption.value}
+                                >
+                                    {filterOption.label}
+                                </option>
+                            );
+                        })}
+                    </select>
+                )}
             </form>
         </div>
     );
