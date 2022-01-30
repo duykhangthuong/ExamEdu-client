@@ -51,7 +51,7 @@ const SearchBar = ({
                 }}
             >
                 {/* Search account */}
-                {keyWord && (
+                {setKeyWord && (
                     <>
                         <input
                             type="text"
@@ -77,7 +77,7 @@ const SearchBar = ({
                     </>
                 )}
                 {/* Filter */}
-                {filterValue && (
+                {setFilterValue && (
                     <select
                         className={`shadow-light ${styles.input} ${styles.select}`}
                         value={filterValue}
