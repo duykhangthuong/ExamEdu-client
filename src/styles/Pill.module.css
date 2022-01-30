@@ -1,0 +1,45 @@
+.pill {
+    width: 75px;
+    min-width: fit-content;
+    border-radius: 35px;
+    padding: 5px;
+    display: inline-block;
+}
+
+.blue {
+    background-color: #3d5af1;
+}
+
+.red {
+    background-color: #ff2d2d;
+}
+
+.green {
+    background-color: #00ff19;
+}
+
+.orange {
+    background-color: #ff5300;
+}
+
+@media screen and (max-width: 768px) {
+    .blue {
+        color: #3d5af1;
+        background-color: transparent;
+    }
+
+    .red {
+        color: var#FF2D2D;
+        background-color: transparent;
+    }
+
+    .green {
+        color: #00ff19;
+        background-color: transparent;
+    }
+
+    .orange {
+        color: #ff5300;
+        background-color: transparent;
+    }
+}
