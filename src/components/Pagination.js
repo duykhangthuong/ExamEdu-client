@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { usePagination } from "../utils/usePagination";
+import { usePagination } from "../utilities/usePagination";
 import style from "../styles/Pagination.module.css";
 
 /**
