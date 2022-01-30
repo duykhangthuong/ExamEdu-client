@@ -1,0 +1,31 @@
+@import url("../index.css");
+
+.pagination_Container {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    text-align: center;
+    box-shadow: 3.5px 3.5px 6px rgba(0, 0, 0, 0.16);
+    padding: 0.3rem 0.5rem;
+    width: fit-content;
+}
+
+.pagination_Button {
+    background: transparent;
+    width: 35px;
+    height: 35px;
+    border: none;
+    border-radius: 50%;
+
+    color: var(--text);
+}
+
+.pagination_Button:hover {
+    /* background-color: #65e7bb; */
+    border: 3px solid var(--color-aqua);
+    transition: 0.3s;
+}
+
+.pagination_Button_Active {
+    border: 3px solid var(--color-cyan);
+}
