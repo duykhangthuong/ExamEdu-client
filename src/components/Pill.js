@@ -21,7 +21,7 @@ function Pill({
             case "teacher":
                 setColor("blue");
                 break;
-            case "ad":
+            case "academicdepartment":
                 setColor("red");
                 break;
             default:
