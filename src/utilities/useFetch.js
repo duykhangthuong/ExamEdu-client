@@ -37,8 +37,16 @@ export const useLazyFetch = (url, options = {}) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(undefined);
 
-    async function fetchData() {
-        handleFetch(url, options, setData, setLoading, setError);
+    async function fetchData(urlParam = "", optionsParam = {}) {
+        //If there is a new URL and options, fetch that new URL and options
+        const newOptions = {
+            ...options,
+            ...optionsParam,
+        };
+
+        const newUrl = urlParam || url;
+
+        handleFetch(newUrl, newOptions, setData, setLoading, setError);
     }
 
     return [fetchData, { data, loading, error }];
