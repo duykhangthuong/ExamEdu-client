@@ -2,9 +2,27 @@ import React from "react";
 import Icon from "./Icon";
 import styles from "../styles/HorizontalNavBar.module.css";
 import logo from "../static/logo-ExamEdu.png";
+import { useLazyFetch } from "utilities/useFetch";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 const HorizontalNavBar = () => {
+    const history = useHistory();
     const name = "Kha Minh Ho";
+    // Handle Logout
+    const [fetchData] = useLazyFetch(`https://localhost:5001/api/auth/logout`, {
+        method: "POST",
+        body: {},
+    });
+
+    const handleLogout = () => {
+        fetchData();
+        history.push({
+            pathname: "/logout",
+            state: {
+                logout: "logout",
+            },
+        });
+    };
     return (
         <nav className={`shadow-heavy pe-2 ps-3 py-2 ${styles.navbar} `}>
             {/* <div className="d-flex justify-content-end align-items-center txt-gray"> */}
@@ -42,6 +60,7 @@ const HorizontalNavBar = () => {
                 {/* Log out button */}
                 <div
                     className={`shadow-light d-none d-md-flex ${styles.icon_container}`}
+                    onClick={handleLogout}
                 >
                     <Icon
                         icon="power-off"

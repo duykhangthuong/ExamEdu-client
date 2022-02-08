@@ -1,9 +1,13 @@
 import React from "react";
-import { Route } from "react-router-dom";
-import { Switch } from "react-router-dom";
-import Login from "../pages/Login";
+import { Route, Switch, Redirect } from "react-router-dom";
+import { useAuthentication } from "utilities/useAuthorization";
+import Login from "../pages/Authentication/Login";
 
 const AuthenticationRoutes = () => {
+    const { redirect, path } = useAuthentication();
+
+    if (redirect) return <Redirect to={path} />;
+
     return (
         <Switch>
             <Route path="/">

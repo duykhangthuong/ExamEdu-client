@@ -19,7 +19,7 @@ import { NavLink } from "react-router-dom";
 //         icon: <Icon icon="save" className="" size="2x"></Icon>,
 //     },
 // ];
-export const VerticalNavbarData = [
+export const DataAdministrator = [
     {
         link: (
             <NavLink
@@ -62,6 +62,135 @@ export const VerticalNavbarData = [
                     <Icon icon="save" className="" size="2x"></Icon>
                 </div>
                 <div className={style.title}>Account History</div>
+            </NavLink>
+        ),
+    },
+];
+
+export const DataStudent = [
+    {
+        link: (
+            <NavLink
+                className="d-flex flex-sm-row flex-md-column"
+                to="/student/ExamSchedule"
+                activeClassName={style.active_link}
+                exact={true}
+            >
+                <div className={style.icon}>
+                    <Icon icon="calendar-day" className="" size="2x"></Icon>
+                </div>
+                <div className={style.title}>View Exam Schedule</div>
+            </NavLink>
+        ),
+    },
+    {
+        link: (
+            <NavLink
+                className="d-flex flex-sm-row flex-md-column"
+                to="/student/MarkReport"
+                activeClassName={style.active_link}
+                exact={true}
+            >
+                <div className={style.icon}>
+                    <Icon icon="clipboard-check" className="" size="2x"></Icon>
+                </div>
+                <div className={style.title}>Mark Report</div>
+            </NavLink>
+        ),
+    },
+];
+
+export const DataTeacher = [
+    {
+        link: (
+            <NavLink
+                className="d-flex flex-sm-row flex-md-column"
+                to="/teacher/exam"
+                activeClassName={style.active_link}
+                exact={true}
+            >
+                <div className={style.icon}>
+                    <Icon icon="file-alt" className="" size="2x"></Icon>
+                </div>
+                <div className={style.title}>Exam</div>
+            </NavLink>
+        ),
+    },
+    {
+        link: (
+            <NavLink
+                className="d-flex flex-sm-row flex-md-column"
+                to="/teacher/class"
+                activeClassName={style.active_link}
+                exact={true}
+            >
+                <div className={style.icon}>
+                    <Icon icon="id-card" className="" size="2x"></Icon>
+                </div>
+                <div className={style.title}>Class</div>
+            </NavLink>
+        ),
+    },
+    {
+        link: (
+            <NavLink
+                className="d-flex flex-sm-row flex-md-column"
+                to="/teacher/question"
+                activeClassName={style.active_link}
+                exact={true}
+            >
+                <div className={style.icon}>
+                    <Icon icon="folder-plus" className="" size="2x"></Icon>
+                </div>
+                <div className={style.title}>Question Bank</div>
+            </NavLink>
+        ),
+    },
+];
+
+export const DataAcademic = [
+    {
+        link: (
+            <NavLink
+                className="d-flex flex-sm-row flex-md-column"
+                to="/academic/module"
+                activeClassName={style.active_link}
+                exact={true}
+            >
+                <div className={style.icon}>
+                    <Icon icon="copy" className="" size="2x"></Icon>
+                </div>
+                <div className={style.title}>Module</div>
+            </NavLink>
+        ),
+    },
+    {
+        link: (
+            <NavLink
+                className="d-flex flex-sm-row flex-md-column"
+                to="/academic/class"
+                activeClassName={style.active_link}
+                exact={true}
+            >
+                <div className={style.icon}>
+                    <Icon icon="id-card" className="" size="2x"></Icon>
+                </div>
+                <div className={style.title}>Class</div>
+            </NavLink>
+        ),
+    },
+    {
+        link: (
+            <NavLink
+                className="d-flex flex-sm-row flex-md-column"
+                to="/academic/exam"
+                activeClassName={style.active_link}
+                exact={true}
+            >
+                <div className={style.icon}>
+                    <Icon icon="file-alt" className="" size="2x"></Icon>
+                </div>
+                <div className={style.title}>Exam</div>
             </NavLink>
         ),
     },

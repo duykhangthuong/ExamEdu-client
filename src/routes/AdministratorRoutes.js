@@ -1,34 +1,42 @@
 import React from "react";
-
+import { Route, Switch, Redirect } from "react-router-dom";
 import AccountList from "pages/Administrator/AccountList";
 import CreateAccount from "pages/Administrator/CreateAccount";
 import DeactivateAccount from "pages/Administrator/DeactivateAccount";
 import DeactivatedAccountList from "pages/Administrator/DeactivatedAccountList";
-import { Route } from "react-router-dom";
-import { Switch } from "react-router-dom";
+
 import HorizontalNavBar from "components/HorizontalNavBar";
 import VerticalNavBar from "components/VerticalNavBar";
+import { useUserAuthorization } from "utilities/useAuthorization";
+import { DataAdministrator } from "utilities/VerticalNavbarData";
 
 const AdministratorRoutes = () => {
+    const { redirect, path } = useUserAuthorization("administrator");
+
+    if (redirect) return <Redirect to={path} />;
     return (
         <>
             <HorizontalNavBar />
-            <VerticalNavBar />
+            <VerticalNavBar VerticalNavbarData={DataAdministrator} />
 
             <Switch>
-                <Route path="/administrator/accounts/create">
+                <Route path="/administrator/accounts/create" exact>
                     <CreateAccount />
                 </Route>
 
-                <Route path="/administrator/accounts/deactivate">
+                <Route path="/administrator/accounts/deactivate" exact>
                     <DeactivateAccount />
                 </Route>
 
-                <Route path="/administrator/accounts/deactivated">
+                <Route path="/administrator/accounts/deactivated" exact>
                     <DeactivatedAccountList />
                 </Route>
 
-                <Route path="/administrator/accounts">
+                <Route path="/administrator/accounts" exact>
+                    <AccountList />
+                </Route>
+
+                <Route path="*">
                     <AccountList />
                 </Route>
             </Switch>
