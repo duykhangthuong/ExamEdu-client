@@ -6,15 +6,17 @@ import moment from "moment";
 import React, { useEffect, useState } from "react";
 import Icon from "components/Icon";
 import { useLazyFetch } from "utilities/useFetch";
-import Pagination from "components/Pagination";
 import { API } from "utilities/constants";
 import swal from "sweetalert2";
 import Button from "components/Button";
 import { useWindowSize } from "utilities/useWindowSize";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import Pagination from "components/Pagination";
 const AccountList = () => {
     const history = useHistory();
     const size = useWindowSize();
+
+    //Các cột trong bảng
     const columns = [
         "ID",
         "Full name",
@@ -24,15 +26,22 @@ const AccountList = () => {
         size.width > 768 ? "Action" : "",
     ];
 
+    //Lưu các giá trị tìm kiếm
     const [searchName, setSearchName] = useState("");
+    //Lưu giá trị page hiện tại
     const [currentPage, setcurrentPage] = useState(1);
+    //Lưu số lượng hàng trong 1 page
     const pageSize = 5;
+
+    //Fetch data của cái bảng
     const [fetchData, fetchResult] = useLazyFetch(
         `https://localhost:5001/api/Account/list?pageNumber=${currentPage}&pageSize=${pageSize}&searchName=${searchName}`
     );
 
+    //Fetch delete account
     const [requestDelete, requestResult] = useLazyFetch("", {
         method: "delete",
+        //Khi fetch xong, status code  == 200
         onCompletes: (data) => {
             swal.fire({
                 titleText: "Account deleted",
@@ -43,6 +52,7 @@ const AccountList = () => {
             });
             fetchData();
         },
+        //Khi fetch ko được
         onError: (error) => {
             console.log(error);
             swal.fire({
@@ -56,10 +66,12 @@ const AccountList = () => {
         },
     });
 
+    //Gọi lại hàm Fetch khi nhập vô ô search
     function handleSubmit() {
         fetchData();
     }
 
+    //hàm để hiện lên SweetAlert để hỏi lại khi nhấn xóa account
     function showModalDelete(deleteId, deleteRole) {
         swal.fire({
             title: "Are you sure?",
@@ -73,18 +85,22 @@ const AccountList = () => {
                 popup: "roundCorner",
             },
         }).then((result) => {
+            //nếu người dùng nhấn OK
             if (result.isConfirmed) {
+                //Gọi hàm delete ở dòng 42
                 requestDelete(
                     `https://localhost:5001/api/account/${deleteId}/${deleteRole}`
                 );
             }
         });
     }
-    //fetch data
+    //fetch data lần đầu và fetch data khi đổi page 2 3 4 5
     useEffect(() => {
         fetchData();
     }, [currentPage]);
+
     return (
+        //phải có cái Wrapper này để căn giữa
         <Wrapper>
             <SearchBar
                 pageName="Account List"
@@ -98,6 +114,7 @@ const AccountList = () => {
                     history.push("/administrator/accounts/create")
                 }
             />
+
             <Table
                 columns={columns}
                 data={fetchResult.data?.payload.map((record) => ({
@@ -126,7 +143,7 @@ const AccountList = () => {
                             <Button
                                 circle={true}
                                 disabled={requestResult.loading}
-                                btn="alert-secondary"
+                                btn="secondary"
                             >
                                 <Icon
                                     icon="trash-alt"
