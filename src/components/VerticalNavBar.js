@@ -2,10 +2,9 @@ import React, { useRef } from "react";
 import style from "../styles/VerticalNavBar.module.css";
 import Icon from "components/Icon";
 import { Link } from "react-router-dom";
-import { VerticalNavbarData } from "utilities/VerticalNavbarData";
 import useOutsideClick from "utilities/useOutsideClick";
 
-function VerticalNavBar() {
+function VerticalNavBar({ VerticalNavbarData }) {
     const boxRef = useRef(null);
     const { isClicked, setIsClicked } = useOutsideClick(boxRef);
     return (
