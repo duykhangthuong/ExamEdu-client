@@ -6,6 +6,7 @@ import AuthenticationRoutes from "./AuthenticationRoutes";
 import StudentRoutes from "./StudentRoutes";
 import Logout from "pages/Authentication/Logout";
 import ErrorPage from "pages/ErrorPage";
+import TeacherRoutes from "./TeacherRoutes";
 
 const Routes = () => {
     return (
@@ -20,6 +21,10 @@ const Routes = () => {
 
             <Route path="/logout">
                 <Logout />
+            </Route>
+
+            <Route path="/teacher">
+                <TeacherRoutes />
             </Route>
 
             <Route path="/">

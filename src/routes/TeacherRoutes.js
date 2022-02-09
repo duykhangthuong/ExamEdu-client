@@ -5,6 +5,7 @@ import ExamSchedule from "pages/Student/ExamSchedule";
 import React from "react";
 import { DataTeacher } from "utilities/VerticalNavbarData";
 import { useUserAuthorization } from "utilities/useAuthorization";
+import CreateExamPaper from "pages/Teacher/CreateExamPaper";
 const TeacherRoutes = () => {
     const { redirect, path } = useUserAuthorization("teacher");
 
@@ -15,7 +16,9 @@ const TeacherRoutes = () => {
             <VerticalNavBar VerticalNavbarData={DataTeacher} />
             <Switch>
                 <Route path="/teacher/exam/create/info" exact></Route>
-                <Route path="/teacher/exam/create/question" exact></Route>
+                <Route path="/teacher/exam/create/question/:ExamID" exact>
+                    <CreateExamPaper/>
+                </Route>
                 <Route path="/teacher/question" exact></Route>
                 <Route path="/teacher/exam/list" exact></Route>
                 <Route path="/teacher/exam/list/result" exact></Route>
