@@ -1,0 +1,60 @@
+.page_container {
+    width: 100%;
+    background-color: var(--color-silver-medal);
+}
+.exam_header{
+    text-align: center;
+}
+.horizontal_line {
+    content: "";
+    background-color: black;
+    margin-top: 3px;
+    height: 1px;
+    align-self: stretch;
+}
+.btn_gray{
+    background-color: var(--color-silver-medal);
+    border-radius: 18px;
+    color: var(--color-gray);
+    padding: 0.25rem 0.75rem;
+    width: 7.5rem;
+    margin-right: 1rem;
+    margin-left: 1rem;
+    margin-bottom: 1rem;
+}
+
+.btn_finish{
+    background-color: var(--color-blue);
+    color: white;
+    border-radius: 18px;
+    width: 7.5rem;
+    margin-right: 1rem;
+    margin-left: 1rem;
+    padding: 0.25rem 0.75rem;
+}
+.btn_finish_wrapper{
+    text-align: center;
+}
+.exam_footer{
+    margin-top: 1rem;
+}
+.exam_name{
+    font-size: 1.5rem;
+    color: var(--color-gray);
+}
+.exam_module{
+    font-size: 1rem;
+    color: var(--color-gray);
+}
+.exam_question{
+    overflow: scroll;
+    height: 620px;
+    
+}
+.answer_option{
+    margin: 2px;
+
+}
+.answer_option:hover {
+    background-color: white;
+}
