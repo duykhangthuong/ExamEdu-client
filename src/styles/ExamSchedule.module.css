@@ -45,3 +45,15 @@
 .container_testname {
     flex: 0 1 20em;
 }
+
+.notification_box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    height: 10rem;
+
+    border-radius: 8px;
+
+    box-shadow: var(--shadow-light);
+}

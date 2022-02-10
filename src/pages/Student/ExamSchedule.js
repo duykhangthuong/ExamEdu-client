@@ -3,35 +3,56 @@ import Icon from "components/Icon";
 import Wrapper from "components/Wrapper";
 import moment from "moment";
 import React from "react";
+import { useSelector } from "react-redux";
+import { API } from "utilities/constants";
+import { useFetch } from "utilities/useFetch";
 
 //Styles
 import styles from "../../styles/ExamSchedule.module.css";
 
 const ExamSchedule = () => {
+    const user = useSelector((store) => store.user);
+    const { data, loading, error } = useFetch(`${API}/Exam/${user.accountId}`);
+
+    if (loading) {
+        return <Wrapper>Loading</Wrapper>;
+    }
+    if (error.status === 404) {
+        return (
+            <Wrapper className="d-flex justify-content-center align-items-center">
+                <div className={styles.notification_box}>
+                    <Heading size="3">
+                        You don't have any exam scheduled
+                    </Heading>
+                </div>
+            </Wrapper>
+        );
+    }
+
     return (
-        <Wrapper>
+        <Wrapper className="overflow-auto">
             {/* Date */}
             <div className="txt-blue">
                 {moment(moment().toDate()).format("dddd, D MMMM yyyy")}
             </div>
-
             {/* Title */}
             <Heading className="txt-blue">Your upcoming exam</Heading>
-
             {/* Schedule container */}
-            {mockData.map((data, index) => {
-                return (
-                    <Schedule
-                        date={data.date}
-                        time={data.time}
-                        name={data.name}
-                        desc={data.desc}
-                        subjectName={data.subjectName}
-                        alottedTime={data.alottedTime}
-                        key={index}
-                    />
-                );
-            })}
+            <div className="overflow-auto mb-5" style={{ maxheight: "70%" }}>
+                {mockData.map((data, index) => {
+                    return (
+                        <Schedule
+                            date={data.date}
+                            time={data.time}
+                            name={data.name}
+                            desc={data.desc}
+                            subjectName={data.subjectName}
+                            alottedTime={data.alottedTime}
+                            key={index}
+                        />
+                    );
+                })}
+            </div>
         </Wrapper>
     );
 };
