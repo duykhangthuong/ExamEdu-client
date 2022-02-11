@@ -1,0 +1,37 @@
+.input_box label {
+    color: var(--color-dark-blue);
+}
+
+.modal {
+    background-color: var(--color-lavender-light);
+    padding: 1.25rem 1rem 1rem 1rem;
+    width: 19rem;
+
+    display: flex;
+    justify-content: stretch;
+    align-items: stretch;
+    flex-direction: column;
+}
+
+.modal_content_container {
+    background-color: var(--nav-bar);
+    border-radius: 8px;
+    flex-grow: 1;
+
+    padding: 0.5rem 1rem;
+
+    display: flex;
+    flex-direction: column;
+}
+
+@media screen and (min-width: 768px) {
+    .modal {
+        width: 35rem;
+        height: auto;
+        padding: 0.5rem 1.25rem 1.25rem 1.25rem;
+    }
+
+    .modal_content_container {
+        padding: 3rem 1.25rem;
+    }
+}
