@@ -15,6 +15,7 @@ const CreateAccount = () => {
     const [selectedRole, setSelectedRole] = useState(ADMINISTRATOR);
     const { values, setValues, errors, onChange, onSubmit, clearForm } =
         useForm(fields, handleSubmit);
+    //values.tenTruong VD: values.fullname
 
     const [fetchdata, fetchResult] = useLazyFetch(`${API}/Account`, {
         method: "POST",
