@@ -34,7 +34,7 @@ export const useFetch = (url, options = {}) => {
 
     useEffect(() => {
         if (!url) return;
-        handleFetch(url, options, setData, setError, setLoading, history);
+        handleFetch(url, options, setData, setLoading, setError, history);
     }, []);
 
     return { data, loading, error };
@@ -103,6 +103,8 @@ async function handleFetch(
                 setError(error.response.data);
                 setData(undefined);
                 options.onError && options.onError(error.response.data);
+                setLoading(false);
+            } finally {
                 setLoading(false);
             }
         } else if (error.response) {
