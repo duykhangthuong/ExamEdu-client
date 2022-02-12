@@ -5,16 +5,40 @@ import Wrapper from "../../components/Wrapper";
 import Button from "../../components/Button";
 import styles from "../../styles/CreateAccount.module.css";
 import { useState } from "react";
-import { EMAIL, FULLNAME, REGEX, REQUIRED } from "utilities/constants";
+import { API, EMAIL, FULLNAME, REGEX, REQUIRED } from "utilities/constants";
 import { useForm } from "utilities/useForm";
+import { useLazyFetch } from "utilities/useFetch";
 import InputBox from "components/InputBox";
+import Swal from "sweetalert2";
 
 const CreateAccount = () => {
     const [selectedRole, setSelectedRole] = useState(ADMINISTRATOR);
     const { values, setValues, errors, onChange, onSubmit, clearForm } =
         useForm(fields, handleSubmit);
+    //values.tenTruong VD: values.fullname
 
-    function handleSubmit() {}
+    const [fetchdata, fetchResult] = useLazyFetch(`${API}/Account`, {
+        method: "POST",
+        body: {
+            email: values.email,
+            fullname: values.fullname,
+            roleID: selectedRole,
+        },
+        onCompletes: () => {
+            Swal.fire("Success", "Account created", "success");
+        },
+        onError: (error) => {
+            Swal.fire("Error", error.message, "error");
+        },
+    });
+
+    function handleSubmit() {
+        fetchdata();
+    }
+
+    if (fetchResult.loading) {
+        return <Wrapper>Loading</Wrapper>;
+    }
 
     return (
         <Wrapper className="d-md-flex justify-content-center overflow-auto">
@@ -136,7 +160,7 @@ const CreateAccount = () => {
                         onChange={onChange}
                         errorMessage={errors.fullname}
                     />
-                    {/* User name */}
+                    {/* User name
                     <InputBox
                         label="User name"
                         className="mb-3 mb-md-4"
@@ -144,7 +168,7 @@ const CreateAccount = () => {
                         value={values.userName}
                         onChange={onChange}
                         errorMessage={errors.userName}
-                    />
+                    /> */}
                     {/* Email */}
                     <InputBox
                         label="Email"
@@ -168,14 +192,17 @@ const CreateAccount = () => {
                         </Button>
                         <Button
                             style={{ width: "6.5rem", height: "2.25rem" }}
-                            type="Submit"
+                            type="submit"
                         >
                             <Icon icon="chevron-right" />
                             <Icon icon="chevron-right" className="me-2" />
                             Submit
                         </Button>
                     </div>
-                    <button className={`d-md-none ${styles.btn_submit}`}>
+                    <button
+                        type="submit"
+                        className={`d-md-none ${styles.btn_submit}`}
+                    >
                         <Icon icon="chevron-right" />
                         <Icon icon="chevron-right" className="me-2" />
                         Submit
@@ -188,10 +215,10 @@ const CreateAccount = () => {
 export default CreateAccount;
 
 // Roles
-const ADMINISTRATOR = 1;
-const STUDENT = 2;
+const ADMINISTRATOR = 4;
+const STUDENT = 1;
 const ACADEMIC_DEPARTMENT = 3;
-const TEACHER = 4;
+const TEACHER = 2;
 const HEAD_OF_DEPARTMENT = 5;
 
 //Input fields
@@ -205,8 +232,8 @@ const fields = {
         regex: EMAIL,
         message: "Email must be in the correct format",
     },
-    userName: {
-        validate: REQUIRED,
-        message: "Please input the account's username",
-    },
+    // userName: {
+    //     validate: REQUIRED,
+    //     message: "Please input the account's username",
+    // },
 };

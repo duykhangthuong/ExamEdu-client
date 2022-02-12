@@ -6,8 +6,7 @@ import AuthenticationRoutes from "./AuthenticationRoutes";
 import StudentRoutes from "./StudentRoutes";
 import Logout from "pages/Authentication/Logout";
 import ErrorPage from "pages/ErrorPage";
-import ExamRoutes from "./ExamRoutes";
-import KhaMinh from "pages/KhaMinh";
+import TeacherRoutes from "./TeacherRoutes";
 
 const Routes = () => {
     return (
@@ -20,17 +19,20 @@ const Routes = () => {
                 <StudentRoutes />
             </Route>
 
-            <Route path="/exam">
-                <ExamRoutes />
-            </Route>
-
             <Route path="/logout">
                 <Logout />
             </Route>
 
+            <Route path="/teacher">
+                <TeacherRoutes />
+            </Route>
+
             <Route path="/">
-                <KhaMinh />
-                {/* <AuthenticationRoutes /> */}
+                {/* <KhaMinh /> */}
+                <AuthenticationRoutes />
+            </Route>
+            <Route path="*">
+                <ErrorPage />
             </Route>
             <Route path="*">
                 <ErrorPage />
