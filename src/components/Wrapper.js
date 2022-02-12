@@ -7,9 +7,9 @@ const Wrapper = ({ children, className = "", style = {} }) => {
             style={{
                 ...style,
                 width: "100vw",
-                minHeight: "100vh",
+                maxHeight: "88vh", //Changed minHeight to maxHeight to fix the issue of the page not being scrollable.
             }}
-            className={`${styles.main} ${className}`}
+            className={`${styles.main} ${className} overflow-auto`} //Added overflow-auto to fix the issue of the page not being scrollable.
         >
             {children}
         </div>
