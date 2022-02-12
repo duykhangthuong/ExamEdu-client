@@ -8,6 +8,7 @@ import React from "react";
 
 import { useUserAuthorization } from "utilities/useAuthorization";
 import { DataStudent } from "utilities/VerticalNavbarData";
+import ExamRoutes from "./ExamRoutes";
 const StudentRoutes = () => {
     const { redirect, path } = useUserAuthorization("student");
 
@@ -22,9 +23,10 @@ const StudentRoutes = () => {
                 </Route>
 
                 {/* Chưa xong */}
-                <Route path="/student/exam" exact>
-                    <ExamSchedule />
+                <Route path="/students/exam">
+                    <ExamRoutes />
                 </Route>
+
                 <Route path="/student/module/list" exact>
                     <ExamSchedule />
                 </Route>
@@ -32,9 +34,9 @@ const StudentRoutes = () => {
                 <Route path="/student/mark/report" exact>
                     <MarkReport />
                 </Route>
-                <Route path="*">
+                {/* <Route path="*">
                     <ExamSchedule />
-                </Route>
+                </Route> */}
             </Switch>
         </>
     );
