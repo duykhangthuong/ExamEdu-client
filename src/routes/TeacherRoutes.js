@@ -17,7 +17,7 @@ const TeacherRoutes = () => {
             <Switch>
                 <Route path="/teacher/exam/create/info" exact></Route>
                 <Route path="/teacher/exam/create/question/:ExamID" exact>
-                    <CreateExamPaper/>
+                    <CreateExamPaper />
                 </Route>
                 <Route path="/teacher/question" exact></Route>
                 <Route path="/teacher/exam/list" exact></Route>
