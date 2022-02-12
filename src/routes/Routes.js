@@ -28,7 +28,11 @@ const Routes = () => {
             </Route>
 
             <Route path="/">
+                {/* <KhaMinh /> */}
                 <AuthenticationRoutes />
+            </Route>
+            <Route path="*">
+                <ErrorPage />
             </Route>
             <Route path="*">
                 <ErrorPage />
