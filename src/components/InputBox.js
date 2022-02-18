@@ -9,6 +9,7 @@ const InputBox = ({
     onChange,
     type,
     errorMessage,
+    disabled,
     className,
 }) => {
     return (
@@ -28,6 +29,7 @@ const InputBox = ({
                     value={value}
                     onChange={onChange}
                     type={type}
+                    disabled={disabled}
                 ></input>
                 {errorMessage && <ValidateMessage message={errorMessage} />}
             </div>
