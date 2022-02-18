@@ -1,7 +1,9 @@
 import { Route, Switch, Redirect } from "react-router-dom";
 import HorizontalNavBar from "components/HorizontalNavBar";
 import VerticalNavBar from "components/VerticalNavBar";
+import Exam from "pages/Student/Exam";
 import ExamSchedule from "pages/Student/ExamSchedule";
+import ExamRoutes from "routes/ExamRoutes"
 
 import MarkReport from "pages/Student/MarkReport";
 import React from "react";
@@ -23,7 +25,7 @@ const StudentRoutes = () => {
 
                 {/* Chưa xong */}
                 <Route path="/student/exam" exact>
-                    <ExamSchedule />
+                    <ExamRoutes />
                 </Route>
                 <Route path="/student/module/list" exact>
                     <ExamSchedule />
@@ -35,6 +37,7 @@ const StudentRoutes = () => {
                 <Route path="*">
                     <ExamSchedule />
                 </Route>
+                
             </Switch>
         </>
     );
