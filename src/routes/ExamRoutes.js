@@ -1,4 +1,6 @@
 import { Route, Switch, Redirect } from "react-router-dom";
+
+import Exam from "pages/Student/Exam";
 import ExamSchedule from "pages/Student/ExamSchedule";
 import KhaMinh from "pages/KhaMinh";
 import React from "react";
@@ -11,6 +13,12 @@ const ExamRoutes = () => {
     return (
         <>
             <Switch>
+                
+                {/* Chưa xong */}
+                <Route path="/exam/test" exact>
+                    <Exam />
+                </Route>
+               
                 {/* Chưa xong */}
                 <Route path="/exam" exact>
                     <KhaMinh />
