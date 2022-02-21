@@ -8,6 +8,8 @@ import { useLazyFetch } from "utilities/useFetch";
 
 const CreateExamPaper = () => {
   const { ExamID } = useParams();
+  const {moduleId} = useParams();
+  const {isFinalExam} = useParams();
 
   const [selectTabIndex, setSelectTabIndex] = useState(0); //index of the tab which is show
 
@@ -15,15 +17,6 @@ const CreateExamPaper = () => {
   const [isQuestion2Open, setIsQuestion2Open] = useState([false, false]);
   const [isQuestion3Open, setIsQuestion3Open] = useState([false, false]);
 
-  const [fetchExamData, fetchExamResult] = useLazyFetch(
-    `${API}/exam/examInfor/${ExamID}`
-  );
-
-  var moduleId = 1;
-  var isFinalExam = true;
-  useEffect(() => {
-    fetchExamData();
-  }, []);
 
   //Question Level 1
   const [fetchQuestion1Data, fetchQuestion1Result] = useLazyFetch(
@@ -92,7 +85,6 @@ const CreateExamPaper = () => {
     }
   };
   // `${API}/Question/${fetchExamResult.data["moduleId"]}/3/${fetchExamResult.data["isFinalExam"]}`
-  if (fetchExamResult.loading) return <Wrapper>Loading...</Wrapper>;
 
   return (
     <Wrapper className={style.wrapper}>
@@ -262,8 +254,12 @@ const CreateExamPaper = () => {
 
             {/* question bank */}
             {fetchQuestion1Result.loading && (
-              <div class="spinner-border text-primary" role="status" style={{marginLeft: "1vw"}}>
-                <span class="sr-only">Loading...</span>
+              <div
+                className="spinner-border text-primary"
+                role="status"
+                style={{ marginLeft: "1vw" }}
+              >
+                <span className="sr-only">Loading...</span>
               </div>
             )}
             {isQuestion1Open[0] &&
@@ -313,7 +309,11 @@ const CreateExamPaper = () => {
             <br />
             {/* question bank */}
             {fetchQuestion2Result.loading && (
-              <div class="spinner-border text-primary" role="status" style={{marginLeft: "1vw"}}>
+              <div
+                class="spinner-border text-primary"
+                role="status"
+                style={{ marginLeft: "1vw" }}
+              >
                 <span class="sr-only">Loading...</span>
               </div>
             )}
@@ -365,7 +365,11 @@ const CreateExamPaper = () => {
             </div>
             <br />
             {fetchQuestion3Result.loading && (
-              <div class="spinner-border text-primary" role="status" style={{marginLeft: "1vw"}}>
+              <div
+                class="spinner-border text-primary"
+                role="status"
+                style={{ marginLeft: "1vw" }}
+              >
                 <span class="sr-only">Loading...</span>
               </div>
             )}
