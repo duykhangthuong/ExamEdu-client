@@ -16,7 +16,10 @@ const TeacherRoutes = () => {
             <VerticalNavBar VerticalNavbarData={DataTeacher} />
             <Switch>
                 <Route path="/teacher/exam/create/info" exact></Route>
-                <Route path="/teacher/exam/create/question/:ExamID/:moduleId/:isFinalExam" exact>
+                <Route
+                    path="/teacher/exam/create/question/:ExamID/:moduleId/:isFinalExam"
+                    exact
+                >
                     <CreateExamPaper />
                 </Route>
                 <Route path="/teacher/question" exact></Route>

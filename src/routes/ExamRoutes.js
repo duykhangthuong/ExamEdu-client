@@ -13,12 +13,11 @@ const ExamRoutes = () => {
     return (
         <>
             <Switch>
-                
                 {/* Chưa xong */}
                 <Route path="/exam/test" exact>
                     <Exam />
                 </Route>
-               
+
                 {/* Chưa xong */}
                 <Route path="/exam" exact>
                     <KhaMinh />
