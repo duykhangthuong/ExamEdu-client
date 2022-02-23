@@ -6,6 +6,7 @@ import React from "react";
 
 import { useUserAuthorization } from "utilities/useAuthorization";
 import ModuleList from "pages/AcademicDepartment/ModuleList";
+import MarkReport from "pages/Student/MarkReport";
 const AcademicRoutes = () => {
     const { redirect, path } = useUserAuthorization("academicdepartment");
 
@@ -25,7 +26,9 @@ const AcademicRoutes = () => {
                 <Route path="/academic/exam/list" exact></Route>
                 <Route path="/academic/exam/create" exact></Route>
                 <Route path="/academic/exam/update" exact></Route>
-                <Route path="*"></Route>
+                <Route path="*">
+                    <MarkReport />
+                </Route>
             </Switch>
         </>
     );
