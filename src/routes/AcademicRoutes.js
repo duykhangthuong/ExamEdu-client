@@ -5,6 +5,7 @@ import { DataAcademic } from "utilities/VerticalNavbarData";
 import React from "react";
 
 import { useUserAuthorization } from "utilities/useAuthorization";
+import ModuleList from "pages/AcademicDepartment/ModuleList";
 import MarkReport from "pages/Student/MarkReport";
 const AcademicRoutes = () => {
     const { redirect, path } = useUserAuthorization("academicdepartment");
@@ -15,7 +16,9 @@ const AcademicRoutes = () => {
             <HorizontalNavBar />
             <VerticalNavBar VerticalNavbarData={DataAcademic} />
             <Switch>
-                <Route path="/academic/module/list" exact></Route>
+                <Route path="/academic/module/list" exact>
+                    <ModuleList />
+                </Route>
                 <Route path="/academic/class/list" exact></Route>
                 <Route path="/academic/class/create" exact></Route>
                 <Route path="/academic/class/update" exact></Route>
@@ -23,7 +26,9 @@ const AcademicRoutes = () => {
                 <Route path="/academic/exam/list" exact></Route>
                 <Route path="/academic/exam/create" exact></Route>
                 <Route path="/academic/exam/update" exact></Route>
-                <Route path="*"><MarkReport/></Route>
+                <Route path="*">
+                    <MarkReport />
+                </Route>
             </Switch>
         </>
     );

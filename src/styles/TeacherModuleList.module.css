@@ -1,0 +1,63 @@
+.module_card_container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    row-gap: 1rem;
+    column-gap: 1rem;
+    align-items: flex-start;
+}
+
+.module_card {
+    box-shadow: var(--shadow-light);
+    border-radius: 8px;
+    width: 100%;
+
+    padding: 1rem 1.25rem;
+    transition: all 0.3s linear;
+}
+
+.chevron {
+    transition: all 0.3s linear;
+    cursor: pointer;
+}
+
+.chevron_active {
+    transform: rotateX(180deg);
+}
+
+.horizontal_line {
+    background-color: var(--color-gray);
+    height: 1px;
+    width: 85%;
+}
+
+.class_container {
+    display: none;
+    transition: all 0.3s linear;
+}
+
+.class_container_active {
+    display: block;
+}
+
+.class_grid_container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 15rem));
+    row-gap: 1rem;
+    column-gap: 1.5rem;
+    align-items: flex-start;
+}
+
+.class {
+    color: var(--color-blue);
+    background-color: var(--color-lavender-light);
+    border-radius: 6px;
+
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+}
+
+.class:hover {
+    transition: all 0.1s linear;
+    background-color: var(--color-lavender-light);
+    filter: contrast(90%);
+}
