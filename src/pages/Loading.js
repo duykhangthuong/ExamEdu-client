@@ -1,7 +1,11 @@
-import React, { useEffect, useState } from "react";
+import Wrapper from "components/Wrapper";
+import React from "react";
+import "styles/Loading.css";
 const Loading = () => {
     return (
-        <>Loadinggggggg.....</>
+        <Wrapper className="d-flex justtify-content-center align-items-center">
+            <div class="loader"></div>;
+        </Wrapper>
     );
 };
 export default Loading;

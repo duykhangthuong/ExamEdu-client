@@ -1,6 +1,8 @@
 import MultiStepFormProgressBar from "components/MultiStepFormProgressBar";
+import Wrapper from "components/Wrapper";
 import React from "react";
 import { useState } from "react";
+import Loading from "./Loading";
 
 const KhaMinh = () => {
     const steps = [
@@ -23,7 +25,7 @@ const KhaMinh = () => {
     ];
     return (
         <div>
-            <MultiStepFormProgressBar steps={steps} currentStep={1} />
+            <Loading />
         </div>
     );
 };
