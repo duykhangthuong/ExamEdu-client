@@ -14,7 +14,7 @@ const ExamRoutes = () => {
         <>
             <Switch>
                 {/* Chưa xong */}
-                <Route path="/exam/test" exact>
+                <Route path="/exam/test/:examId" exact>
                     <Exam />
                 </Route>
 
