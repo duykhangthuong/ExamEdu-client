@@ -8,6 +8,7 @@ import Logout from "pages/Authentication/Logout";
 import ErrorPage from "pages/ErrorPage";
 import ExamRoutes from "./ExamRoutes";
 import TeacherRoutes from "./TeacherRoutes";
+import KhaMinh from "pages/KhaMinh";
 
 const Routes = () => {
     return (
