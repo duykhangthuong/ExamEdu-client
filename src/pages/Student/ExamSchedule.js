@@ -6,9 +6,11 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { API } from "utilities/constants";
 import { useFetch } from "utilities/useFetch";
+import { useHistory } from "react-router-dom";
 
 //Styles
 import styles from "../../styles/ExamSchedule.module.css";
+import Swal from "sweetalert2";
 
 const ExamSchedule = () => {
     const user = useSelector((store) => store.user);
@@ -17,7 +19,7 @@ const ExamSchedule = () => {
     if (loading) {
         return <Wrapper>Loading</Wrapper>;
     }
-    if (error.status === 404) {
+    if (error?.status === 404) {
         return (
             <Wrapper className="d-flex justify-content-center align-items-center">
                 <div className={styles.notification_box}>
@@ -39,15 +41,16 @@ const ExamSchedule = () => {
             <Heading className="txt-blue">Your upcoming exam</Heading>
             {/* Schedule container */}
             <div className="overflow-auto mb-5" style={{ maxheight: "70%" }}>
-                {mockData.map((data, index) => {
+                {data?.payload.map((data, index) => {
                     return (
                         <Schedule
-                            date={data.date}
-                            time={data.time}
-                            name={data.name}
-                            desc={data.desc}
-                            subjectName={data.subjectName}
-                            alottedTime={data.alottedTime}
+                            date={moment(data.examDay).format("DD MMMM")}
+                            time={data.examDay}
+                            name={data.examName}
+                            desc={data.description}
+                            subjectName={data.moduleCode}
+                            alottedTime={data.durationInMinute}
+                            examId={data.examId}
                             key={index}
                         />
                     );
@@ -58,7 +61,30 @@ const ExamSchedule = () => {
 };
 export default ExamSchedule;
 
-const Schedule = ({ date, time, name, desc, subjectName, alottedTime }) => {
+const Schedule = ({
+    date,
+    time,
+    name,
+    desc,
+    subjectName,
+    alottedTime,
+    examId,
+}) => {
+    const history = useHistory();
+    function handleStartExam() {
+        //if exam day is today and current time is between exam time and exam time + allotted time then start exam
+        if (
+            moment(time).isSame(moment().toDate(), "day") &&
+            moment().isBetween(
+                moment(time),
+                moment(time).add(alottedTime, "minutes")
+            )
+        ) {
+            history.push(`/student/exam/${examId}`);
+        } else {
+            Swal.fire("Exam not started yet", "", "info");
+        }
+    }
     return (
         <>
             {/* Schedule container */}
@@ -73,7 +99,7 @@ const Schedule = ({ date, time, name, desc, subjectName, alottedTime }) => {
 
                     <div className={`${styles.container_bell_time}`}>
                         <Icon icon="bell"></Icon>
-                        <p className="mb-0">{time}</p>
+                        <p className="mb-0">{moment(time).format("hh:mm")}</p>
                     </div>
 
                     {/* Bigger container */}
@@ -89,74 +115,44 @@ const Schedule = ({ date, time, name, desc, subjectName, alottedTime }) => {
                         <div className={styles.line}></div>
                         {/* Module name, allotted time container */}
                         <div>
-                            <Heading size="3">{subjectName}</Heading>
+                            <Heading
+                                size="3"
+                                style={{ color: "var(--color-blue)" }}
+                            >
+                                {subjectName}
+                            </Heading>
                             <div style={{ fontSize: "1.75rem" }}>
-                                {alottedTime}
+                                {alottedTime} minutes
                             </div>
                         </div>
                         {/* Start button container */}
-                        <div>
-                            <button
-                                className={`shadow-light ${styles.btn_start}`}
-                            >
-                                <Icon icon="play" className="me-2"></Icon>
-                                Start
-                            </button>
-                        </div>
+                        {/* Display start button only if exam date is in the future.
+                        If not, display ended */}
+                        {moment(time).isAfter(moment()) ? (
+                            <div>
+                                <button
+                                    className={`shadow-light ${styles.btn_start}`}
+                                    onClick={() => {
+                                        handleStartExam();
+                                    }}
+                                >
+                                    <Icon icon="play" className="me-2"></Icon>
+                                    Start
+                                </button>
+                            </div>
+                        ) : (
+                            <div>
+                                <button
+                                    className={`shadow-light ${styles.btn_end}`}
+                                    disabled
+                                >
+                                    Ended
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
         </>
     );
 };
-
-const mockData = [
-    {
-        date: "24, April",
-        time: "07:00",
-        name: "Progress Test 3",
-        desc: "This is the description",
-        subjectName: "PRN211",
-        alottedTime: "45 minutes",
-    },
-    {
-        date: "24, April",
-        time: "07:00",
-        name: "Progress Test 3",
-        desc: "This is the description",
-        subjectName: "PRN211",
-        alottedTime: "45 minutes",
-    },
-    {
-        date: "24, April",
-        time: "07:00",
-        name: "Progress Test 3",
-        desc: "This is the description",
-        subjectName: "PRN211",
-        alottedTime: "45 minutes",
-    },
-    {
-        date: "24, April",
-        time: "07:00",
-        name: "Progress Test 3",
-        desc: "This is the description",
-        subjectName: "PRN211",
-        alottedTime: "45 minutes",
-    },
-    {
-        date: "24, April",
-        time: "07:00",
-        name: "Progress Test 3",
-        desc: "This is the description",
-        subjectName: "PRN211",
-        alottedTime: "45 minutes",
-    },
-    {
-        date: "24, April",
-        time: "07:00",
-        name: "Progress Test 3",
-        desc: "This is the description",
-        subjectName: "PRN211",
-        alottedTime: "45 minutes",
-    },
-];
