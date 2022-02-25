@@ -14,6 +14,10 @@
     color: var(--color-blue);
 }
 
+.txt-dark-blue {
+    color: var(--color-dark-blue);
+}
+
 .shadow-heavy {
     box-shadow: var(--shadow-heavy);
 }
