@@ -1,15 +1,21 @@
 import OurModal from "components/OurModal";
-
+import { API } from "utilities/constants";
 import styles from "../../styles/Exam.module.css";
 import Icon from "components/Icon";
-import { useState, useEffect } from "react";
-import { useRef } from "react";
+
+import { useState, useEffect, useRef } from "react";
+import { useLazyFetch, useFetch } from "utilities/useFetch";
 import useOutsideClick from "utilities/useOutsideClick";
+import { useSelector } from "react-redux";
+import Loading from "pages/Loading";
+import Swal from "sweetalert2";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 //Exam header include Exam name, module and time
-function ExamHeader() {
-    const [minutes, setMinutes] = useState(120);
-    const [seconds, setSeconds] = useState(30);
+function ExamHeader({ result, submitAnswer }) {
+    let time = result?.durationInMinute;
+    const [minutes, setMinutes] = useState(time);
+    const [seconds, setSeconds] = useState(0);
     useEffect(() => {
         let myInterval = setInterval(() => {
             if (seconds > 0) {
@@ -18,6 +24,8 @@ function ExamHeader() {
             if (seconds === 0) {
                 if (minutes === 0) {
                     clearInterval(myInterval);
+                    //When time up, submit answer
+                    submitAnswer();
                 } else {
                     setMinutes(minutes - 1);
                     setSeconds(59);
@@ -28,6 +36,7 @@ function ExamHeader() {
             clearInterval(myInterval);
         };
     });
+    // if(minutes===0 && seconds===0 ) submitAnswer()
     return (
         <header
             className={`d-md-flex justify-content-md-between ${styles.exam_header}`}
@@ -35,10 +44,12 @@ function ExamHeader() {
             <div>
                 {/* Exam Name */}
                 <div className={`fs-4`}>
-                    <b>Progress Test</b>
+                    <b>
+                        {result?.isFinalExam ? "Final Exam" : "Progress Test"}
+                    </b>
                 </div>
                 {/* Exam module */}
-                <div className={`fs-6`}>SWD221</div>
+                <div className={`fs-6`}>{result?.moduleCode}</div>
             </div>
 
             {/* Exam time left */}
@@ -116,89 +127,241 @@ function NumberQuestion({ number, onClick, color }) {
         </button>
     );
 }
-const arr = Array.from({ length: 60 }, () => Math.floor(Math.random() * 40)); //mock data for number question
 
 function Exam() {
-    console.log("re render");
+    const history = useHistory();
+    let examId = 6;
+    const { data, loading, error } = useFetch(`${API}/ExamQuestions/${examId}`);
+
+    const user = useSelector((state) => state.user.accountId);
 
     const [question, setQuestion] = useState(0);
     const [answerChecked, setAnswerChecked] = useState();
     const [listAnswer, setListAnswer] = useState([]);
     const [essayAnswer, setEssayAnswer] = useState("");
-    const addAnswerToList = (answer) => {
-        // console.log("Add answer to list");
-        let arrId = result[question].answers.map((a) => a.id); //get all answer Id in each question
-
+    const [reviewQuestion, setReviewQuestion] = useState([]);
+    const addAnswerToList = (answer, examQuestion) => {
+        answer = String(answer);
+        let arrId = data?.questionAnswer[question].answers.map((a) =>
+            String(a.answerId)
+        ); //get all answer Id in each question
         if (
             arrId.includes(answer) &&
-            !listAnswer.some((r) => arrId.indexOf(r) >= 0)
+            !listAnswer.some((r) => arrId.indexOf(r.studentAnswerContent) >= 0) //List answer does not have this answer
         ) {
-            setListAnswer([...listAnswer, answer]); //If list answer does not have the answer of this question, add answer to list
-            // console.log("vo if 1");
+            setListAnswer([
+                ...listAnswer,
+                {
+                    studentAnswerContent: answer,
+                    studentId: user,
+                    examQuestionId: examQuestion,
+                },
+            ]); //If list answer does not have the answer of this question, add answer to list
+
             // In case user want to change the answer after choose one
-        } else if (!listAnswer.includes(answer) && arrId.includes(answer)) {
-            // console.log("vo if 2");
-            //If list answer does not have the same input answer of this question
-            let previousAnswer = listAnswer.filter((value) =>
-                arrId.includes(value)
-            );
-            // console.log("previous answer: " + previousAnswer);
-            // console.log("Replace answer: " + answer);
+        } else if (
+            !listAnswer.map((a) => a.studentAnswerContent).includes(answer) &&
+            arrId.includes(answer) //If list answer does not have the same input answer of THIS question (so we need to replace the old answer with new input answer)
+        ) {
+            //lấy ra answer before
+            let previousAnswer = listAnswer
+                .map((a) => a.studentAnswerContent)
+                .filter((value) => arrId.includes(value)); //lọc ra những thằng trong listAnswer có mặt trong arrId
+
             // get index of previous answer to replace
-            let previousAnswerIndex = listAnswer.indexOf(...previousAnswer);
-            listAnswer.splice(previousAnswerIndex, 1, answer);
-            // console.log("After: " + listAnswer);
-            // console.log("vo if 2");
+            let previousAnswerIndex = listAnswer.findIndex(
+                (prev) => prev.studentAnswerContent === previousAnswer[0]
+            );
+            // replace previous answer with new answer
+            listAnswer.splice(previousAnswerIndex, 1, {
+                studentAnswerContent: answer,
+                studentId: user,
+                examQuestionId: examQuestion,
+            });
+        }
+    };
+    const addEssayAnswerToList = (essayAnswerParam, examQuestion) => {
+        if (essayAnswerParam === "") return;
+        //in case list answer does not have this essay answer, add the essay answer to list
+        if (!listAnswer.some((r) => r.examQuestionId === examQuestion)) {
+            setListAnswer([
+                ...listAnswer,
+                {
+                    studentAnswerContent: essayAnswerParam,
+                    studentId: user,
+                    examQuestionId: examQuestion,
+                },
+            ]);
+        } else {
+            //in case list answer have this essay answer, replace the new essay answer to list
+            //get the old answer
+            let previousAnswer = listAnswer.filter(
+                (ans) => ans.examQuestionId === examQuestion
+            );
+            // get index of previous answer to replace
+            let previousAnswerIndex = listAnswer.findIndex(
+                (prev) =>
+                    prev.examQuestionId === previousAnswer[0].examQuestionId
+            );
+            // replace previous answer with new answer
+            listAnswer.splice(previousAnswerIndex, 1, {
+                studentAnswerContent: essayAnswerParam,
+                studentId: user,
+                examQuestionId: examQuestion,
+            });
+        }
+        setEssayAnswer("");
+    };
+    const addToReviewLaterList = (thisQuestion) => {
+        if (reviewQuestion.some((q) => q === thisQuestion)) return;
+        setReviewQuestion([...reviewQuestion, thisQuestion]);
+    };
+    const removeQuestionInReviewList = (thisQuestion) => {
+        // remove the input question in review later list
+        if (reviewQuestion.some((q) => q === thisQuestion)) {
+            setReviewQuestion(reviewQuestion.filter((q) => q !== thisQuestion));
         }
     };
 
-    console.log(essayAnswer);
-    console.log(listAnswer);
+    // useEffect to call function remove question in review Later list when change question (click next, previous or number button)
+    useEffect(() => {
+        removeQuestionInReviewList(
+            data?.questionAnswer[question].examQuestionId
+        );
+    }, [question]);
+
+    //hàm để hiện lên SweetAlert để hỏi lại khi nhấn xóa account
+    function showModalConfirmSubmit() {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "Do you really want to submit the exam?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#e76565",
+            cancelButtonColor: "#363940",
+            confirmButtonText: "Confirm",
+            customClass: {
+                popup: "roundCorner",
+            },
+        }).then((result) => {
+            console.log(listAnswer);
+            //nếu người dùng nhấn OK
+            if (result.isConfirmed) {
+                submitAnswer();
+            }
+        });
+    }
+    const submitAnswer = () => {
+        if (data?.isFinalExam) {
+            //Gọi hàm postAnswer
+            postAnswer(`${API}/Answer/FE?examId=${examId}&studentId=${user}`);
+        }
+        //Gọi hàm postAnswer
+        else postAnswer(`${API}/Answer/PT?examId=${examId}&studentId=${user}`);
+    };
+    //submit answer and show student multiple choice mark
+    const [postAnswer, postAnswerResult] = useLazyFetch("", {
+        method: "POST",
+        body: listAnswer,
+        onCompletes: (data) => {
+            Swal.fire({
+                title: "Submit exam successfully",
+                text: data.message,
+                icon: "success",
+                confirmButtonColor: "#7AE765",
+                confirmButtonText: "Ok",
+                allowOutsideClick: false,
+                customClass: {
+                    popup: "roundCorner",
+                },
+            }).then((result) => {
+                //nếu người dùng nhấn OK
+                if (result.isConfirmed) {
+                    // redirect to exam schedule
+                    history.push("/student");
+                }
+            });
+        },
+        onError: (error) => {
+            Swal.fire("Error", error.message, "error");
+        },
+    });
+    // Loading when fetch API
+    if (loading || postAnswerResult.loading) {
+        return <Loading />;
+    }
+
     return (
         <div>
-            <ExamHeader />
+            <ExamHeader result={data} submitAnswer={submitAnswer} />
             <NumberQuestionModal>
-                {result.map((number, index) => {
-                    let answerGetByQuestionNumber = number.answers.map(
-                        (a) => a.id
-                    ); //get all answer id by this question number
-                    let isDone = answerGetByQuestionNumber.includes(
-                        listAnswer[index]
-                    ); //boolean check nếu list answer có phần tử nằm trong answerGetByQuestionNumber
-                    //...(đáp án đã được check, nằm trong list answer)
+                {data?.questionAnswer.map((number, index) => {
+                    //boolean check nếu examQuestionId nằm trong list answer
+                    let isDone = listAnswer.some(
+                        (r) => r.examQuestionId === number.examQuestionId
+                    );
+                    let toBeReView = reviewQuestion.some(
+                        (r) => r === number.examQuestionId
+                    );
                     return (
                         <NumberQuestion
                             key={index}
                             number={index + 1}
-                            onClick={() => setQuestion(index)}
-                            color={isDone ? "#7AE765" : "var(--color-gray)"}
+                            onClick={() => {
+                                addEssayAnswerToList(
+                                    essayAnswer,
+                                    data?.questionAnswer[question]
+                                        .examQuestionId
+                                );
+                                setQuestion(index);
+                            }}
+                            color={
+                                toBeReView
+                                    ? "var(--color-blue)"
+                                    : isDone
+                                    ? "#7AE765"
+                                    : "var(--color-gray)"
+                            }
                         />
                     );
                 })}
             </NumberQuestionModal>
             <div className={`d-md-flex ${styles.wrapper}`}>
                 <div className={`d-none d-md-block ${styles.questionBlock}`}>
-                    {result.map((number, index) => {
-                        let answerGetByQuestionNumber = number.answers.map(
-                            (a) => a.id
-                        ); //get all answer id by this question number
-                        let isDone = answerGetByQuestionNumber.some(
-                            (answer) => listAnswer.indexOf(answer) >= 0
-                        ); //boolean check nếu list answer có phần tử nào nằm trong answerGetByQuestionNumber
-                        //...(đáp án đã được check, nằm trong list answer)
+                    {data?.questionAnswer.map((number, index) => {
+                        //boolean check nếu examQuestionId nằm trong list answer
+                        let isDone = listAnswer.some(
+                            (r) => r.examQuestionId === number.examQuestionId
+                        );
+                        let toBeReView = reviewQuestion.some(
+                            (r) => r === number.examQuestionId
+                        );
                         return (
                             <NumberQuestion
                                 key={index}
                                 number={index + 1}
-                                onClick={() => setQuestion(index)}
-                                color={isDone ? "#7AE765" : "var(--color-gray)"}
+                                onClick={() => {
+                                    addEssayAnswerToList(
+                                        essayAnswer,
+                                        data?.questionAnswer[question]
+                                            .examQuestionId
+                                    );
+                                    setQuestion(index);
+                                }}
+                                color={
+                                    toBeReView
+                                        ? "var(--color-blue)"
+                                        : isDone
+                                        ? "#7AE765"
+                                        : "var(--color-gray)"
+                                }
                             />
                         );
                     })}
                     <div>
                         <Icon
                             icon="circle"
-                            className="me-4 ms-2"
+                            className="me-2 ms-2"
                             style={{ color: "#7AE765" }}
                         ></Icon>
                         Attempted
@@ -206,24 +369,35 @@ function Exam() {
                     <div>
                         <Icon
                             icon="circle"
-                            className="me-4 ms-2"
+                            className="me-2 ms-2"
                             style={{ color: "var(--color-blue)" }}
                         ></Icon>
                         To be review
                     </div>
                 </div>
                 <div className={styles.page_container}>
-                    <form>
+                    <form
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            showModalConfirmSubmit();
+                        }}
+                    >
                         <div className={`${styles.exam_question}`}>
                             <div style={{ color: "var(--color-gray)" }}>
                                 <b>Question {question + 1}</b>
                             </div>
-                            <p>{result[question].questionContent}</p>
+                            <p>
+                                {data?.questionAnswer[question].questionContent}
+                            </p>
                             {/* Image of question */}
-                            {result[question].questionImageURL && ( //Check if image url is null, don't render image
+                            {data?.questionAnswer[question]
+                                .questionImageURL && ( //Check if image url is null, don't render image
                                 <img
                                     id={`${styles.imgQuestion}`}
-                                    src={result[question].questionImageURL}
+                                    src={
+                                        data?.questionAnswer[question]
+                                            .questionImageURL
+                                    }
                                     alt="L0-5-1"
                                     border="0"
                                 />
@@ -234,34 +408,68 @@ function Exam() {
                             ></div>
                             {/* Answer option */}
                             <div>
-                                {result[question].answers.length > 1 ? (
-                                    result[question].answers.map((answer) => (
-                                        <div
-                                            className={`${styles.answer_option}`}
-                                            key={answer.id}
-                                        >
-                                            <input
-                                                type="radio"
-                                                id={answer.id}
-                                                checked={listAnswer.includes(
-                                                    answer.id
-                                                )}
-                                                onChange={() => {
-                                                    setAnswerChecked(answer.id);
-                                                    addAnswerToList(answer.id);
-                                                    // changeBackGroundQuestionNumber();
-                                                }}
-                                                value={answer.id}
-                                            />
-                                            <label htmlFor={answer.id}>
-                                                {answer.answerContent}
-                                            </label>
-                                        </div>
-                                    ))
+                                {data?.questionAnswer[question].answers.length >
+                                1 ? (
+                                    data?.questionAnswer[question].answers.map(
+                                        (answer) => (
+                                            <div
+                                                className={`${styles.answer_option}`}
+                                                key={answer.answerId}
+                                            >
+                                                <input
+                                                    type="radio"
+                                                    id={answer.answerId}
+                                                    checked={listAnswer
+                                                        .map(
+                                                            (a) =>
+                                                                a.studentAnswerContent
+                                                        )
+                                                        .includes(
+                                                            String(
+                                                                answer.answerId
+                                                            ) // Check answer if answer in included in listAnswer
+                                                        )}
+                                                    onChange={() => {
+                                                        setAnswerChecked(
+                                                            answer.answerId
+                                                        );
+                                                        addAnswerToList(
+                                                            answer.answerId,
+                                                            data
+                                                                ?.questionAnswer[
+                                                                question
+                                                            ].examQuestionId
+                                                        );
+                                                        // changeBackGroundQuestionNumber();
+                                                    }}
+                                                    value={answer.id}
+                                                />
+                                                <label
+                                                    className="ms-2"
+                                                    htmlFor={answer.answerId}
+                                                >
+                                                    {answer.answerContent}
+                                                </label>
+                                            </div>
+                                        )
+                                    )
                                 ) : (
                                     <textarea
+                                        defaultValue={
+                                            listAnswer.filter(
+                                                (r) =>
+                                                    r.examQuestionId ===
+                                                    data?.questionAnswer[
+                                                        question
+                                                    ].examQuestionId
+                                            )[0]?.studentAnswerContent
+                                        }
                                         name="answer"
-                                        cols="163"
+                                        cols={
+                                            window.innerWidth < 1180
+                                                ? "84"
+                                                : "135"
+                                        }
                                         rows="16"
                                         onChange={(e) =>
                                             setEssayAnswer(e.target.value)
@@ -281,6 +489,11 @@ function Exam() {
                                     disabled={question === 0} //If question is the first one
                                     className={`btn shadow-light ${styles.btn_gray} ${styles.exam_btn}`}
                                     onClick={() => {
+                                        addEssayAnswerToList(
+                                            essayAnswer,
+                                            data?.questionAnswer[question]
+                                                .examQuestionId
+                                        );
                                         setQuestion(question - 1);
                                     }}
                                 >
@@ -293,9 +506,17 @@ function Exam() {
                                 {/* Button for next question */}
                                 <button
                                     type="button"
-                                    disabled={question === result.length - 1} //if question is the last one
+                                    disabled={
+                                        question ===
+                                        data?.questionAnswer.length - 1
+                                    } //if question is the last one
                                     className={`btn shadow-light ${styles.btn_gray} ${styles.exam_btn}`}
                                     onClick={() => {
+                                        addEssayAnswerToList(
+                                            essayAnswer,
+                                            data?.questionAnswer[question]
+                                                .examQuestionId
+                                        );
                                         setQuestion(question + 1);
                                     }}
                                 >
@@ -315,6 +536,12 @@ function Exam() {
                                     <button
                                         type="button"
                                         className={`btn shadow-light ${styles.btn_gray} ${styles.exam_btn}`}
+                                        onClick={() =>
+                                            addToReviewLaterList(
+                                                data?.questionAnswer[question]
+                                                    .examQuestionId
+                                            )
+                                        }
                                     >
                                         Review later
                                     </button>
@@ -322,7 +549,15 @@ function Exam() {
                                 <div>
                                     {/* Finish button */}
                                     <button
+                                        type="submit"
                                         className={`btn ${styles.btn_finish} ${styles.exam_btn}`}
+                                        onClick={() => {
+                                            addEssayAnswerToList(
+                                                essayAnswer,
+                                                data?.questionAnswer[question]
+                                                    .examQuestionId
+                                            );
+                                        }}
                                     >
                                         Finish
                                     </button>
@@ -335,63 +570,4 @@ function Exam() {
         </div>
     );
 }
-const result = [
-    {
-        questionId: 21,
-        questionContent:
-            "Which of the following if limitation of Non-buffered Event-Based architecture?",
-        questionImageURL: "https://i.ibb.co/kScwdKg/L0-5-1.png",
-        answers: [
-            {
-                id: 1,
-                answerContent:
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt",
-            },
-            {
-                id: 2,
-                answerContent:
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt",
-            },
-            {
-                id: 3,
-                answerContent:
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt",
-            },
-            {
-                id: 4,
-                answerContent:
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt",
-            },
-        ],
-    },
-    {
-        questionId: 47,
-        questionContent:
-            "Main- subroutine architecture can also be applied in any object-oriented software design",
-        questionImageURL: "https://i.ibb.co/3N0f31H/FA-Management.png",
-        answers: [
-            {
-                id: 5,
-                answerContent: "True",
-            },
-            {
-                id: 6,
-                answerContent: "False",
-            },
-        ],
-    },
-    {
-        questionId: 34,
-        questionContent:
-            "Design produces architectures that specify products and components in the form of which of the following",
-        questionImageURL: "",
-        answers: [
-            {
-                id: 7,
-                answerContent:
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt",
-            },
-        ],
-    },
-];
 export default Exam;
