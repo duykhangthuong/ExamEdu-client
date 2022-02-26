@@ -3,13 +3,14 @@ import Wrapper from "components/Wrapper";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import style from "styles/CreateExamPaper.module.css";
-import { API } from "utilities/constants";
+import { API, REQUIRED } from "utilities/constants";
 import { useLazyFetch } from "utilities/useFetch";
+import Swal from "sweetalert2";
 
 const CreateExamPaper = () => {
   const { ExamID } = useParams();
-  const {moduleId} = useParams();
-  const {isFinalExam} = useParams();
+  const { moduleId } = useParams();
+  const { isFinalExam } = useParams();
 
   const [selectTabIndex, setSelectTabIndex] = useState(0); //index of the tab which is show
 
@@ -17,6 +18,110 @@ const CreateExamPaper = () => {
   const [isQuestion2Open, setIsQuestion2Open] = useState([false, false]);
   const [isQuestion3Open, setIsQuestion3Open] = useState([false, false]);
 
+  const [questionListInfor, setQuestionListInfor] = useState([]);
+
+  const [noMCQLevel1, setNoMCQLevel1] = useState(0);
+  const [noMCQLevel2, setNoMCQLevel2] = useState(0);
+  const [noMCQLevel3, setNoMCQLevel3] = useState(0);
+
+  const [noEssayLevel1, setNoEssayLevel1] = useState(0);
+  const [noEssayLevel2, setNoEssayLevel2] = useState(0);
+  const [noEssayLevel3, setNoEssayLevel3] = useState(0);
+
+  const [MarkLevel1, setMarkLevel1] = useState(0);
+  const [MarkLevel2, setMarkLevel2] = useState(0);
+  const [MarkLevel3, setMarkLevel3] = useState(0);
+
+  const [variantNumber, setVariantNumber] = useState(1);
+
+  const addQuestion = (id, level, questionType) => {
+    setQuestionListInfor([
+      ...questionListInfor,
+      {
+        id: id,
+        level: level,
+        questionType: questionType,
+      },
+    ]);
+  };
+
+  const removeQuestion = (id, questionType) => {
+    setQuestionListInfor(
+      questionListInfor.filter(
+        (question) =>
+          !(question.id === id && question.questionType === questionType)
+      )
+    );
+  };
+
+  const [fetchdata, fetchResult] = useLazyFetch(`${API}/Exam/byHand`, {
+    method: "POST",
+    body: {
+      IsFinal: isFinalExam === "true",
+      VariantNumber: variantNumber,
+      ExamId: ~~ExamID,
+      MCQuestionByLevel: {
+        1: questionListInfor
+          .filter(
+            (question) => question.level === 1 && question.questionType === 1
+          )
+          .map((question) => question.id),
+        2: questionListInfor
+          .filter(
+            (question) => question.level === 2 && question.questionType === 1
+          )
+          .map((question) => question.id),
+        3: questionListInfor
+          .filter(
+            (question) => question.level === 3 && question.questionType === 1
+          )
+          .map((question) => question.id),
+      },
+      NumberOfMCQuestionByLevel: {
+        1: ~~noMCQLevel1,
+        2: ~~noMCQLevel2,
+        3: ~~noMCQLevel3,
+      },
+      NonMCQuestionByLevel: {
+        1: questionListInfor
+          .filter(
+            (question) => question.level === 1 && question.questionType === 2
+          )
+          .map((question) => question.id),
+        2: questionListInfor
+          .filter(
+            (question) => question.level === 2 && question.questionType === 2
+          )
+          .map((question) => question.id),
+        3: questionListInfor
+          .filter(
+            (question) => question.level === 3 && question.questionType === 2
+          )
+          .map((question) => question.id),
+      },
+      NumberOfNonMCQuestionByLevel: {
+        1: ~~noEssayLevel1,
+        2: ~~noEssayLevel2,
+        3: ~~noEssayLevel3,
+      },
+      MarkByLevel: {
+        1: parseFloat(MarkLevel1),
+        2: parseFloat(MarkLevel2),
+        3: parseFloat(MarkLevel3),
+      },
+    },
+    onCompletes: () => {
+      Swal.fire("Success", "Exam paper created", "success");
+    },
+    onError: (error) => {
+      Swal.fire("Error", error.message, "error");
+    },
+  });
+
+  const SubmitForm = () => {
+    Swal.fire("Success", "Processing", "success");
+    fetchdata();
+  };
 
   //Question Level 1
   const [fetchQuestion1Data, fetchQuestion1Result] = useLazyFetch(
@@ -85,7 +190,6 @@ const CreateExamPaper = () => {
     }
   };
   // `${API}/Question/${fetchExamResult.data["moduleId"]}/3/${fetchExamResult.data["isFinalExam"]}`
-
   return (
     <Wrapper className={style.wrapper}>
       <Heading className="d-none d-md-block">
@@ -118,14 +222,22 @@ const CreateExamPaper = () => {
               Number of level 1 question
             </label>
             <br />
-            <input className={`${style.input_box}`} type="number" />
+            <input
+              className={`${style.input_box}`}
+              type="number"
+              onChange={(e) => setNoMCQLevel1(e.target.value)}
+            />
             <br />
 
             <label className={`${style.input_label}`}>
               Number of level 2 question
             </label>
             <br />
-            <input className={`${style.input_box}`} type="number" />
+            <input
+              className={`${style.input_box}`}
+              type="number"
+              onChange={(e) => setNoMCQLevel2(e.target.value)}
+            />
             <br />
 
             <label className={`${style.input_label}`}>
@@ -133,7 +245,11 @@ const CreateExamPaper = () => {
             </label>
             <br />
 
-            <input className={`${style.input_box}`} type="number" />
+            <input
+              className={`${style.input_box}`}
+              type="number"
+              onChange={(e) => setNoMCQLevel3(e.target.value)}
+            />
             <br />
           </div>
           {/* right div */}
@@ -145,25 +261,43 @@ const CreateExamPaper = () => {
                 className={`${style.question_number_box_div}`}
                 style={{ fontWeight: "bold" }}
               >
-                10 questions
+                {
+                  questionListInfor.filter(
+                    (question) =>
+                      question.level === 1 && question.questionType === 1
+                  ).length
+                }{" "}
+                questions
               </div>
             </div>
             <div className={`${style.question_number_box}`}>
-              <div className={`${style.question_number_box_div}`}>Level 1 </div>
+              <div className={`${style.question_number_box_div}`}>Level 2 </div>
               <div
                 className={`${style.question_number_box_div}`}
                 style={{ fontWeight: "bold" }}
               >
-                10 questions
+                {
+                  questionListInfor.filter(
+                    (question) =>
+                      question.level === 2 && question.questionType === 1
+                  ).length
+                }{" "}
+                questions
               </div>
             </div>
             <div className={`${style.question_number_box}`}>
-              <div className={`${style.question_number_box_div}`}>Level 1 </div>
+              <div className={`${style.question_number_box_div}`}>Level 3 </div>
               <div
                 className={`${style.question_number_box_div}`}
                 style={{ fontWeight: "bold" }}
               >
-                10 questions
+                {
+                  questionListInfor.filter(
+                    (question) =>
+                      question.level === 3 && question.questionType === 1
+                  ).length
+                }{" "}
+                questions
               </div>
             </div>
           </div>
@@ -177,27 +311,51 @@ const CreateExamPaper = () => {
               Number of level 1 question
             </label>
             <br />
-            <input className={`${style.input_box_essay}`} type="number" />
+            <input
+              className={`${style.input_box_essay}`}
+              type="number"
+              onChange={(e) => setNoEssayLevel1(e.target.value)}
+            />
             <label className={`${style.input_label}`}>Mark</label>
-            <input className={`${style.input_box_essay}`} type="number" />
+            <input
+              className={`${style.input_box_essay}`}
+              type="number"
+              onChange={(e) => setMarkLevel1(e.target.value)}
+            />
             <br />
 
             <label className={`${style.input_label}`}>
               Number of level 2 question
             </label>
             <br />
-            <input className={`${style.input_box_essay}`} type="number" />
+            <input
+              className={`${style.input_box_essay}`}
+              type="number"
+              onChange={(e) => setNoEssayLevel2(e.target.value)}
+            />
             <label className={`${style.input_label}`}>Mark</label>
-            <input className={`${style.input_box_essay}`} type="number" />
+            <input
+              className={`${style.input_box_essay}`}
+              type="number"
+              onChange={(e) => setMarkLevel2(e.target.value)}
+            />
             <br />
 
             <label className={`${style.input_label}`}>
               Number of level 3 question
             </label>
             <br />
-            <input className={`${style.input_box_essay}`} type="number" />
+            <input
+              className={`${style.input_box_essay}`}
+              type="number"
+              onChange={(e) => setNoEssayLevel3(e.target.value)}
+            />
             <label className={`${style.input_label}`}>Mark</label>
-            <input className={`${style.input_box_essay}`} type="number" />
+            <input
+              className={`${style.input_box_essay}`}
+              type="number"
+              onChange={(e) => setMarkLevel3(e.target.value)}
+            />
             <br />
           </div>
           {/* right div */}
@@ -209,7 +367,13 @@ const CreateExamPaper = () => {
                 className={`${style.question_number_box_div}`}
                 style={{ fontWeight: "bold" }}
               >
-                10 questions
+                {
+                  questionListInfor.filter(
+                    (question) =>
+                      question.level === 1 && question.questionType === 2
+                  ).length
+                }{" "}
+                questions
               </div>
             </div>
             <div className={`${style.question_number_box}`}>
@@ -218,7 +382,13 @@ const CreateExamPaper = () => {
                 className={`${style.question_number_box_div}`}
                 style={{ fontWeight: "bold" }}
               >
-                10 questions
+                {
+                  questionListInfor.filter(
+                    (question) =>
+                      question.level === 2 && question.questionType === 2
+                  ).length
+                }{" "}
+                questions
               </div>
             </div>
             <div className={`${style.question_number_box}`}>
@@ -227,7 +397,13 @@ const CreateExamPaper = () => {
                 className={`${style.question_number_box_div}`}
                 style={{ fontWeight: "bold" }}
               >
-                10 questions
+                {
+                  questionListInfor.filter(
+                    (question) =>
+                      question.level === 3 && question.questionType === 2
+                  ).length
+                }{" "}
+                questions
               </div>
             </div>
           </div>
@@ -267,7 +443,23 @@ const CreateExamPaper = () => {
                 return (
                   <div className={`${style.question_answer_div}`}>
                     <div className={`${style.checkbox_column}`}>
-                      <input type="checkbox"></input>
+                      <input
+                        type="checkbox"
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            addQuestion(
+                              question.questionId,
+                              1,
+                              question.questionTypeID
+                            );
+                          } else {
+                            removeQuestion(
+                              question.questionId,
+                              question.questionTypeID
+                            );
+                          }
+                        }}
+                      ></input>
                     </div>
                     <div className={`${style.question_column}`}>
                       <div className={`${style.question_content_div}`}>
@@ -322,7 +514,23 @@ const CreateExamPaper = () => {
                 return (
                   <div className={`${style.question_answer_div}`}>
                     <div className={`${style.checkbox_column}`}>
-                      <input type="checkbox"></input>
+                      <input
+                        type="checkbox"
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            addQuestion(
+                              question.questionId,
+                              2,
+                              question.questionTypeID
+                            );
+                          } else {
+                            removeQuestion(
+                              question.questionId,
+                              question.questionTypeID
+                            );
+                          }
+                        }}
+                      ></input>
                     </div>
                     <div className={`${style.question_column}`}>
                       <div className={`${style.question_content_div}`}>
@@ -378,7 +586,23 @@ const CreateExamPaper = () => {
                 return (
                   <div className={`${style.question_answer_div}`}>
                     <div className={`${style.checkbox_column}`}>
-                      <input type="checkbox"></input>
+                      <input
+                        type="checkbox"
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            addQuestion(
+                              question.questionId,
+                              3,
+                              question.questionTypeID
+                            );
+                          } else {
+                            removeQuestion(
+                              question.questionId,
+                              question.questionTypeID
+                            );
+                          }
+                        }}
+                      ></input>
                     </div>
                     <div className={`${style.question_column}`}>
                       <div className={`${style.question_content_div}`}>
@@ -407,7 +631,17 @@ const CreateExamPaper = () => {
               })}
           </div>
         </div>
+        <button
+          onClick={(e) => {
+            SubmitForm();
+            e.preventDefault();
+          }}
+        >
+          submit
+        </button>
       </form>
+      <label>Variant</label>
+      <input type="number" onChange={(e) => setVariantNumber(e.target.value)} />
     </Wrapper>
   );
 };
