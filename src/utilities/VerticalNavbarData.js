@@ -105,14 +105,14 @@ export const DataTeacher = [
         link: (
             <NavLink
                 className="d-flex flex-sm-row flex-md-column"
-                to="/teacher/exam"
+                to="/teacher/exam/create/info"
                 activeClassName={style.active_link}
                 exact={true}
             >
                 <div className={style.icon}>
                     <Icon icon="file-alt" className="" size="2x"></Icon>
                 </div>
-                <div className={style.title}>Exam</div>
+                <div className={style.title}>Create Exam</div>
             </NavLink>
         ),
     },
@@ -120,14 +120,14 @@ export const DataTeacher = [
         link: (
             <NavLink
                 className="d-flex flex-sm-row flex-md-column"
-                to="/teacher/class"
+                to="/teacher/module/list"
                 activeClassName={style.active_link}
                 exact={true}
             >
                 <div className={style.icon}>
                     <Icon icon="id-card" className="" size="2x"></Icon>
                 </div>
-                <div className={style.title}>Class</div>
+                <div className={style.title}>Module</div>
             </NavLink>
         ),
     },
