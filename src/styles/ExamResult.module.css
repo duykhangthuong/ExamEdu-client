@@ -1,0 +1,25 @@
+.horizontal_line {
+    background-color: black;
+    height: 1px;
+    width: 100%;
+}
+.markPillPassed {
+    width: 75px;
+    min-width: fit-content;
+    border-radius: 35px;
+    padding: 5px;
+    display: inline-block;
+    background-color: #00ff00;
+    color: white;
+    font-weight: bold;
+}
+.markPillNotPassed {
+    width: 75px;
+    min-width: fit-content;
+    border-radius: 35px;
+    padding: 5px;
+    display: inline-block;
+    background-color: red;
+    color: white;
+    font-weight: bold;
+}

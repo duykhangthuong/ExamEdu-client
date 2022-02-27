@@ -7,6 +7,8 @@ import { useUserAuthorization } from "utilities/useAuthorization";
 import CreateExamPaper from "pages/Teacher/CreateExamPaper";
 import ExamList from "pages/Teacher/ExamList";
 import ModuleList from "pages/Teacher/ModuleList";
+import ExamResult from "pages/Teacher/ExamResult";
+import CreateExam from "pages/Teacher/CreateExam";
 const TeacherRoutes = () => {
     const { redirect, path } = useUserAuthorization("teacher");
 
@@ -15,24 +17,42 @@ const TeacherRoutes = () => {
         <>
             <HorizontalNavBar />
             <VerticalNavBar VerticalNavbarData={DataTeacher} />
+
             <Switch>
-                <Route path="/teacher/exam/create/info" exact></Route>
+                {/* Create Exam info */}
+                <Route path="/teacher/exam/create/info" exact>
+                    <CreateExam />
+                </Route>
+
+                {/* Create Exam Paper */}
                 <Route
                     path="/teacher/exam/create/question/:ExamID/:moduleId/:isFinalExam"
                     exact
                 >
                     <CreateExamPaper />
                 </Route>
+
                 <Route path="/teacher/question" exact></Route>
-                <Route path="/teacher/exam/list" exact></Route>
-                <Route path="/teacher/exam/list/result" exact></Route>
-                <Route path="/teacher/class/list" exact>
+
+                {/* Exam result of a class */}
+                <Route path="/teacher/exam/list/result/:ExamID" exact>
+                    <ExamResult />
+                </Route>
+
+                {/* Module list of a teacher */}
+                <Route path="/teacher/module/list" exact>
                     <ModuleList />
                 </Route>
+
+                {/* Exam list of a teacher */}
                 <Route path="/teacher/class/progress_exam/:classModuleId" exact>
                     <ExamList />
                 </Route>
-                <Route path="*"></Route>
+
+                {/* Default Route */}
+                <Route path="*">
+                    <ModuleList />
+                </Route>
             </Switch>
         </>
     );

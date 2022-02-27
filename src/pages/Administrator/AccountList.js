@@ -35,7 +35,7 @@ const AccountList = () => {
 
     //Fetch data của cái bảng
     const [fetchData, fetchResult] = useLazyFetch(
-        `https://localhost:5001/api/Account/list?pageNumber=${currentPage}&pageSize=${pageSize}&searchName=${searchName}`
+        `${API}/Account/list?pageNumber=${currentPage}&pageSize=${pageSize}&searchName=${searchName}`
     );
 
     //Fetch delete account
@@ -88,9 +88,7 @@ const AccountList = () => {
             //nếu người dùng nhấn OK
             if (result.isConfirmed) {
                 //Gọi hàm delete ở dòng 42
-                requestDelete(
-                    `https://localhost:5001/api/account/${deleteId}/${deleteRole}`
-                );
+                requestDelete(`${API}/account/${deleteId}/${deleteRole}`);
             }
         });
     }
