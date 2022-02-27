@@ -6,6 +6,8 @@ import style from "styles/CreateExamPaper.module.css";
 import { API, REQUIRED } from "utilities/constants";
 import { useLazyFetch } from "utilities/useFetch";
 import Swal from "sweetalert2";
+import Loading from "pages/Loading";
+import { useWindowSize } from "utilities/useWindowSize";
 
 const CreateExamPaper = () => {
   const { ExamID } = useParams();
@@ -33,7 +35,7 @@ const CreateExamPaper = () => {
   const [MarkLevel3, setMarkLevel3] = useState(0);
 
   const [variantNumber, setVariantNumber] = useState(1);
-
+  const { width, height } = useWindowSize();
   const addQuestion = (id, level, questionType) => {
     setQuestionListInfor([
       ...questionListInfor,
@@ -54,73 +56,114 @@ const CreateExamPaper = () => {
     );
   };
 
-  const [fetchdata, fetchResult] = useLazyFetch(`${API}/Exam/byHand`, {
-    method: "POST",
-    body: {
-      IsFinal: isFinalExam === "true",
-      VariantNumber: variantNumber,
-      ExamId: ~~ExamID,
-      MCQuestionByLevel: {
-        1: questionListInfor
-          .filter(
-            (question) => question.level === 1 && question.questionType === 1
-          )
-          .map((question) => question.id),
-        2: questionListInfor
-          .filter(
-            (question) => question.level === 2 && question.questionType === 1
-          )
-          .map((question) => question.id),
-        3: questionListInfor
-          .filter(
-            (question) => question.level === 3 && question.questionType === 1
-          )
-          .map((question) => question.id),
+  const [fetchdataByHand, fetchResultByHand] = useLazyFetch(
+    `${API}/Exam/byHand`,
+    {
+      method: "POST",
+      body: {
+        IsFinal: isFinalExam === "true",
+        VariantNumber: variantNumber,
+        ExamId: ~~ExamID,
+        MCQuestionByLevel: {
+          1: questionListInfor
+            .filter(
+              (question) => question.level === 1 && question.questionType === 1
+            )
+            .map((question) => question.id),
+          2: questionListInfor
+            .filter(
+              (question) => question.level === 2 && question.questionType === 1
+            )
+            .map((question) => question.id),
+          3: questionListInfor
+            .filter(
+              (question) => question.level === 3 && question.questionType === 1
+            )
+            .map((question) => question.id),
+        },
+        NumberOfMCQuestionByLevel: {
+          1: ~~noMCQLevel1,
+          2: ~~noMCQLevel2,
+          3: ~~noMCQLevel3,
+        },
+        NonMCQuestionByLevel: {
+          1: questionListInfor
+            .filter(
+              (question) => question.level === 1 && question.questionType === 2
+            )
+            .map((question) => question.id),
+          2: questionListInfor
+            .filter(
+              (question) => question.level === 2 && question.questionType === 2
+            )
+            .map((question) => question.id),
+          3: questionListInfor
+            .filter(
+              (question) => question.level === 3 && question.questionType === 2
+            )
+            .map((question) => question.id),
+        },
+        NumberOfNonMCQuestionByLevel: {
+          1: ~~noEssayLevel1,
+          2: ~~noEssayLevel2,
+          3: ~~noEssayLevel3,
+        },
+        MarkByLevel: {
+          1: parseFloat(MarkLevel1),
+          2: parseFloat(MarkLevel2),
+          3: parseFloat(MarkLevel3),
+        },
       },
-      NumberOfMCQuestionByLevel: {
-        1: ~~noMCQLevel1,
-        2: ~~noMCQLevel2,
-        3: ~~noMCQLevel3,
+      onCompletes: () => {
+        Swal.fire("Success", "Exam paper created", "success");
       },
-      NonMCQuestionByLevel: {
-        1: questionListInfor
-          .filter(
-            (question) => question.level === 1 && question.questionType === 2
-          )
-          .map((question) => question.id),
-        2: questionListInfor
-          .filter(
-            (question) => question.level === 2 && question.questionType === 2
-          )
-          .map((question) => question.id),
-        3: questionListInfor
-          .filter(
-            (question) => question.level === 3 && question.questionType === 2
-          )
-          .map((question) => question.id),
+      onError: (error) => {
+        Swal.fire("Error", error.message, "error");
       },
-      NumberOfNonMCQuestionByLevel: {
-        1: ~~noEssayLevel1,
-        2: ~~noEssayLevel2,
-        3: ~~noEssayLevel3,
-      },
-      MarkByLevel: {
-        1: parseFloat(MarkLevel1),
-        2: parseFloat(MarkLevel2),
-        3: parseFloat(MarkLevel3),
-      },
-    },
-    onCompletes: () => {
-      Swal.fire("Success", "Exam paper created", "success");
-    },
-    onError: (error) => {
-      Swal.fire("Error", error.message, "error");
-    },
-  });
+    }
+  );
 
-  const SubmitForm = () => {
+  const [fetchdataAuto, fetchResultAuto] = useLazyFetch(
+    `${API}/Exam/autoGenerate`,
+    {
+      method: "POST",
+      body: {
+        IsFinal: isFinalExam === "true",
+        VariantNumber: variantNumber,
+        ExamId: ~~ExamID,
+        NumberOfMCQuestionByLevel: {
+          1: ~~noMCQLevel1,
+          2: ~~noMCQLevel2,
+          3: ~~noMCQLevel3,
+        },
+        NumberOfNonMCQuestionByLevel: {
+          1: ~~noEssayLevel1,
+          2: ~~noEssayLevel2,
+          3: ~~noEssayLevel3,
+        },
+        MarkByLevel: {
+          1: parseFloat(MarkLevel1),
+          2: parseFloat(MarkLevel2),
+          3: parseFloat(MarkLevel3),
+        },
+      },
+      onCompletes: () => {
+        Swal.fire("Success", "Exam paper created", "success");
+      },
+      onError: (error) => {
+        Swal.fire("Error", error.message, "error");
+      },
+    }
+  );
+
+  const SubmitFormByHand = () => {
     Swal.fire("Success", "Processing", "success");
-    fetchdata();
+    fetchdataByHand();
+  };
+
+  const SubmitFormAuto = () => {
+    Swal.fire("Success", "Processing", "success");
+    fetchdataAuto();
   };
 
   //Question Level 1
@@ -189,6 +232,8 @@ const CreateExamPaper = () => {
       return;
     }
   };
+  if(width < 1400)
+    return <Wrapper>Not support small screen</Wrapper>
   // `${API}/Question/${fetchExamResult.data["moduleId"]}/3/${fetchExamResult.data["isFinalExam"]}`
   return (
     <Wrapper className={style.wrapper}>
@@ -631,13 +676,31 @@ const CreateExamPaper = () => {
               })}
           </div>
         </div>
+        <label style={{ color: "#3D5AF1", fontSize: "20px" }}>Variant</label>
+        <input
+          type="number"
+          className={`${style.input_box}`}
+          onChange={(e) => setVariantNumber(e.target.value)}
+        />
+        <br></br>
         <button
+          style={{ marginRight: "31rem" }}
+          className={`${style.btn_submit}`}
           onClick={(e) => {
-            SubmitForm();
+            SubmitFormAuto();
             e.preventDefault();
           }}
         >
-          submit
+          Random From Question Bank
+        </button>
+        <button
+          onClick={(e) => {
+            SubmitFormByHand();
+            e.preventDefault();
+          }}
+          className={`${style.btn_submit}`}
+        >
+          Create From Picked Question
         </button>
       </form>
       <label>Variant</label>
