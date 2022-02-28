@@ -24,9 +24,9 @@ const KhaMinh = () => {
         },
     ];
     return (
-        <div>
-            <Loading />
-        </div>
+        <Wrapper>
+            <MultiStepFormProgressBar steps={steps} currentStep={1} />
+        </Wrapper>
     );
 };
 
