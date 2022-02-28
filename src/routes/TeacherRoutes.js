@@ -50,10 +50,6 @@ const TeacherRoutes = () => {
                     <ExamList />
                 </Route>
 
-                <Route path="/teacher/test" exact>
-                    <KhaMinh />
-                </Route>
-
                 {/* Default Route */}
                 <Route path="*">
                     <ModuleList />
