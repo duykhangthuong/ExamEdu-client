@@ -3,13 +3,14 @@ import HorizontalNavBar from "components/HorizontalNavBar";
 import VerticalNavBar from "components/VerticalNavBar";
 import Exam from "pages/Student/Exam";
 import ExamSchedule from "pages/Student/ExamSchedule";
-import ExamRoutes from "routes/ExamRoutes"
+import ExamRoutes from "routes/ExamRoutes";
 
 import MarkReport from "pages/Student/MarkReport";
 import React from "react";
 
 import { useUserAuthorization } from "utilities/useAuthorization";
 import { DataStudent } from "utilities/VerticalNavbarData";
+import KhaMinh from "pages/KhaMinh";
 const StudentRoutes = () => {
     const { redirect, path } = useUserAuthorization("student");
 
@@ -34,10 +35,10 @@ const StudentRoutes = () => {
                 <Route path="/student/mark/report" exact>
                     <MarkReport />
                 </Route>
+
                 <Route path="*">
                     <ExamSchedule />
                 </Route>
-                
             </Switch>
         </>
     );
