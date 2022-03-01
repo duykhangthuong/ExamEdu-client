@@ -33,6 +33,15 @@
     transition: 0.2s linear;
 }
 
+.btn_end {
+    background-color: var(--color-orange);
+    border: none;
+    border-radius: 16px;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    opacity: 0.8;
+}
+
 .schedule_container_sub {
     display: flex;
     align-items: center;

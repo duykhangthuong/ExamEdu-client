@@ -3,7 +3,8 @@ import { API } from "utilities/constants";
 import styles from "../../styles/Exam.module.css";
 import Icon from "components/Icon";
 
-import { useState, useEffect, useRef } from "react";
+import { useParams } from "react-router-dom";
+import { useState, useEffect, useRef, useCallback} from "react";
 import { useLazyFetch, useFetch } from "utilities/useFetch";
 import useOutsideClick from "utilities/useOutsideClick";
 import { useSelector } from "react-redux";
@@ -36,7 +37,6 @@ function ExamHeader({ result, submitAnswer }) {
             clearInterval(myInterval);
         };
     });
-    // if(minutes===0 && seconds===0 ) submitAnswer()
     return (
         <header
             className={`d-md-flex justify-content-md-between ${styles.exam_header}`}
@@ -130,16 +130,32 @@ function NumberQuestion({ number, onClick, color }) {
 
 function Exam() {
     const history = useHistory();
-    let examId = 6;
+    const param = useParams();
+    let examId = param.examId;
     const { data, loading, error } = useFetch(`${API}/ExamQuestions/${examId}`);
 
     const user = useSelector((state) => state.user.accountId);
-
     const [question, setQuestion] = useState(0);
     const [answerChecked, setAnswerChecked] = useState();
     const [listAnswer, setListAnswer] = useState([]);
     const [essayAnswer, setEssayAnswer] = useState("");
     const [reviewQuestion, setReviewQuestion] = useState([]);
+
+    // console.log("Before: ");
+    // console.log(data?.questionAnswer[0].answers);
+    const [, updateState] = useState();
+    const forceUpdate = useCallback(() => updateState({}), []);
+    useEffect(() => {
+        data?.questionAnswer.map((question) => {
+            question.answers.sort(
+                (a, b) => 0.5 - Math.random()
+            );
+        });
+        forceUpdate();
+    }, [loading]);
+    // console.log("After: ");
+    // console.log(data?.questionAnswer[0].answers);
+
     const addAnswerToList = (answer, examQuestion) => {
         answer = String(answer);
         let arrId = data?.questionAnswer[question].answers.map((a) =>
@@ -230,7 +246,7 @@ function Exam() {
         );
     }, [question]);
 
-    //hàm để hiện lên SweetAlert để hỏi lại khi nhấn xóa account
+    //hàm để hiện lên SweetAlert để hỏi lại khi nhấn submit
     function showModalConfirmSubmit() {
         Swal.fire({
             title: "Are you sure?",
@@ -244,7 +260,6 @@ function Exam() {
                 popup: "roundCorner",
             },
         }).then((result) => {
-            console.log(listAnswer);
             //nếu người dùng nhấn OK
             if (result.isConfirmed) {
                 submitAnswer();
