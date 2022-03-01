@@ -49,9 +49,6 @@ const TeacherRoutes = () => {
                 <Route path="/teacher/class/progress_exam/:classModuleId" exact>
                     <ExamList />
                 </Route>
-                <Route path="/teacher/textanswer" exact>
-                    <TextAnswer />
-                </Route>
                 {/* Default Route */}
                 <Route path="*">
                     <ModuleList />
