@@ -36,7 +36,7 @@ const TeacherRoutes = () => {
                 <Route path="/teacher/question" exact></Route>
 
                 {/* Exam result of a class */}
-                <Route path="/teacher/exam/list/result/:ExamID" exact>
+                <Route path="/teacher/exam/list/result/:ExamID/:ModuleID" exact>
                     <ExamResult />
                 </Route>
 

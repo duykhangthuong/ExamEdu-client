@@ -67,6 +67,8 @@ const ExamList = () => {
                             date={exam.examDay}
                             duration={exam.durationInMinute}
                             isCancelled={exam.isCancelled}
+                            examId={exam.examId}
+                            moduleId={data.module.moduleId}
                             key={exam.examId}
                         />
                     );
@@ -84,7 +86,12 @@ const ExamList = () => {
 
 export default ExamList;
 
-const ExamCard = ({ date, duration, isCancelled }) => {
+const ExamCard = ({ date, duration, isCancelled, examId, moduleId }) => {
+    const history = useHistory();
+    function onClickViewDetail(examId, moduleId) {
+        history.push(`/teacher/exam/list/result/${examId}/${moduleId}`);
+    }
+
     return (
         <div className={styles.exam_card_wrapper}>
             <article className={styles.exam_card}>
@@ -117,7 +124,7 @@ const ExamCard = ({ date, duration, isCancelled }) => {
                     </div>
                 </div>
                 {/* Button */}
-                <Button>
+                <Button onClick={() => onClickViewDetail(examId, moduleId)}>
                     View Detail <Icon icon="arrow-right" className="ms-2" />
                 </Button>
             </article>
