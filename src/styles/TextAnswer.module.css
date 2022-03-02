@@ -1,0 +1,39 @@
+.heading{
+    background-color: var(--color-lavender-light);
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    padding: 0.5rem;
+    color: var(--color-gray);
+    font-weight: 100;
+}
+.modal{
+    width: 87vw;
+    height: 35rem;
+    text-align: left!important;
+}
+.questionItem{
+    padding: 1rem;
+    border: 1px solid #212529;
+    margin: 1rem;
+}
+.studentAnswer{
+    padding: 10px;
+    background-color: var(--color-silver-medal);
+}
+.questionWrapper{
+    height:27rem;
+    overflow: scroll;
+}
+.btn_submit{
+    border-radius: 18px!important;
+    width: 7.5rem;
+    margin-right: 1rem;
+    margin-left: 1rem;
+    padding: 0.25rem 0.75rem !important;
+    background-color: var(--color-blue)!important;
+    color: white !important;
+}
+
+.input_box{
+    display: block;
+}
