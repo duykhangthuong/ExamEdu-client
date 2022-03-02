@@ -72,7 +72,7 @@ export const DataStudent = [
         link: (
             <NavLink
                 className="d-flex flex-sm-row flex-md-column"
-                to="/student/ExamSchedule"
+                to="/student/exam/schedule"
                 activeClassName={style.active_link}
                 exact={true}
             >
@@ -87,7 +87,7 @@ export const DataStudent = [
         link: (
             <NavLink
                 className="d-flex flex-sm-row flex-md-column"
-                to="/student/MarkReport"
+                to="/student/module/list"
                 activeClassName={style.active_link}
                 exact={true}
             >

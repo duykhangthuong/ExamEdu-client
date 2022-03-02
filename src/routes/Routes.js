@@ -9,6 +9,8 @@ import ErrorPage from "pages/ErrorPage";
 import ExamRoutes from "./ExamRoutes";
 import TeacherRoutes from "./TeacherRoutes";
 import KhaMinh from "pages/KhaMinh";
+import MarkReport from "pages/Student/MarkReport";
+import ModuleList from "pages/Student/ModuleList";
 
 const Routes = () => {
     return (
