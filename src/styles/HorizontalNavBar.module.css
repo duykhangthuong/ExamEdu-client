@@ -24,6 +24,18 @@
     cursor: pointer;
 }
 
+.icon_container_noHover {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 35px;
+    height: 35px;
+    background-color: var(--color-silver-medal);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
 .icon_container.bell_container {
     position: relative;
     color: var(--color-gray);
@@ -75,10 +87,60 @@
     color: #61d2dc;
 }
 
+/* PC Notification Style */
+.showNotifi:hover .frame_Notifi {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* .showNotifi:hover .icon-Color {
+    color: var(--color-cyan) !important;
+} */
+
+.frame_Notifi {
+    padding: 0 2em 0 0;
+    right: 0;
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+}
+
+.body_Notifi {
+    background-color: white;
+    width: 20rem;
+    border-radius: 1rem;
+}
+
+.scroll_Notifi {
+    max-height: 14rem;
+    overflow-y: scroll;
+    overscroll-behavior: contain;
+    background-color: white;
+}
+
+.notifi_list:hover{
+    background-color: var(--bg);
+}
+/* Mobile User Menu Styles */
+.frameMobile_User {
+    padding: 1.5rem 0 0 0;
+    position: absolute;
+    right: 0;
+    left: 0;
+    transition: all 0.3s ease-in-out;
+}
+
+.bodyMobile_User {
+    width: 100%;
+    background-color: var(--bg);
+    border-radius: 1rem;
+}
+
 @media screen and (min-width: 768px) {
     .navbar {
         display: flex;
         justify-content: flex-end;
         align-items: center;
     }
+
 }
