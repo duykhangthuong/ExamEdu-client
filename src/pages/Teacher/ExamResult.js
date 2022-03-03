@@ -35,6 +35,7 @@ const ExamResult = () => {
     ];
 
     const [studentId, setStudentId] = useState();
+    const [studentEmail, setStudentEmail] = useState();
     const [studentName, setStudentName] = useState("");
     const [examQuestionId, setExamQuestionId] = useState([]);
     const [searchName, setSearchName] = useState("");
@@ -50,6 +51,15 @@ const ExamResult = () => {
     const { data, loading, error } = useFetch(
         `${API}/ClassModule/${param.classModuleId}`
     );
+    const [fetchNotifcation, fetchNotifcationResult] = useLazyFetch("");
+    //Fetch classModule info
+    // const { data, loading, error } = useFetch(
+    //     `${API}/ClassModule/${param.classModuleId}`,
+    //     {
+    //         onCompletes: (data) => {},
+    //         onError: (error) => {},
+    //     }
+    // );
 
     useEffect(() => {
         fetchData();
@@ -84,7 +94,7 @@ const ExamResult = () => {
             examQuestionId: examQuestionId[index],
         };
     });
-    //Call API to post mark
+    //Call API to    post mark
     function handleUpdateScore() {
         postScore(
             `${API}/Mark/textAnswer?studentId=${studentId}&examId=${param.ExamID}`,
@@ -97,6 +107,14 @@ const ExamResult = () => {
                         "Grade text answer successfully",
                         "success"
                     );
+                    fetchNotifcation(`${API}/notify/trainee`, {
+                        method: "POST",
+                        body: {
+                            sendTo: studentEmail,
+                            user: "Notification",
+                            message: `Your text answer in ${fetchResult.data?.payload[0].examName} have been grade`,
+                        },
+                    });
                     fetchData();
                 },
                 onError: (error) => {
@@ -221,12 +239,13 @@ const ExamResult = () => {
                         </div>
                     ),
                     grade: (
-                        //Nút chấm điểm tự luận, onClick sẽ trả về studentId vào State ở dòng 31
+                        //Nút chấm điểm tự luận, onClick sẽ trả về studentId vào State ở dòng 37
                         <div
                             className="d-flex justify-content-center"
                             onClick={() => {
                                 setStudentName(item.studentName);
                                 setStudentId(item.studentId);
+                                setStudentEmail(item.studentEmail);
                                 setIsClicked(true);
                                 fetchDataTA(
                                     `${API}/Answer/TextAnswer?studentId=${item.studentId}&examId=${param.ExamID}`
@@ -291,7 +310,7 @@ const ExamResult = () => {
                                     <div>
                                         <i>
                                             Max score for this quesition is{" "}
-                                            <b>{ans.questionMark}</b>
+                                            <b>{ans.questionMark.toFixed(2)}</b>
                                         </i>
                                         <InputBox
                                             label="Score"
