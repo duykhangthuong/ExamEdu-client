@@ -32,7 +32,7 @@ const StudentRoutes = () => {
                     <ExamSchedule />
                 </Route>
 
-                <Route path="/student/mark/report" exact>
+                <Route path="/student/mark" exact>
                     <MarkReport />
                 </Route>
 
