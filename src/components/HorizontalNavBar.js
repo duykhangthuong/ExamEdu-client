@@ -48,7 +48,6 @@ const HorizontalNavBar = () => {
     );
 
     useEffect(() => {
-        console.log(user.email);
         if (user?.role.toLowerCase() == "Student") {
             fetchNotifi();
         }
