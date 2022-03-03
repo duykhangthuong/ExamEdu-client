@@ -293,7 +293,7 @@ const ExamResult = () => {
                                     <div>
                                         <i>
                                             Max score for this quesition is{" "}
-                                            <b>{ans.questionMark}</b>
+                                            <b>{ans.questionMark.toFixed(2)}</b>
                                         </i>
                                         <InputBox
                                             label="Score"
