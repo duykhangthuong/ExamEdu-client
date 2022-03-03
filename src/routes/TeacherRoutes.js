@@ -9,6 +9,7 @@ import ExamList from "pages/Teacher/ExamList";
 import ModuleList from "pages/Teacher/ModuleList";
 import ExamResult from "pages/Teacher/ExamResult";
 import CreateExam from "pages/Teacher/CreateExam";
+import TextAnswer from "pages/Teacher/TextAnswer";
 const TeacherRoutes = () => {
     const { redirect, path } = useUserAuthorization("teacher");
 

@@ -11,6 +11,7 @@ import React from "react";
 import { useUserAuthorization } from "utilities/useAuthorization";
 import { DataStudent } from "utilities/VerticalNavbarData";
 import KhaMinh from "pages/KhaMinh";
+import ModuleList from "pages/Student/ModuleList";
 const StudentRoutes = () => {
     const { redirect, path } = useUserAuthorization("student");
 
@@ -24,15 +25,14 @@ const StudentRoutes = () => {
                     <ExamSchedule />
                 </Route>
 
-                {/* Chưa xong */}
                 <Route path="/student/exam" exact>
                     <ExamRoutes />
                 </Route>
                 <Route path="/student/module/list" exact>
-                    <ExamSchedule />
+                    <ModuleList />
                 </Route>
 
-                <Route path="/student/mark" exact>
+                <Route path="/student/mark/report/:moduleID" exact>
                     <MarkReport />
                 </Route>
 

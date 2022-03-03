@@ -1,16 +1,16 @@
 .butn{
     background: inherit;
     border: none;
-    color: #3D5AF1;
+    color: var(--color-blue);
     margin-top: 1vw;
     font-size: 20px;
     margin-left: 1.5vw;
 }
 .blue_color_text{
-    color: #3D5AF1;
+    color: var(--color-blue);
 }
 .title{
-    color: #3D5AF1;
+    color: var(--color-blue);
     width: fit-content;
     margin: 0 auto;
     margin-top: 1rem;
@@ -52,7 +52,7 @@
     padding-left: 1rem;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.16);
     outline: none;
-    background-color: #3D5AF1;
+    background-color: var(--color-blue);
     color: white;
 }
 .question_number_box_div{
@@ -85,7 +85,7 @@
     margin-left: 1.5vw;
     margin-top: 1.5vw;
     font-size: 20px;
-    color: #3D5AF1;
+    color: var(--color-blue);
 }
 .dropdown_title{
     width: 65vw;
@@ -98,7 +98,7 @@
     padding-left: 1rem;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.16);
     outline: none;
-    background-color: #3D5AF1;
+    background-color: var(--color-blue);
     color: white;
 }
 .dropdown_title_div{
@@ -167,7 +167,7 @@
     
 }
 .btn_submit{
-    background: #3D5AF1;
+    background: var(--color-blue);
     border: none;
     color: white;
     margin-top: 1vw;

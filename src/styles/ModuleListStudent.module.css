@@ -1,0 +1,14 @@
+.frame {
+    border-radius: 20px;
+    width: 70%;
+    margin: auto;
+    color: var(--color-dark-blue);
+    box-shadow: var(--shadow-heavy);
+}
+@media screen and (min-width: 768px) {
+    .frame {
+        width: 30%;
+        margin: 0 3rem 0 0;
+        height: fit-content;
+    }
+}
