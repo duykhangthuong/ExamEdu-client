@@ -35,7 +35,7 @@ const ExamResult = () => {
     ];
 
     const [studentId, setStudentId] = useState();
-    const [studentName,setStudentName]=useState("");
+    const [studentName, setStudentName] = useState("");
     const [examQuestionId, setExamQuestionId] = useState([]);
     const [searchName, setSearchName] = useState("");
     const [currentPage, setcurrentPage] = useState(1);
@@ -46,14 +46,10 @@ const ExamResult = () => {
         `${API}/exam/result/${param.ExamID}?pageNumber=${currentPage}&pageSize=${pageSize}&searchName=${searchName}`
     );
 
-    //Fetch classModule info
-    // const { data, loading, error } = useFetch(
-    //     `${API}/ClassModule/${param.classModuleId}`,
-    //     {
-    //         onCompletes: (data) => {},
-    //         onError: (error) => {},
-    //     }
-    // );
+    // Fetch classModule info
+    const { data, loading, error } = useFetch(
+        `${API}/ClassModule/${param.classModuleId}`
+    );
 
     useEffect(() => {
         fetchData();
@@ -164,7 +160,7 @@ const ExamResult = () => {
                         style={{ color: "var(--color-dark-blue)" }}
                     >
                         <Icon icon="id-card" className="me-2" />
-                        {"chờ Minh pass param"}
+                        {data?.class.className}
                     </div>
                     {/* Module code and name */}
                     <div
@@ -172,7 +168,7 @@ const ExamResult = () => {
                         style={{ color: "var(--color-dark-blue)" }}
                     >
                         <Icon icon="cube" className="me-2" />
-                        {`${"chờ Minh pass param"}`}
+                        {`${data?.module.moduleCode} - ${data?.module.moduleName}`}
                     </div>
                 </div>
                 <div className="d-flex flex-md-column">
@@ -229,7 +225,7 @@ const ExamResult = () => {
                         <div
                             className="d-flex justify-content-center"
                             onClick={() => {
-                                setStudentName(item.studentName)
+                                setStudentName(item.studentName);
                                 setStudentId(item.studentId);
                                 setIsClicked(true);
                                 fetchDataTA(
@@ -276,7 +272,9 @@ const ExamResult = () => {
                         onClick={() => setIsClicked(false)}
                     ></Icon>
                 </header>
-                <div className="text-center mt-2">Student Name: {studentName}</div>
+                <div className="text-center mt-2">
+                    Student Name: {studentName}
+                </div>
                 <form onSubmit={updateScore.onSubmit}>
                     <div className={`${styleTA.questionWrapper}`}>
                         {fetchDataResultTA.data?.map((ans, index) => {

@@ -11,11 +11,11 @@ const KhaMinh = () => {
             stepName: "Basic Informationsssss",
         },
         {
-            stepIcon: "trash-alt",
+            stepIcon: "folder-open",
             stepName: "asdasd",
         },
         {
-            stepIcon: "trash-alt",
+            stepIcon: "user-circle",
             stepName: "Information",
         },
         {
@@ -25,7 +25,7 @@ const KhaMinh = () => {
     ];
     return (
         <Wrapper>
-            <MultiStepFormProgressBar steps={steps} currentStep={1} />
+            <MultiStepFormProgressBar steps={steps} currentStep={4} />
         </Wrapper>
     );
 };
