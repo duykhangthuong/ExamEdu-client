@@ -15,6 +15,7 @@ const ModuleList = () => {
     const history = useHistory();
     const { data, loading, error } = useFetch(`${API}/Module/${user}`);
     function onClickMarkReport(moduleId) {
+        console.log(moduleId);
         history.push(`/student/mark/report/${moduleId}`);
     }
     if (loading) {

@@ -46,6 +46,11 @@ const ExamResult = () => {
     const [fetchData, fetchResult] = useLazyFetch(
         `${API}/exam/result/${param.ExamID}?pageNumber=${currentPage}&pageSize=${pageSize}&searchName=${searchName}`
     );
+
+    // Fetch classModule info
+    const { data, loading, error } = useFetch(
+        `${API}/ClassModule/${param.classModuleId}`
+    );
     const [fetchNotifcation, fetchNotifcationResult] = useLazyFetch("");
     //Fetch classModule info
     // const { data, loading, error } = useFetch(
@@ -102,7 +107,7 @@ const ExamResult = () => {
                         "Grade text answer successfully",
                         "success"
                     );
-                    fetchNotifcation(`${API}/notify/trainee`,{
+                    fetchNotifcation(`${API}/notify/trainee`, {
                         method: "POST",
                         body: {
                             sendTo: studentEmail,
@@ -173,7 +178,7 @@ const ExamResult = () => {
                         style={{ color: "var(--color-dark-blue)" }}
                     >
                         <Icon icon="id-card" className="me-2" />
-                        {"chờ Minh pass param"}
+                        {data?.class.className}
                     </div>
                     {/* Module code and name */}
                     <div
@@ -181,7 +186,7 @@ const ExamResult = () => {
                         style={{ color: "var(--color-dark-blue)" }}
                     >
                         <Icon icon="cube" className="me-2" />
-                        {`${"chờ Minh pass param"}`}
+                        {`${data?.module.moduleCode} - ${data?.module.moduleName}`}
                     </div>
                 </div>
                 <div className="d-flex flex-md-column">
