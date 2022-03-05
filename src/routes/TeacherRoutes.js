@@ -48,11 +48,12 @@ const TeacherRoutes = () => {
                 <Route path="/teacher/class/progress_exam/:classModuleId" exact>
                     <ExamList />
                 </Route>
-
                 {/* Default Route */}
                 <Route path="*">
                     <ModuleList />
                 </Route>
+               
+                <Route path="*"></Route>
             </Switch>
         </>
     );

@@ -703,8 +703,6 @@ const CreateExamPaper = () => {
           Create From Picked Question
         </button>
       </form>
-      <label>Variant</label>
-      <input type="number" onChange={(e) => setVariantNumber(e.target.value)} />
     </Wrapper>
   );
 };

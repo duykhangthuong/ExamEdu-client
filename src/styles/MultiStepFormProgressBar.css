@@ -75,6 +75,7 @@
     color: var(--color-blue);
     text-align: right;
     margin-right: 1rem;
+    display: inline-block;
 }
 .oneStep {
     margin-bottom: 2.5rem;
@@ -86,8 +87,11 @@
 }
 
 .titleIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     background: white;
-    padding: 0.5rem 0.8rem;
+    /* padding: 0.5rem 0.5rem; */
     margin-bottom: 1.2rem;
     border-radius: 50%;
     font-size: 1.4rem;
@@ -95,14 +99,28 @@
     /* margin-left: 2rem; */
     position: relative;
     z-index: 10;
+    /* overflow: hidden; */
+    width: 3rem;
+    height: 3rem;
 }
 .titleIcon::before {
     content: "";
     width: 2px;
-    height: 6rem;
-    top: -1rem;
+    height: 3rem;
+    top: -3rem;
     position: absolute;
-    left: 1.27rem;
+    left: 1.45rem;
+    background-color: var(--shadow-color);
+    z-index: -10;
+}
+
+.titleIcon::after {
+    content: "";
+    width: 2px;
+    height: 1.5rem;
+    bottom: -1.5rem;
+    position: absolute;
+    left: 1.45rem;
     background-color: var(--shadow-color);
     z-index: -10;
 }
