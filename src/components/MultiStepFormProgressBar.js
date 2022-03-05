@@ -34,9 +34,10 @@ import Icon from "./Icon";
 const MultiStepFormProgressBar = ({
     steps = [{ stepIcon: [""], stepName: "" }],
     currentStep,
+    className = "",
 }) => {
     return (
-        <div className="left__container">
+        <div className={className}>
             {steps.map((step, index) => {
                 return (
                     <React.Fragment key={index}>
