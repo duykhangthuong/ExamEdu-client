@@ -32,7 +32,7 @@ const ExamSchedule = () => {
     }
 
     return (
-        <Wrapper className="overflow-auto">
+        <Wrapper>
             {/* Date */}
             <div className="txt-blue">
                 {moment(moment().toDate()).format("dddd, D MMMM yyyy")}
@@ -40,7 +40,7 @@ const ExamSchedule = () => {
             {/* Title */}
             <Heading className="txt-blue">Your upcoming exam</Heading>
             {/* Schedule container */}
-            <div className="overflow-auto mb-5" style={{ maxheight: "70%" }}>
+            <div className="mb-5" style={{ maxheight: "70%" }}>
                 {data?.payload.map((data, index) => {
                     return (
                         <Schedule
@@ -51,6 +51,7 @@ const ExamSchedule = () => {
                             subjectName={data.moduleCode}
                             alottedTime={data.durationInMinute}
                             examId={data.examId}
+                            password={data.password}
                             key={index}
                         />
                     );
@@ -69,8 +70,30 @@ const Schedule = ({
     subjectName,
     alottedTime,
     examId,
+    password,
 }) => {
     const history = useHistory();
+    function handleInputExamPassword(password) {
+        //If there is a password, pop up the dialog box to enter password else go straight to exam
+        if (!!password) {
+            Swal.fire({
+                title: "Enter exam password",
+                input: "password",
+                confirmButtonText: "Start Exam",
+            }).then((result) => {
+                //If Start Exam button is clicked then check if password is correct
+                if (result.isConfirmed) {
+                    if (result.value === password) {
+                        history.push(`/student/exam/${examId}`);
+                    } else {
+                        Swal.fire("Wrong password", "", "error");
+                    }
+                }
+            });
+        } else {
+            history.push(`/student/exam/${examId}`);
+        }
+    }
     function handleStartExam() {
         //if exam day is today and current time is between exam time and exam time + allotted time then start exam
         if (
@@ -80,7 +103,7 @@ const Schedule = ({
                 moment(time).add(alottedTime, "minutes")
             )
         ) {
-            history.push(`/student/exam/${examId}`);
+            handleInputExamPassword(password);
         } else {
             Swal.fire("Exam not started yet", "", "info");
         }
@@ -128,7 +151,11 @@ const Schedule = ({
                         {/* Start button container */}
                         {/* Display start button only if exam date is in the future.
                         If not, display ended */}
-                        {moment(time).isAfter(moment()) ? (
+                        {moment(time).isAfter(moment()) ||
+                        moment().isBetween(
+                            moment(time),
+                            moment(time).add(alottedTime, "minutes")
+                        ) ? (
                             <div>
                                 <button
                                     className={`shadow-light ${styles.btn_start}`}
