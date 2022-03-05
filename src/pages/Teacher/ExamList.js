@@ -28,6 +28,7 @@ const ExamList = () => {
     const [fetchData, fetchResult] = useLazyFetch(
         `${API}/Exam/progressExam/${param.classModuleId}?pageNumber=${currentPage}&pageSize=${pageSize}`
     );
+    console.log(fetchResult);
 
     function onAddButtonClick() {
         history.push("/teacher/exam/create/info");
@@ -68,7 +69,8 @@ const ExamList = () => {
                             duration={exam.durationInMinute}
                             isCancelled={exam.isCancelled}
                             examId={exam.examId}
-                            classModuleId={param.classModuleId}
+                            moduleId={data.module.moduleId}
+                            examName={exam.examName}
                             key={exam.examId}
                         />
                     );
@@ -86,10 +88,17 @@ const ExamList = () => {
 
 export default ExamList;
 
-const ExamCard = ({ date, duration, isCancelled, examId, classModuleId }) => {
+const ExamCard = ({
+    date,
+    duration,
+    isCancelled,
+    examId,
+    moduleId,
+    examName,
+}) => {
     const history = useHistory();
-    function onClickViewDetail(examId, classModuleId) {
-        history.push(`/teacher/exam/list/result/${examId}/${classModuleId}`);
+    function onClickViewDetail(examId, moduleId) {
+        history.push(`/teacher/exam/list/result/${examId}/${moduleId}`);
     }
 
     return (
@@ -108,9 +117,9 @@ const ExamCard = ({ date, duration, isCancelled, examId, classModuleId }) => {
                     <Icon icon="check-circle" className={styles.check_icon} />
                 )}
                 {/* Progress test */}
-                <div>
+                <div className="d-flex flex-column justify-content-center align-items-center">
                     <Heading size="3" className="mb-3">
-                        Progress Test
+                        {examName}
                     </Heading>
                     {/* Date time */}
                     <div className="mb-3">
@@ -124,9 +133,7 @@ const ExamCard = ({ date, duration, isCancelled, examId, classModuleId }) => {
                     </div>
                 </div>
                 {/* Button */}
-                <Button
-                    onClick={() => onClickViewDetail(examId, classModuleId)}
-                >
+                <Button onClick={() => onClickViewDetail(examId, moduleId)}>
                     View Detail <Icon icon="arrow-right" className="ms-2" />
                 </Button>
             </article>

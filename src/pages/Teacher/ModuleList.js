@@ -16,7 +16,9 @@ const ModuleList = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 5;
 
-    const { data, loading, error } = useFetch(`${API}/Teacher/ClassModule/1`);
+    const { data, loading, error } = useFetch(
+        `${API}/Teacher/ClassModule/${teacher.accountId}`
+    );
 
     if (loading) {
         return <Wrapper>Loading</Wrapper>;
