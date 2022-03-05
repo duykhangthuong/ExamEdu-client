@@ -16,7 +16,7 @@ const ModuleList = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 5;
 
-    const { data, loading, error } = useFetch(
+    const { data, loading } = useFetch(
         `${API}/Teacher/ClassModule/${teacher.accountId}`
     );
 
@@ -64,7 +64,7 @@ const ModuleCard = ({ moduleName, classes }) => {
         <article className={styles.module_card}>
             {/* Module name */}
             <div className="d-flex justify-content-between align-items-center">
-                <Heading style={{ color: "var(--color-blue)" }}>
+                <Heading size={2} style={{ color: "var(--color-blue)" }}>
                     {moduleName}
                 </Heading>
                 <Icon
