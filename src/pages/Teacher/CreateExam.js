@@ -169,7 +169,7 @@ const CreateExam = () => {
                         },
                     ]}
                     currentStep={formStep}
-                    className={`d-flex flex-column justify-content-center me-3`}
+                    className={`d-flex flex-column justify-content-center me-3 mt-5`}
                 />
                 {/* vertical line */}
                 <div className={styles.vertical_line}></div>
