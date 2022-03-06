@@ -94,6 +94,7 @@ const ExamCard = ({
     isCancelled,
     examId,
     moduleId,
+    classModuleId,
     examName
 }) => {
     const history = useHistory();

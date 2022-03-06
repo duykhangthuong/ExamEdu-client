@@ -33,7 +33,17 @@ const TeacherRoutes = () => {
                     <CreateExamPaper />
                 </Route>
 
-                <Route path="/teacher/question" exact>
+                {/* Add Question to Bank */}
+                <Route path="/teacher/question" exact></Route>
+
+                {/* Xem các request đã được giao */}
+                <Route path="/teacher/question/request" exact></Route>
+
+                {/* Xử lí request add question */}
+                <Route path="/teacher/question/process" exact></Route>
+
+                {/* Trưởng bộ môn phân công duyệt duyệt request */}
+                <Route path="/teacher/question/assign" exact>
                     <RequestAddQuestionBank />
                 </Route>
 

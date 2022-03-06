@@ -6,7 +6,7 @@ import Table from "components/Table";
 import Wrapper from "components/Wrapper";
 import React, { useEffect, useRef } from "react";
 import { useState } from "react";
-import { useLazyFetch } from "utilities/useFetch";
+import { useLazyFetch, useFetch } from "utilities/useFetch";
 import { useWindowSize } from "utilities/useWindowSize";
 import { API } from "utilities/constants";
 import { useSelector } from "react-redux";
@@ -15,21 +15,59 @@ import Loading from "pages/Loading";
 import OurModal from "components/OurModal";
 import useOutsideClick from "utilities/useOutsideClick";
 import style from "styles/RequestAddQuestionBank.module.css";
+import swal from "sweetalert2";
 const RequestAddQuestionBank = () => {
     const teacher = useSelector((store) => store.user);
     const size = useWindowSize();
     const [searchName, setSearchName] = useState("");
     const [currentPage, setcurrentPage] = useState(1);
+    const [selectedTeacherId, setSelectedTeacherId] = useState();
     const pageSize = 5;
     const [currentRequest, setCurrentRequest] = useState();
 
     const modalRef = useRef(null);
     let { isClicked, setIsClicked } = useOutsideClick(modalRef);
 
+    const { data1, loading1, error1 } = useFetch(
+        `${API}/Teacher/check/${teacher.accountId}`
+    );
+
     ///api/Question/requestList
     const [fetchData, fetchResult] = useLazyFetch(
         `${API}/Question/requestList?id=${teacher.accountId}&pageNumber=${currentPage}&pageSize=${pageSize}&searchName=${searchName}`
     );
+
+    //hàm assign
+    const [requestAssign, requestResult] = useLazyFetch("", {
+        method: "put",
+        //Khi fetch xong, status code  == 200
+        onCompletes: (data) => {
+            swal.fire({
+                titleText: "Assined successfully!",
+                icon: "success",
+                customClass: {
+                    popup: "roundCorner"
+                }
+            });
+            setSelectedTeacherId();
+            fetchData();
+        },
+        //Khi fetch ko được
+        onError: (error) => {
+            swal.fire({
+                titleText: "Operation failed!",
+                text: "There is an error when assigning request to teacher",
+                icon: "error",
+                customClass: {
+                    popup: "roundCorner"
+                }
+            });
+        }
+    });
+
+    ///api/Teacher/idName
+    const { data, loading, error } = useFetch(`${API}/Teacher/idName`);
+
     const columns = [
         "Requested by",
         "Module",
@@ -47,8 +85,29 @@ const RequestAddQuestionBank = () => {
         fetchData();
     }, [currentPage]);
 
-    if (fetchResult.loading) return <Loading />;
-
+    if (fetchResult.loading || requestResult.loading) return <Loading />;
+    function showModalAsign(id, addQuestionRequestId, teacherId) {
+        console.log(teacherId);
+        swal.fire({
+            title: "Are you sure?",
+            text: "Are you sure to assign this request?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#e76565",
+            cancelButtonColor: "#363940",
+            confirmButtonText: "Confirm",
+            customClass: {
+                popup: "roundCorner"
+            }
+        }).then((result) => {
+            //nếu người dùng nhấn OK
+            if (result.isConfirmed) {
+                requestAssign(
+                    `${API}/Question/assignTeacher/?id=${id}&addQuestionRequestId=${addQuestionRequestId}&teacherId=${teacherId}`
+                );
+            }
+        });
+    }
     return (
         <Wrapper>
             <SearchBar
@@ -116,19 +175,53 @@ const RequestAddQuestionBank = () => {
                         Please choose a teacher to assign to review the question
                     </p>
                     <p>
-                        <strong>Requested by:</strong>
+                        <strong>Requested by: </strong>
                         {currentRequest?.fullname}
                     </p>
                     <p>
-                        <strong>Module:</strong>
+                        <strong>Module: </strong>
                         {currentRequest?.moduleName}
                     </p>
                     <p>
-                        <strong>Banks:</strong>
+                        <strong>Banks: </strong>
                         {currentRequest?.isFinalExamBank
                             ? "Final Exam"
                             : "Progress Test"}
                     </p>
+                </div>
+                <div className="d-flex ">
+                    <select
+                        className={style.input_select}
+                        onChange={(e) => {
+                            if (e.target.value !== "-1") {
+                                setSelectedTeacherId(parseInt(e.target.value));
+                            } else {
+                                setSelectedTeacherId();
+                            }
+                        }}
+                    >
+                        <option value={"-1"}>Select Teacher</option>
+                        {data?.map((teacher, index) => {
+                            return (
+                                <option value={teacher.teacherId} key={index}>
+                                    {teacher.fullname}
+                                </option>
+                            );
+                        })}
+                    </select>
+                    <Button
+                        onClick={() => {
+                            showModalAsign(
+                                teacher.accountId,
+                                currentRequest.addQuestionRequestId,
+                                selectedTeacherId
+                            );
+                        }}
+                        className="ms-3"
+                        disabled={requestResult.loading}
+                    >
+                        Confirm
+                    </Button>
                 </div>
             </OurModal>
             <Pagination
