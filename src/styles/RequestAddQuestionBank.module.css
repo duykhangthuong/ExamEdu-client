@@ -1,0 +1,24 @@
+.heading {
+    background-color: var(--color-lavender-light);
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    padding: 0.5rem;
+    color: var(--color-gray);
+    font-weight: 100;
+}
+.bodyModal {
+    padding: 1rem;
+    color: var(--color-blue);
+    font-size: 1.2rem;
+}
+.input_select {
+    border: none;
+    border-radius: 8px;
+    height: 3rem;
+    box-shadow: var(--shadow-medium);
+    outline: none;
+    color: var(--color-blue);
+    width: 60%;
+    padding-left: 1rem;
+    margin-left: 1rem;
+}

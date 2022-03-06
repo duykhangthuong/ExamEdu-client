@@ -9,6 +9,7 @@ import ExamList from "pages/Teacher/ExamList";
 import ModuleList from "pages/Teacher/ModuleList";
 import ExamResult from "pages/Teacher/ExamResult";
 import CreateExam from "pages/Teacher/CreateExam";
+import RequestAddQuestionBank from "pages/Teacher/RequestAddQuestionBank";
 const TeacherRoutes = () => {
     const { redirect, path } = useUserAuthorization("teacher");
 
@@ -32,7 +33,19 @@ const TeacherRoutes = () => {
                     <CreateExamPaper />
                 </Route>
 
+                {/* Add Question to Bank */}
                 <Route path="/teacher/question" exact></Route>
+
+                {/* Xem các request đã được giao */}
+                <Route path="/teacher/question/request" exact></Route>
+
+                {/* Xử lí request add question */}
+                <Route path="/teacher/question/process" exact></Route>
+
+                {/* Trưởng bộ môn phân công duyệt duyệt request */}
+                <Route path="/teacher/question/assign" exact>
+                    <RequestAddQuestionBank />
+                </Route>
 
                 {/* Exam result of a class */}
                 <Route path="/teacher/exam/list/result/:ExamID/:ModuleID" exact>
@@ -48,11 +61,15 @@ const TeacherRoutes = () => {
                 <Route path="/teacher/class/progress_exam/:classModuleId" exact>
                     <ExamList />
                 </Route>
+
+                {/* Head of department view request add question */}
+                <Route path="/teacher/question/request" exact></Route>
+
                 {/* Default Route */}
                 <Route path="*">
                     <ModuleList />
                 </Route>
-               
+
                 <Route path="*"></Route>
             </Switch>
         </>

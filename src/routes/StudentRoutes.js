@@ -35,6 +35,9 @@ const StudentRoutes = () => {
                 <Route path="/student/mark/report/:moduleID" exact>
                     <MarkReport />
                 </Route>
+                <Route path="/student/test" exact>
+                    <KhaMinh />
+                </Route>
 
                 <Route path="*">
                     <ExamSchedule />

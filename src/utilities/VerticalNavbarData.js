@@ -33,7 +33,7 @@ export const DataAdministrator = [
                 </div>
                 <div className={style.title}>Account List</div>
             </NavLink>
-        ),
+        )
     },
     {
         link: (
@@ -48,7 +48,7 @@ export const DataAdministrator = [
                 </div>
                 <div className={style.title}>Create Account</div>
             </NavLink>
-        ),
+        )
     },
     {
         link: (
@@ -63,8 +63,8 @@ export const DataAdministrator = [
                 </div>
                 <div className={style.title}>Account History</div>
             </NavLink>
-        ),
-    },
+        )
+    }
 ];
 
 export const DataStudent = [
@@ -81,7 +81,7 @@ export const DataStudent = [
                 </div>
                 <div className={style.title}>View Exam Schedule</div>
             </NavLink>
-        ),
+        )
     },
     {
         link: (
@@ -96,8 +96,8 @@ export const DataStudent = [
                 </div>
                 <div className={style.title}>Mark Report</div>
             </NavLink>
-        ),
-    },
+        )
+    }
 ];
 
 export const DataTeacher = [
@@ -114,7 +114,7 @@ export const DataTeacher = [
                 </div>
                 <div className={style.title}>Create Exam</div>
             </NavLink>
-        ),
+        )
     },
     {
         link: (
@@ -129,7 +129,7 @@ export const DataTeacher = [
                 </div>
                 <div className={style.title}>Module</div>
             </NavLink>
-        ),
+        )
     },
     {
         link: (
@@ -142,10 +142,42 @@ export const DataTeacher = [
                 <div className={style.icon}>
                     <Icon icon="folder-plus" className="" size="2x"></Icon>
                 </div>
-                <div className={style.title}>Question Bank</div>
+                <div className={style.title}>Add Question</div>
             </NavLink>
-        ),
+        )
     },
+    {
+        //dành cho teacher để duyệt câu hỏi
+        link: (
+            <NavLink
+                className="d-flex flex-sm-row flex-md-column"
+                to="/teacher/question/request"
+                activeClassName={style.active_link}
+                exact={true}
+            >
+                <div className={style.icon}>
+                    <Icon icon="pen-square" className="" size="2x"></Icon>
+                </div>
+                <div className={style.title}>Question Process</div>
+            </NavLink>
+        )
+    },
+    {
+        link: (
+            //chỉ dành cho trưởng bộ môn
+            <NavLink
+                className="d-flex flex-sm-row flex-md-column"
+                to="/teacher/question/assign"
+                activeClassName={style.active_link}
+                exact={true}
+            >
+                <div className={style.icon}>
+                    <Icon icon="portrait" className="" size="2x"></Icon>
+                </div>
+                <div className={style.title}>Assign Request</div>
+            </NavLink>
+        )
+    }
 ];
 
 export const DataAcademic = [
@@ -162,7 +194,7 @@ export const DataAcademic = [
                 </div>
                 <div className={style.title}>Module</div>
             </NavLink>
-        ),
+        )
     },
     {
         link: (
@@ -177,7 +209,7 @@ export const DataAcademic = [
                 </div>
                 <div className={style.title}>Class</div>
             </NavLink>
-        ),
+        )
     },
     {
         link: (
@@ -192,6 +224,6 @@ export const DataAcademic = [
                 </div>
                 <div className={style.title}>Exam</div>
             </NavLink>
-        ),
-    },
+        )
+    }
 ];
