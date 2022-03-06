@@ -1,0 +1,13 @@
+.heading {
+    background-color: var(--color-lavender-light);
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    padding: 0.5rem;
+    color: var(--color-gray);
+    font-weight: 100;
+}
+.bodyModal {
+    padding: 1rem;
+    color: var(--color-blue);
+    font-size: 1.2rem;
+}
