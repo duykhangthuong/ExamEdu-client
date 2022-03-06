@@ -33,4 +33,15 @@
     .input_container div {
         width: 70%;
     }
+
+    /* For displaying input_container in vertical orientation */
+    .input_container.vertical {
+        flex-direction: column;
+        justify-content: start;
+        align-items: flex-start;
+    }
+
+    .input_container.vertical div {
+        align-self: stretch;
+    }
 }

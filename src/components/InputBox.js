@@ -10,13 +10,15 @@ const InputBox = ({
     type,
     errorMessage,
     disabled,
+    minValue,
+    orientation_vertical = false,
     className,
 }) => {
     return (
         <div
-            className={`${styles.input_container} ${className} ${
-                errorMessage && "align-items-md-start"
-            }`}
+            className={`${styles.input_container} ${
+                orientation_vertical && styles.vertical
+            }  ${errorMessage && "align-items-md-start"} ${className}`}
         >
             <label className="text-capitalize" htmlFor={name}>
                 <b>{label}</b>
@@ -30,6 +32,7 @@ const InputBox = ({
                     onChange={onChange}
                     type={type}
                     disabled={disabled}
+                    {...(minValue && { min: minValue })}
                 ></input>
                 {errorMessage && <ValidateMessage message={errorMessage} />}
             </div>

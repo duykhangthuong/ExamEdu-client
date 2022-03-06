@@ -8,7 +8,7 @@ function VerticalNavBar({ VerticalNavbarData }) {
     const boxRef = useRef(null);
     const { isClicked, setIsClicked } = useOutsideClick(boxRef);
     return (
-        <div ref={boxRef}>
+        <div ref={boxRef} style={{ position: "absolute" }}>
             <input
                 type="checkbox"
                 id={style.check}

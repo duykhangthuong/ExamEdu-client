@@ -12,6 +12,7 @@ import Button from "components/Button";
 import { useWindowSize } from "utilities/useWindowSize";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import Pagination from "components/Pagination";
+import Loading from "pages/Loading";
 const AccountList = () => {
     const history = useHistory();
     const size = useWindowSize();
@@ -23,7 +24,7 @@ const AccountList = () => {
         "Email",
         "Created Day",
         "Role",
-        size.width > 768 ? "Action" : "",
+        size.width > 768 ? "Action" : ""
     ];
 
     //Lưu các giá trị tìm kiếm
@@ -47,8 +48,8 @@ const AccountList = () => {
                 titleText: "Account deleted",
                 icon: "success",
                 customClass: {
-                    popup: "roundCorner",
-                },
+                    popup: "roundCorner"
+                }
             });
             fetchData();
         },
@@ -60,10 +61,10 @@ const AccountList = () => {
                 text: "The account hasn't been deleted.",
                 icon: "error",
                 customClass: {
-                    popup: "roundCorner",
-                },
+                    popup: "roundCorner"
+                }
             });
-        },
+        }
     });
 
     //Gọi lại hàm Fetch khi nhập vô ô search
@@ -82,8 +83,8 @@ const AccountList = () => {
             cancelButtonColor: "#363940",
             confirmButtonText: "Confirm",
             customClass: {
-                popup: "roundCorner",
-            },
+                popup: "roundCorner"
+            }
         }).then((result) => {
             //nếu người dùng nhấn OK
             if (result.isConfirmed) {
@@ -96,7 +97,7 @@ const AccountList = () => {
     useEffect(() => {
         fetchData();
     }, [currentPage]);
-
+    if (fetchResult.loading) return <Loading />;
     return (
         //phải có cái Wrapper này để căn giữa
         <Wrapper>
@@ -150,7 +151,7 @@ const AccountList = () => {
                                 />
                             </Button>
                         </div>
-                    ),
+                    )
                 }))}
             />
             <Pagination
