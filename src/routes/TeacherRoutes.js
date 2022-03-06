@@ -9,6 +9,7 @@ import ExamList from "pages/Teacher/ExamList";
 import ModuleList from "pages/Teacher/ModuleList";
 import ExamResult from "pages/Teacher/ExamResult";
 import CreateExam from "pages/Teacher/CreateExam";
+import AddQuestionRequest from "pages/Teacher/AddQuestionRequest";
 const TeacherRoutes = () => {
     const { redirect, path } = useUserAuthorization("teacher");
 
@@ -47,6 +48,9 @@ const TeacherRoutes = () => {
                 {/* Exam list of a teacher */}
                 <Route path="/teacher/class/progress_exam/:classModuleId" exact>
                     <ExamList />
+                </Route>
+                <Route path="/teacher/request" exact>
+                    <AddQuestionRequest />
                 </Route>
                 {/* Default Route */}
                 <Route path="*">
