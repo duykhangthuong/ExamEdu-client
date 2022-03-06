@@ -1,0 +1,41 @@
+.wrapper{
+    background-color: var(--color-lavender-light);
+}
+.horizontal_line {
+    content: "";
+    background-color: black;
+    margin-top: 10px !important;
+    height: 1px;
+    align-self: stretch;
+}
+.wrapper > div {
+    width: 70%;
+    margin: auto;
+}
+.questionBlock textarea{
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.16);
+
+    outline: none;
+    border: none;
+    border-radius: 6px;
+}
+.answerOptionBlock{
+
+}
+.answerOption{
+    margin: 0.5rem;
+}
+.answerOption input[type=text] {
+    border: none;
+    border-radius: 6px;
+    height: 2.25rem;
+
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.16);
+
+    outline: none;
+    width: 85%;
+}
+.totalOption label{
+    color: var(--color-dark-blue);
+    font-weight: bold;
+}
