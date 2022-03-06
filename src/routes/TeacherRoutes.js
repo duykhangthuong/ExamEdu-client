@@ -50,6 +50,17 @@ const TeacherRoutes = () => {
                     <RequestAddQuestionBank />
                 </Route>
 
+                {/* Xem các request đã được giao */}
+                <Route path="/teacher/question/request" exact></Route>
+
+                {/* Xử lí request add question */}
+                <Route path="/teacher/question/process" exact></Route>
+
+                {/* Trưởng bộ môn phân công duyệt duyệt request */}
+                <Route path="/teacher/question/assign" exact>
+                    <RequestAddQuestionBank />
+                </Route>
+
                 {/* Exam result of a class */}
                 <Route path="/teacher/exam/list/result/:ExamID/:ModuleID" exact>
                     <ExamResult />
