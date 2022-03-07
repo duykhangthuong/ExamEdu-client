@@ -5,16 +5,19 @@ import Wrapper from "../../components/Wrapper";
 import Button from "../../components/Button";
 import styles from "../../styles/CreateAccount.module.css";
 import { useState } from "react";
-import { API, EMAIL, FULLNAME, REGEX, REQUIRED } from "utilities/constants";
+import { API, EMAIL, REGEX, REQUIRED } from "utilities/constants";
 import { useForm } from "utilities/useForm";
 import { useLazyFetch } from "utilities/useFetch";
 import InputBox from "components/InputBox";
 import Swal from "sweetalert2";
+import Loading from "pages/Loading";
 
 const CreateAccount = () => {
     const [selectedRole, setSelectedRole] = useState(ADMINISTRATOR);
-    const { values, setValues, errors, onChange, onSubmit, clearForm } =
-        useForm(fields, handleSubmit);
+    const { values, errors, onChange, onSubmit, clearForm } = useForm(
+        fields,
+        handleSubmit
+    );
     //values.tenTruong VD: values.fullname
 
     const [fetchdata, fetchResult] = useLazyFetch(`${API}/Account`, {
@@ -22,14 +25,14 @@ const CreateAccount = () => {
         body: {
             email: values.email,
             fullname: values.fullname,
-            roleID: selectedRole,
+            roleID: selectedRole
         },
         onCompletes: () => {
             Swal.fire("Success", "Account created", "success");
         },
         onError: (error) => {
             Swal.fire("Error", error.message, "error");
-        },
+        }
     });
 
     function handleSubmit() {
@@ -37,7 +40,7 @@ const CreateAccount = () => {
     }
 
     if (fetchResult.loading) {
-        return <Wrapper>Loading</Wrapper>;
+        return <Loading />;
     }
 
     return (
@@ -225,13 +228,13 @@ const HEAD_OF_DEPARTMENT = 5;
 const fields = {
     fullname: {
         validate: REQUIRED,
-        message: "Please input the account's fullname",
+        message: "Please input the account's fullname"
     },
     email: {
         validate: REGEX,
         regex: EMAIL,
-        message: "Email must be in the correct format",
-    },
+        message: "Email must be in the correct format"
+    }
     // userName: {
     //     validate: REQUIRED,
     //     message: "Please input the account's username",
