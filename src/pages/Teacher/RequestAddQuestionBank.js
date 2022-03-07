@@ -136,7 +136,7 @@ const RequestAddQuestionBank = () => {
                             }}
                             data-bs-toggle="tooltip"
                             data-bs-placement="right"
-                            title="Delete this account"
+                            title="Assign this request"
                         >
                             <Button
                                 circle={true}
