@@ -89,7 +89,7 @@ const CreateExam = () => {
             fetchClassStudents(
                 `${API}/Student/${selectedClass.classModuleId}`,
                 {
-                    onCompletes: (data) => setExamStudents(data.payload),
+                    onCompletes: (data) => setExamStudents(data.payload)
                 }
             );
             console.log("fetch student from classmodules");
@@ -118,7 +118,7 @@ const CreateExam = () => {
                 moduleId: selectedModule.moduleId,
                 proctorId: teacher.accountId,
                 supervisorId: teacher.accountId,
-                graderId: teacher.accountId,
+                graderId: teacher.accountId
             },
             onCompletes: (data) => {
                 Swal.fire({
@@ -127,7 +127,7 @@ const CreateExam = () => {
                     icon: "success",
                     confirmButtonText: "Yes",
                     cancelButtonText: "No",
-                    showCancelButton: true,
+                    showCancelButton: true
                 }).then((result) => {
                     if (result.isConfirmed) {
                         history.push(
@@ -141,8 +141,12 @@ const CreateExam = () => {
             },
             onError: (error) => {
                 Swal.fire("Error", error.message, "error");
-            },
+            }
         });
+    }
+
+    if (postExamResult.loading) {
+        return <Loading />;
     }
 
     return (
@@ -157,16 +161,16 @@ const CreateExam = () => {
                     steps={[
                         {
                             stepIcon: ["fas", "info"],
-                            stepName: "Basic information",
+                            stepName: "Basic information"
                         },
                         {
                             stepIcon: ["fas", "book-open"],
-                            stepName: "Module",
+                            stepName: "Module"
                         },
                         {
                             stepIcon: ["fas", "user-graduate"],
-                            stepName: "Assign Class & Trainee",
-                        },
+                            stepName: "Assign Class & Trainee"
+                        }
                     ]}
                     currentStep={formStep}
                     className={`d-flex flex-column justify-content-center me-3 mt-5`}
@@ -225,7 +229,7 @@ const ExamInformationFormContent = ({
     setFormStep,
     values,
     errors,
-    onChange,
+    onChange
 }) => {
     return (
         <div>
@@ -308,7 +312,7 @@ const ModuleFormContent = ({
     setFormStep,
     fetchModulesResult,
     selectedModule,
-    setSelectedModule,
+    setSelectedModule
 }) => {
     return (
         <div>
@@ -403,7 +407,7 @@ const ClassAndTraineeFormContent = ({
     selectedStudents,
     setSelectedStudents,
     toggleClassStudent,
-    setToggleClassStudent,
+    setToggleClassStudent
 }) => {
     //Toggle between class and student select form
     //true for Class, false for Student
@@ -502,7 +506,7 @@ const ClassAndTraineeFormContent = ({
                                                         ) === e.target.value
                                                     );
                                                 }
-                                            ),
+                                            )
                                         ]);
                                     } else {
                                         setSelectedStudents([]);
@@ -609,17 +613,17 @@ const ProctorFormContent = () => {
 const fields = {
     examName: {
         validate: REQUIRED,
-        errorMessage: "Exam name is required",
+        errorMessage: "Exam name is required"
     },
     description: {},
     duration: {
         validate: REQUIRED,
-        errorMessage: "Duration is required",
+        errorMessage: "Duration is required"
     },
     examDate: {
         validate: REQUIRED,
-        errorMessage: "Exam date is required",
+        errorMessage: "Exam date is required"
     },
     room: {},
-    password: {},
+    password: {}
 };
