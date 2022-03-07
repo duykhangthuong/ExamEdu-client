@@ -11,6 +11,8 @@ import ExamResult from "pages/Teacher/ExamResult";
 import CreateExam from "pages/Teacher/CreateExam";
 import AddQuestionRequest from "pages/Teacher/AddQuestionRequest";
 import RequestAddQuestionBank from "pages/Teacher/RequestAddQuestionBank";
+import ApproveRequests from "pages/Teacher/ApproveRequests";
+import Wrapper from "components/Wrapper";
 const TeacherRoutes = () => {
     const { redirect, path } = useUserAuthorization("teacher");
 
@@ -39,11 +41,18 @@ const TeacherRoutes = () => {
                     <AddQuestionRequest />
                 </Route>
 
+                {/* Trưởng bộ môn phân công duyệt duyệt request */}
+                <Route path="/teacher/question/assign" exact>
+                    <RequestAddQuestionBank />
+                </Route>
+
                 {/* Xem các request đã được giao */}
                 <Route path="/teacher/question/request" exact></Route>
 
                 {/* Xử lí request add question */}
-                <Route path="/teacher/question/process" exact></Route>
+                <Route path="/teacher/question/process/:requestId" exact>
+                    <ApproveRequests />
+                </Route>
 
                 {/* Trưởng bộ môn phân công duyệt duyệt request */}
                 <Route path="/teacher/question/assign" exact>

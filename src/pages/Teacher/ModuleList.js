@@ -10,6 +10,7 @@ import { useFetch } from "../../utilities/useFetch";
 import { API } from "../../utilities/constants";
 import { useHistory } from "react-router-dom";
 import Pagination from "../../components/Pagination";
+import Loading from "pages/Loading";
 
 const ModuleList = () => {
     const teacher = useSelector((store) => store.user);
@@ -21,7 +22,7 @@ const ModuleList = () => {
     );
 
     if (loading) {
-        return <Wrapper>Loading</Wrapper>;
+        return <Loading />;
     }
 
     return (
@@ -63,7 +64,11 @@ const ModuleCard = ({ moduleName, classes }) => {
     return (
         <article className={styles.module_card}>
             {/* Module name */}
-            <div className="d-flex justify-content-between align-items-center">
+            <div
+                className="d-flex justify-content-between align-items-center"
+                style={{ cursor: "pointer" }}
+                onClick={() => setIsExpanded(!isExpanded)}
+            >
                 <Heading size={2} style={{ color: "var(--color-blue)" }}>
                     {moduleName}
                 </Heading>

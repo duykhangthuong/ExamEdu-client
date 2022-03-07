@@ -5,6 +5,7 @@ import Pagination from "components/Pagination";
 import SearchBar from "components/SearchBar";
 import Wrapper from "components/Wrapper";
 import moment from "moment";
+import Loading from "pages/Loading";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useHistory } from "react-router-dom";
@@ -38,7 +39,7 @@ const ExamList = () => {
         fetchData();
     }, [currentPage]);
 
-    if (fetchResult.loading || loading) return <Wrapper>Loading...</Wrapper>;
+    if (fetchResult.loading || loading) return <Loading />;
 
     return (
         <Wrapper>

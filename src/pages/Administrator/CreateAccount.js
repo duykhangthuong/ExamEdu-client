@@ -5,7 +5,7 @@ import Wrapper from "../../components/Wrapper";
 import Button from "../../components/Button";
 import styles from "../../styles/CreateAccount.module.css";
 import { useState } from "react";
-import { API, EMAIL, FULLNAME, REGEX, REQUIRED } from "utilities/constants";
+import { API, EMAIL, REGEX, REQUIRED } from "utilities/constants";
 import { useForm } from "utilities/useForm";
 import { useLazyFetch } from "utilities/useFetch";
 import InputBox from "components/InputBox";
@@ -14,8 +14,10 @@ import Loading from "pages/Loading";
 
 const CreateAccount = () => {
     const [selectedRole, setSelectedRole] = useState(ADMINISTRATOR);
-    const { values, setValues, errors, onChange, onSubmit, clearForm } =
-        useForm(fields, handleSubmit);
+    const { values, errors, onChange, onSubmit, clearForm } = useForm(
+        fields,
+        handleSubmit
+    );
     //values.tenTruong VD: values.fullname
 
     const [fetchdata, fetchResult] = useLazyFetch(`${API}/Account`, {
