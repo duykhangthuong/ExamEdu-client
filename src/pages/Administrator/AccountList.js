@@ -19,7 +19,6 @@ const AccountList = () => {
 
     //Các cột trong bảng
     const columns = [
-        "ID",
         "Full name",
         "Email",
         "Created Day",
@@ -117,7 +116,6 @@ const AccountList = () => {
             <Table
                 columns={columns}
                 data={fetchResult.data?.payload.map((record) => ({
-                    id: record.id,
                     fullname: record.fullname,
                     email: record.email,
                     createdAt: moment(record.createdAt).format(
@@ -142,11 +140,11 @@ const AccountList = () => {
                             <Button
                                 circle={true}
                                 disabled={requestResult.loading}
-                                btn="secondary"
+                                btn="primary"
                             >
                                 <Icon
                                     icon="trash-alt"
-                                    color="#e76565"
+                                    color="#fff"
                                     className="fs-4"
                                 />
                             </Button>

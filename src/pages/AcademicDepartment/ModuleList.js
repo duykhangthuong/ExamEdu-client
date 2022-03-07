@@ -18,6 +18,7 @@ import InputBox from "components/InputBox";
 import Heading from "components/Heading";
 import { useForm } from "utilities/useForm";
 import Swal from "sweetalert2";
+import Loading from "pages/Loading";
 
 const ModuleList = () => {
     const [keyword, setKeyword] = useState("");
@@ -38,7 +39,7 @@ const ModuleList = () => {
         method: "POST",
         body: {
             moduleCode: createForm.values.moduleCode,
-            moduleName: createForm.values.moduleName,
+            moduleName: createForm.values.moduleName
         },
         onCompletes: () => {
             Swal.fire("Success", "Module created", "success");
@@ -46,7 +47,7 @@ const ModuleList = () => {
         },
         onError: (error) => {
             Swal.fire("Error", error.message, "error");
-        },
+        }
     });
 
     //Handle creating new modules
@@ -59,7 +60,7 @@ const ModuleList = () => {
             method: "PUT",
             body: {
                 moduleCode: updateForm.values.moduleCode,
-                moduleName: updateForm.values.moduleName,
+                moduleName: updateForm.values.moduleName
             },
             onCompletes: () => {
                 Swal.fire("Success", "Module Updated", "success");
@@ -67,7 +68,7 @@ const ModuleList = () => {
             },
             onError: (error) => {
                 Swal.fire("Error", error.message, "error");
-            },
+            }
         });
     }
 
@@ -95,11 +96,11 @@ const ModuleList = () => {
         "Module Code",
         "Module Name",
         "Created At",
-        windowSize.width > 768 ? "Actions" : "",
+        windowSize.width > 768 ? "Actions" : ""
     ];
 
     if (fetchDataResult.loading || postDataResult.loading) {
-        return <Wrapper>Loading...</Wrapper>;
+        return <Loading />;
     }
 
     return (
@@ -219,13 +220,13 @@ const ModuleList = () => {
                                     circle={true}
                                     style={{
                                         backgroundColor: "var(--nav-bar)",
-                                        color: "#00FF2B",
+                                        color: "#00FF2B"
                                     }}
                                     className="me-2"
                                     onClick={() => {
                                         updateForm.setValues({
                                             moduleCode: module.moduleCode,
-                                            moduleName: module.moduleName,
+                                            moduleName: module.moduleName
                                         });
 
                                         updateModal.setIsClicked(true);
@@ -234,7 +235,7 @@ const ModuleList = () => {
                                     <Icon icon="edit" />
                                 </Button>
                             </div>
-                        ),
+                        )
                     }))}
                 ></Table>
                 <Pagination
@@ -253,10 +254,10 @@ export default ModuleList;
 const fields = {
     moduleCode: {
         validate: REQUIRED,
-        message: "Please input the module code",
+        message: "Please input the module code"
     },
     moduleName: {
         validate: REQUIRED,
-        message: "Please input the module name",
-    },
+        message: "Please input the module name"
+    }
 };

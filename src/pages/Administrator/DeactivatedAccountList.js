@@ -9,6 +9,7 @@ import { useState } from "react";
 import { API } from "utilities/constants";
 import { useLazyFetch } from "utilities/useFetch";
 import moment from "moment";
+import Loading from "pages/Loading";
 const DeactivatedAccountList = () => {
     const columns = ["ID", "Full name", "Email", "Deleted Day", "Role"];
     //Lưu các giá trị tìm kiếm
@@ -27,7 +28,9 @@ const DeactivatedAccountList = () => {
     useEffect(() => {
         fetchData();
     }, [currentPage]);
-
+    if (fetchResult.loading) {
+        return <Loading />;
+    }
     return (
         <Wrapper>
             <SearchBar
@@ -53,7 +56,7 @@ const DeactivatedAccountList = () => {
                             content={record.roleName}
                             type={record.roleName}
                         />
-                    ),
+                    )
                 }))}
             />
             <Pagination
