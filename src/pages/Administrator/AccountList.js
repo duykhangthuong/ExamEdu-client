@@ -97,6 +97,7 @@ const AccountList = () => {
     useEffect(() => {
         fetchData();
     }, [currentPage]);
+    
     if (fetchResult.loading) return <Loading />;
     return (
         //phải có cái Wrapper này để căn giữa
