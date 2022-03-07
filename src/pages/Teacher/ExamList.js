@@ -29,7 +29,7 @@ const ExamList = () => {
     const [fetchData, fetchResult] = useLazyFetch(
         `${API}/Exam/progressExam/${param.classModuleId}?pageNumber=${currentPage}&pageSize=${pageSize}`
     );
-    console.log(fetchResult);
+    // console.log(fetchResult);
 
     function onAddButtonClick() {
         history.push("/teacher/exam/create/info");
@@ -73,6 +73,7 @@ const ExamList = () => {
                             moduleId={data.module.moduleId}
                             examName={exam.examName}
                             key={exam.examId}
+                            classModuleId={param.classModuleId}
                         />
                     );
                 })}
@@ -136,7 +137,9 @@ const ExamCard = ({
                 </div>
                 {/* Button */}
                 <Button
-                    onClick={() => onClickViewDetail(examId, classModuleId)}
+                    onClick={() => {
+                        onClickViewDetail(examId, classModuleId);
+                    }}
                 >
                     View Detail <Icon icon="arrow-right" className="ms-2" />
                 </Button>
