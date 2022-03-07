@@ -19,13 +19,14 @@ function AddQuestionRequest() {
     }, [fetchModuleResult.loading]);
     const [isFinalExam, setIsFinalExam] = useState(false);
     const [questionType, setQuestionType] = useState(1);
+
     const [postData, postDataResult] = useLazyFetch(`${API}/question/request`, {
         method: "POST",
         body: {
             requesterId: user,
             description: "",
             isFinalExam: isFinalExam,
-            questions: questionList,
+            questions: questionList
         },
         onCompletes: () => {
             Swal.fire("Success", "Add question request created", "success");
@@ -33,11 +34,11 @@ function AddQuestionRequest() {
         },
         onError: (error) => {
             Swal.fire("Error", error.message, "error");
-        },
+        }
     });
 
-    console.log("question List: ");
-    console.log(questionList);
+    // console.log("question List: ");
+    // console.log(questionList);
     const addNewQuestion = () => {
         if (questionType === 1) {
             setQuestionList([
@@ -47,17 +48,18 @@ function AddQuestionRequest() {
                     questionTypeId: 1,
                     levelId: 1,
                     moduleId: module,
+                    duplicatedQuestion: "",
                     answers: [
                         {
                             answerContent: "",
-                            isCorrect: true,
+                            isCorrect: true
                         },
                         {
                             answerContent: "",
-                            isCorrect: false,
-                        },
-                    ],
-                },
+                            isCorrect: false
+                        }
+                    ]
+                }
             ]);
         } else {
             setQuestionList([
@@ -67,13 +69,14 @@ function AddQuestionRequest() {
                     questionTypeId: 2,
                     levelId: 1,
                     moduleId: module,
+                    duplicatedQuestion: "",
                     answers: [
                         {
                             answerContent: "",
-                            isCorrect: true,
-                        },
-                    ],
-                },
+                            isCorrect: true
+                        }
+                    ]
+                }
             ]);
         }
     };
@@ -86,7 +89,7 @@ function AddQuestionRequest() {
             if (index === i) {
                 question.answers.push({
                     answerContent: "",
-                    isCorrect: false,
+                    isCorrect: false
                 });
                 return question;
             } else {
@@ -178,8 +181,8 @@ function AddQuestionRequest() {
                 cancelButtonColor: "#363940",
                 confirmButtonText: "Confirm",
                 customClass: {
-                    popup: "roundCorner",
-                },
+                    popup: "roundCorner"
+                }
             }).then((result) => {
                 //nếu người dùng nhấn OK
                 if (result.isConfirmed) {
@@ -203,23 +206,72 @@ function AddQuestionRequest() {
             cancelButtonColor: "#363940",
             confirmButtonText: "Confirm",
             customClass: {
-                popup: "roundCorner",
-            },
+                popup: "roundCorner"
+            }
         }).then((result) => {
             //nếu người dùng nhấn OK
             if (result.isConfirmed) {
                 postData();
+                fetchDataAdd();
             }
         });
     }
-    if (fetchModuleResult.loading || postDataResult.loading) {
+
+    const [fetchDataCheck, fetchResultCheck] = useLazyFetch(
+        "http://127.0.0.1:2022/check",
+        {
+            method: "post",
+            body: {
+                questions: questionList.map((question) => {
+                    return question["questionContent"];
+                })
+            },
+            onError: (error) => {
+                Swal.fire("Error", error.message, "error");
+            }
+        }
+    );
+    const [fetchDataAdd, fetchResultAdd] = useLazyFetch(
+        "http://127.0.0.1:2022/add/question",
+        {
+            method: "post",
+            body: {
+                questions: questionList.map((question) => {
+                    return question["questionContent"];
+                })
+            },
+            onError: (error) => {
+                Swal.fire("Error", error.message, "error");
+            }
+        }
+    );
+
+    useEffect(() => {
+        //set question list state but add content to duplicatedQuestion field
+        const updateList = questionList.map((question, i) => {
+            question.duplicatedQuestion = fetchResultCheck.data?.results[i];
+            return question;
+        });
+        setQuestionList(updateList);
+
+        // console.log(fetchResultCheck.data);
+        // console.log("sau khi check");
+        // console.log(questionList);
+    }, [fetchResultCheck.loading]);
+
+    if (
+        fetchModuleResult.loading ||
+        postDataResult.loading ||
+        fetchResultCheck.loading
+    ) {
         return <Loading />;
     }
+
     return (
         <Wrapper>
             <Heading>Request Add New Question</Heading>
             <div className={`${styles.wrapper}`}>
-                <Heading size={3} className={`text-center`}>
+                <Heading size={2} className={`text-center mb-3`}>
                     New Question
                 </Heading>
                 <div
@@ -291,13 +343,16 @@ function AddQuestionRequest() {
 
                 {/* Horizontal line */}
                 <div className={`${styles.horizontal_line} mb-2`}></div>
+
                 {questionList.map((question, index) => {
                     if (questionType === 1)
                         return (
                             <div key={index}>
                                 <div className={`${styles.questionBlock}`}>
                                     <div className="d-flex justify-content-between">
-                                        <span>Question {index + 1}</span>
+                                        <span className="fw-bold">
+                                            Question {index + 1}
+                                        </span>
                                         <div className="d-flex">
                                             <select
                                                 class="w-13 form-select"
@@ -329,14 +384,17 @@ function AddQuestionRequest() {
                                                 }
                                             >
                                                 <Icon
+                                                    onClick={() =>
+                                                        deleteQuestion(index)
+                                                    }
                                                     icon="trash"
                                                     color="#fff"
-                                                    className="fs-4"
+                                                    className="fs-5"
                                                 />
                                             </Button>
                                         </div>
                                     </div>
-                                    <div className="d-flex justify-content-center">
+                                    <div className="d-flex flex-column justify-content-center">
                                         <textarea
                                             value={question.questionContent}
                                             onChange={(e) =>
@@ -347,7 +405,26 @@ function AddQuestionRequest() {
                                             }
                                             cols="73"
                                             rows="5"
+                                            className="mt-2 p-3 fs-5"
                                         ></textarea>
+                                        <div className="text-danger mt-2">
+                                            {question.duplicatedQuestion ? (
+                                                <>
+                                                    <Icon
+                                                        icon="exclamation-triangle"
+                                                        className="me-2"
+                                                    />
+                                                    Warning duplicated question:
+                                                    <strong>
+                                                        {
+                                                            question.duplicatedQuestion
+                                                        }
+                                                    </strong>
+                                                </>
+                                            ) : (
+                                                " "
+                                            )}
+                                        </div>
                                     </div>
                                     <div
                                         className={`${styles.answerOptionBlock}`}
@@ -378,6 +455,7 @@ function AddQuestionRequest() {
                                                     </div>
                                                     <input
                                                         type="text"
+                                                        className="p-2"
                                                         value={
                                                             ans.answerContent
                                                         }
@@ -403,7 +481,7 @@ function AddQuestionRequest() {
                                                         <Icon
                                                             icon="trash"
                                                             color="#fff"
-                                                            className="fs-4"
+                                                            className="fs-5"
                                                         />
                                                     </Button>
                                                 </div>
@@ -425,7 +503,9 @@ function AddQuestionRequest() {
                             <div key={index}>
                                 <div className={`${styles.questionBlock}`}>
                                     <div className="d-flex justify-content-between">
-                                        <span>Question {index + 1}</span>
+                                        <span className="fw-bold">
+                                            Question {index + 1}
+                                        </span>
                                         <div className="d-flex">
                                             <select
                                                 class="w-13 form-select"
@@ -476,6 +556,9 @@ function AddQuestionRequest() {
                                             cols="73"
                                             rows="5"
                                         ></textarea>
+                                        <div className="text-danger">
+                                            {question.duplicatedQuestion}
+                                        </div>
                                     </div>
                                     <div
                                         className={`${styles.answerOptionBlock}`}
@@ -516,24 +599,30 @@ function AddQuestionRequest() {
                 })}
 
                 <div className="d-flex justify-content-center">
-                    <button className="btn btn-light" onClick={addNewQuestion}>
+                    <button
+                        className="btn btn-success"
+                        onClick={addNewQuestion}
+                    >
                         Add new question
                     </button>
                 </div>
                 <div className="d-flex justify-content-between mt-4">
                     <button
                         className="btn btn-warning"
-                        // onClick={addNewQuestion}
+                        onClick={() => fetchDataCheck()}
                         disabled={questionList.length === 0}
                     >
                         Check for duplicate
                     </button>
                     <button
                         className="btn btn-primary"
-                        onClick={showModalConfirmSubmit}
+                        onClick={() => {
+                            showModalConfirmSubmit();
+                        }}
                         disabled={questionList.length === 0}
                     >
                         Send request
+                        <Icon icon="angle-double-right" className="ms-3" />
                     </button>
                 </div>
             </div>

@@ -17,14 +17,14 @@ const HorizontalNavBar = () => {
     const user = useSelector((state) => state.user);
     const [showNotifiMobileNav, setShowNotifiMobileNav] = useState(false);
     const pageSize = 5;
-    const name = "Kha Minh Ho";
+    const name = user.fullname;
     const latestChat = useRef(null);
     latestChat.current = notifications;
 
     // Handle Logout
     const [fetchData] = useLazyFetch(`https://localhost:5001/api/auth/logout`, {
         method: "POST",
-        body: {},
+        body: {}
     });
 
     const handleLogout = () => {
@@ -32,8 +32,8 @@ const HorizontalNavBar = () => {
         history.push({
             pathname: "/logout",
             state: {
-                logout: "logout",
-            },
+                logout: "logout"
+            }
         });
     };
 
@@ -43,7 +43,7 @@ const HorizontalNavBar = () => {
         {
             method: "GET",
             onCompleted: (data) =>
-                setNotifications(notifications.concat(data.payload)),
+                setNotifications(notifications.concat(data.payload))
         }
     );
 
@@ -103,8 +103,8 @@ const HorizontalNavBar = () => {
         method: "POST",
         body: user?.email.toLowerCase(),
         headers: {
-            "Content-Type": "application/json",
-        },
+            "Content-Type": "application/json"
+        }
     });
 
     const handleSeen = () => {
@@ -122,7 +122,7 @@ const HorizontalNavBar = () => {
                             sendTo: notification.sendTo,
                             message: notification.message,
                             createdAt: notification.createdAt,
-                            isSeen: true,
+                            isSeen: true
                         };
                     } else {
                         return notification;
@@ -158,7 +158,9 @@ const HorizontalNavBar = () => {
                                 className="text-Color btn rounded-circle text-center justify-content-center align-items-center position-relative"
                                 style={{ width: 40, height: 40 }}
                                 onTouchStart={() => {
-                                    setShowNotifiMobileNav(!showNotifiMobileNav);
+                                    setShowNotifiMobileNav(
+                                        !showNotifiMobileNav
+                                    );
                                     handleSeen();
                                 }}
                                 onMouseOver={handleSeen}
@@ -181,9 +183,9 @@ const HorizontalNavBar = () => {
                                             notification.isSeen === false
                                     ).length !== 0
                                         ? notifications.filter(
-                                            (notification) =>
-                                                notification.isSeen === false
-                                        ).length
+                                              (notification) =>
+                                                  notification.isSeen === false
+                                          ).length
                                         : ""}
                                 </span>
                             </div>
@@ -191,8 +193,8 @@ const HorizontalNavBar = () => {
                             <div
                                 className={
                                     showNotifiMobileNav
-                                    ? `${styles.frameMobile_Notifi} d-flex justify-content-end position-absolute`
-                                    : `${styles.frame_Notifi} d-flex justify-content-end position-absolute`
+                                        ? `${styles.frameMobile_Notifi} d-flex justify-content-end position-absolute`
+                                        : `${styles.frame_Notifi} d-flex justify-content-end position-absolute`
                                 }
                             >
                                 <div
@@ -220,10 +222,11 @@ const HorizontalNavBar = () => {
                                         {notifications.length > 0 ? (
                                             notifications?.map(
                                                 (notification, objIndex) => (
-                                                    <div className={styles.notifi_list}
-                                                        key={
-                                                            objIndex + "a"
+                                                    <div
+                                                        className={
+                                                            styles.notifi_list
                                                         }
+                                                        key={objIndex + "a"}
                                                     >
                                                         <div className="text-Color navbarSelect-Color row mx-0 p-2">
                                                             {/* Icon */}
@@ -231,7 +234,7 @@ const HorizontalNavBar = () => {
                                                                 className="shadow-app col-4 rounded-circle d-flex align-items-center px-0 ps-2"
                                                                 style={{
                                                                     width: "2.5rem",
-                                                                    height: "2.5rem",
+                                                                    height: "2.5rem"
                                                                 }}
                                                             >
                                                                 <Icon
@@ -258,7 +261,7 @@ const HorizontalNavBar = () => {
                                                                 <div
                                                                     style={{
                                                                         fontSize:
-                                                                            "12px",
+                                                                            "12px"
                                                                     }}
                                                                 >
                                                                     {moment(

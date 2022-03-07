@@ -1,5 +1,8 @@
-.wrapper{
+.wrapper {
     background-color: var(--color-lavender-light);
+    border-radius: 10px;
+    padding-top: 1rem;
+    padding-bottom: 2rem;
 }
 .horizontal_line {
     content: "";
@@ -12,20 +15,19 @@
     width: 70%;
     margin: auto;
 }
-.questionBlock textarea{
+.questionBlock textarea {
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.16);
 
     outline: none;
     border: none;
     border-radius: 6px;
 }
-.answerOptionBlock{
-
+.answerOptionBlock {
 }
-.answerOption{
+.answerOption {
     margin: 0.5rem;
 }
-.answerOption input[type=text] {
+.answerOption input[type="text"] {
     border: none;
     border-radius: 6px;
     height: 2.25rem;
@@ -35,7 +37,7 @@
     outline: none;
     width: 85%;
 }
-.totalOption label{
+.totalOption label {
     color: var(--color-dark-blue);
     font-weight: bold;
 }
