@@ -107,7 +107,7 @@ const ExamResult = () => {
                         "Grade text answer successfully",
                         "success"
                     );
-                    fetchNotifcation(`${API}/notify/trainee`, {
+                    fetchNotifcation(`${API}/notify/trainee`,{
                         method: "POST",
                         body: {
                             sendTo: studentEmail,
