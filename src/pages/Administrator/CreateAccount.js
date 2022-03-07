@@ -10,6 +10,7 @@ import { useForm } from "utilities/useForm";
 import { useLazyFetch } from "utilities/useFetch";
 import InputBox from "components/InputBox";
 import Swal from "sweetalert2";
+import Loading from "pages/Loading";
 
 const CreateAccount = () => {
     const [selectedRole, setSelectedRole] = useState(ADMINISTRATOR);
@@ -22,14 +23,14 @@ const CreateAccount = () => {
         body: {
             email: values.email,
             fullname: values.fullname,
-            roleID: selectedRole,
+            roleID: selectedRole
         },
         onCompletes: () => {
             Swal.fire("Success", "Account created", "success");
         },
         onError: (error) => {
             Swal.fire("Error", error.message, "error");
-        },
+        }
     });
 
     function handleSubmit() {
@@ -37,7 +38,7 @@ const CreateAccount = () => {
     }
 
     if (fetchResult.loading) {
-        return <Wrapper>Loading</Wrapper>;
+        return <Loading />;
     }
 
     return (
@@ -225,13 +226,13 @@ const HEAD_OF_DEPARTMENT = 5;
 const fields = {
     fullname: {
         validate: REQUIRED,
-        message: "Please input the account's fullname",
+        message: "Please input the account's fullname"
     },
     email: {
         validate: REGEX,
         regex: EMAIL,
-        message: "Email must be in the correct format",
-    },
+        message: "Email must be in the correct format"
+    }
     // userName: {
     //     validate: REQUIRED,
     //     message: "Please input the account's username",
