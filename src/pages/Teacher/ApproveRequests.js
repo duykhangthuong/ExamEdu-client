@@ -9,8 +9,10 @@ import { API } from "utilities/constants";
 import { useParams } from "react-router-dom";
 import Loading from "pages/Loading";
 import Swal from "sweetalert2";
+import { useHistory } from "react-router-dom";
 
 export default function ApproveRequests() {
+    const history = useHistory();
     // id 130
     const [approvedQuestions, setApprovedQuestions] = useState([]);
 
@@ -25,6 +27,7 @@ export default function ApproveRequests() {
                 setApprovedQuestions(
                     data.questions.map((question) => {
                         return {
+                            questionContent: question.questionContent,
                             questionId: question.questionId,
                             isApproved: false,
                             comment: "",
@@ -42,10 +45,31 @@ export default function ApproveRequests() {
         postApprovedQuestions(`${API}/Question/approveRequest`, {
             method: "PUT",
             body: approvedQuestions,
-            onCompletes: () => Swal.fire("Success", "", "success"),
+            onCompletes: () => {
+                fetchData1();
+                Swal.fire("Success", "", "success");
+                history.push("/teacher/question/request");
+            },
             onError: (error) => Swal.fire("Error", error.message, "error")
         });
     }
+    //filter out approved questions where isApproved is true return only questionContent
+    // const approvedQuestionsContent = approvedQuestions
+    //     .filter((question) => question.isApproved)
+    //     .map((question) => question.questionContent);
+
+    //--------- Handle save questions to Modal Question list ----------
+    const [fetchData1, fetchResult1] = useLazyFetch(
+        "http://127.0.0.1:2022/add/question",
+        {
+            method: "post",
+            body: {
+                questions: approvedQuestions
+                    .filter((question) => question.isApproved)
+                    .map((question) => question.questionContent)
+            }
+        }
+    );
 
     if (loading || postApprovedQuestionsResult.loading) {
         return <Loading />;
