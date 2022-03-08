@@ -20,7 +20,7 @@ const ModuleList = () => {
     const { data, loading } = useFetch(
         `${API}/Teacher/ClassModule/${teacher.accountId}`
     );
-
+    console.log(data);
     if (loading) {
         return <Loading />;
     }
@@ -32,7 +32,7 @@ const ModuleList = () => {
             {/* Module card container */}
             <section className={styles.module_card_container}>
                 {/* Module cards */}
-                {data.payload.map((module) => {
+                {data?.payload.map((module) => {
                     return (
                         <ModuleCard
                             moduleName={module.moduleCode}
