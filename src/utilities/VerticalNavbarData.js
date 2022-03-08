@@ -185,7 +185,7 @@ export const DataAcademic = [
         link: (
             <NavLink
                 className="d-flex flex-sm-row flex-md-column"
-                to="/academic/module"
+                to="/AcademicDepartment/module/list"
                 activeClassName={style.active_link}
                 exact={true}
             >
@@ -195,35 +195,35 @@ export const DataAcademic = [
                 <div className={style.title}>Module</div>
             </NavLink>
         )
-    },
-    {
-        link: (
-            <NavLink
-                className="d-flex flex-sm-row flex-md-column"
-                to="/academic/class"
-                activeClassName={style.active_link}
-                exact={true}
-            >
-                <div className={style.icon}>
-                    <Icon icon="id-card" className="" size="2x"></Icon>
-                </div>
-                <div className={style.title}>Class</div>
-            </NavLink>
-        )
-    },
-    {
-        link: (
-            <NavLink
-                className="d-flex flex-sm-row flex-md-column"
-                to="/academic/exam"
-                activeClassName={style.active_link}
-                exact={true}
-            >
-                <div className={style.icon}>
-                    <Icon icon="file-alt" className="" size="2x"></Icon>
-                </div>
-                <div className={style.title}>Exam</div>
-            </NavLink>
-        )
     }
+    // {
+    //     link: (
+    //         <NavLink
+    //             className="d-flex flex-sm-row flex-md-column"
+    //             to="/academicdeparment/class"
+    //             activeClassName={style.active_link}
+    //             exact={true}
+    //         >
+    //             <div className={style.icon}>
+    //                 <Icon icon="id-card" className="" size="2x"></Icon>
+    //             </div>
+    //             <div className={style.title}>Class</div>
+    //         </NavLink>
+    //     )
+    // },
+    // {
+    //     link: (
+    //         <NavLink
+    //             className="d-flex flex-sm-row flex-md-column"
+    //             to="/academic/exam"
+    //             activeClassName={style.active_link}
+    //             exact={true}
+    //         >
+    //             <div className={style.icon}>
+    //                 <Icon icon="file-alt" className="" size="2x"></Icon>
+    //             </div>
+    //             <div className={style.title}>Exam</div>
+    //         </NavLink>
+    //     )
+    // }
 ];
