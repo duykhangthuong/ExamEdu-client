@@ -11,13 +11,14 @@ import { useHistory } from "react-router-dom";
 //Styles
 import styles from "../../styles/ExamSchedule.module.css";
 import Swal from "sweetalert2";
+import Loading from "pages/Loading";
 
 const ExamSchedule = () => {
     const user = useSelector((store) => store.user);
     const { data, loading, error } = useFetch(`${API}/Exam/${user.accountId}`);
 
     if (loading) {
-        return <Wrapper>Loading</Wrapper>;
+        return <Loading />;
     }
     if (error?.status === 404) {
         return (
@@ -70,7 +71,7 @@ const Schedule = ({
     subjectName,
     alottedTime,
     examId,
-    password,
+    password
 }) => {
     const history = useHistory();
     function handleInputExamPassword(password) {
@@ -79,19 +80,19 @@ const Schedule = ({
             Swal.fire({
                 title: "Enter exam password",
                 input: "password",
-                confirmButtonText: "Start Exam",
+                confirmButtonText: "Start Exam"
             }).then((result) => {
                 //If Start Exam button is clicked then check if password is correct
                 if (result.isConfirmed) {
                     if (result.value === password) {
-                        history.push(`/student/exam/${examId}`);
+                        history.push(`/exam/${examId}`);
                     } else {
                         Swal.fire("Wrong password", "", "error");
                     }
                 }
             });
         } else {
-            history.push(`/student/exam/${examId}`);
+            history.push(`/exam/${examId}`);
         }
     }
     function handleStartExam() {

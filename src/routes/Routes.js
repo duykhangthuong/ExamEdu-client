@@ -11,6 +11,7 @@ import TeacherRoutes from "./TeacherRoutes";
 import KhaMinh from "pages/KhaMinh";
 import MarkReport from "pages/Student/MarkReport";
 import ModuleList from "pages/Student/ModuleList";
+import AcademicRoutes from "./AcademicRoutes";
 
 const Routes = () => {
     return (
@@ -21,6 +22,9 @@ const Routes = () => {
 
             <Route path="/student">
                 <StudentRoutes />
+            </Route>
+            <Route path="/AcademicDepartment">
+                <AcademicRoutes />
             </Route>
 
             <Route path="/logout">

@@ -5,6 +5,7 @@ import Pagination from "components/Pagination";
 import SearchBar from "components/SearchBar";
 import Wrapper from "components/Wrapper";
 import moment from "moment";
+import Loading from "pages/Loading";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useHistory } from "react-router-dom";
@@ -28,7 +29,7 @@ const ExamList = () => {
     const [fetchData, fetchResult] = useLazyFetch(
         `${API}/Exam/progressExam/${param.classModuleId}?pageNumber=${currentPage}&pageSize=${pageSize}`
     );
-    console.log(fetchResult);
+    // console.log(fetchResult);
 
     function onAddButtonClick() {
         history.push("/teacher/exam/create/info");
@@ -38,7 +39,7 @@ const ExamList = () => {
         fetchData();
     }, [currentPage]);
 
-    if (fetchResult.loading || loading) return <Wrapper>Loading...</Wrapper>;
+    if (fetchResult.loading || loading) return <Loading />;
 
     return (
         <Wrapper>
@@ -72,6 +73,7 @@ const ExamList = () => {
                             moduleId={data.module.moduleId}
                             examName={exam.examName}
                             key={exam.examId}
+                            classModuleId={param.classModuleId}
                         />
                     );
                 })}
@@ -135,7 +137,9 @@ const ExamCard = ({
                 </div>
                 {/* Button */}
                 <Button
-                    onClick={() => onClickViewDetail(examId, classModuleId)}
+                    onClick={() => {
+                        onClickViewDetail(examId, classModuleId);
+                    }}
                 >
                     View Detail <Icon icon="arrow-right" className="ms-2" />
                 </Button>
