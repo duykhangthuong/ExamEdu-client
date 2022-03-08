@@ -11,6 +11,7 @@ import { login } from "store/action";
 import background from "static/background-login-page.jpg";
 import style from "styles/login.module.css";
 import logo from "static/logo-ExamEdu.png";
+import Button from "components/Button";
 
 const Login = () => {
     const dispatch = useDispatch();
@@ -23,7 +24,7 @@ const Login = () => {
             method: "post",
             body: {
                 email: values.email,
-                password: values.password,
+                password: values.password
             },
             // Dispatch user to redux store
             onCompletes: (result) => {
@@ -35,7 +36,7 @@ const Login = () => {
             // Redirect to home page
             finally: (result) => {
                 history.push(`/${result.role.toLowerCase()}`);
-            },
+            }
         }
     );
     function handleSubmit() {
@@ -47,7 +48,7 @@ const Login = () => {
                 backgroundImage: `url("${background}")`,
                 height: "100vh",
                 minHeight: "100%",
-                backgroundSize: "cover",
+                backgroundSize: "cover"
             }}
         >
             <div className="text-center mt-5 mb-4">
@@ -83,10 +84,27 @@ const Login = () => {
                             <ValidateMessage message={errors.password} />
                         )}
                     </div>
-                    <button className={style.buttonLogin}>LOGIN</button>
-                    <a href="#" className="mb-3">
+                    <Button
+                        className={`${style.buttonLogin} mb-5`}
+                        disable={loading}
+                        type="submit"
+                    >
+                        {loading && (
+                            <div
+                                className="spinner-border text-light me-3"
+                                role="status"
+                            >
+                                <span className="visually-hidden">
+                                    Loading...
+                                </span>
+                            </div>
+                        )}
+                        {loading && <span>Loging in...</span>}
+                        {!loading && <span>Login</span>}
+                    </Button>
+                    {/* <a href="#" className="mb-3">
                         Forgot Password?
-                    </a>
+                    </a> */}
                 </div>
             </form>
         </div>
@@ -98,10 +116,10 @@ const form = {
     email: {
         validate: REGEX,
         regex: EMAIL,
-        message: "Please input proper email format!",
+        message: "Please input proper email format!"
     },
     password: {
         validate: REQUIRED,
-        message: "Password is required!",
-    },
+        message: "Password is required!"
+    }
 };
