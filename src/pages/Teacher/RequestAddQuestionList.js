@@ -35,8 +35,11 @@ const RequestAddQuestionList = () => {
 
     //Fetch data của cái bảng
     const [fetchData, fetchResult] = useLazyFetch(
-        `${API}/Question/requestList/${user}?pageNumber=${currentPage}&pageSize=${pageSize}&searchName=${searchName}`,{
-            onCompletes:(data) => {console.log(data);}
+        `${API}/Question/requestList/${user}?pageNumber=${currentPage}&pageSize=${pageSize}&searchName=${searchName}`,
+        {
+            onCompletes: (data) => {
+                console.log(data);
+            }
         }
     );
     //data loading error
@@ -63,7 +66,7 @@ const RequestAddQuestionList = () => {
                     requestedBy: record.fullname,
                     module: record.moduleName,
                     noOfQuestions: record.numberOfQuestion,
-                    requestedTime:  moment(record.createdAt).format(
+                    requestedTime: moment(record.createdAt).format(
                         "DD/MM/YYYY , h:mm A"
                     ),
                     detail: (
@@ -80,7 +83,9 @@ const RequestAddQuestionList = () => {
                         >
                             <Button
                                 circle={true}
-                                disabled={fetchResult.loading}
+                                disabled={
+                                    fetchResult.loading || record.isApproved
+                                }
                                 btn="primary"
                             >
                                 <Icon
