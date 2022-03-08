@@ -212,7 +212,7 @@ function AddQuestionRequest() {
             //nếu người dùng nhấn OK
             if (result.isConfirmed) {
                 postData();
-                fetchDataAdd();
+                // fetchDataAdd();
             }
         });
     }
@@ -358,6 +358,9 @@ function AddQuestionRequest() {
                                                 class="w-13 form-select"
                                                 aria-label="Default select example"
                                                 id={`question${index}Level`}
+                                                value={
+                                                    questionList[index].levelId
+                                                }
                                                 onChange={(e) =>
                                                     updateLevelEachQuestion(
                                                         index,
@@ -511,6 +514,9 @@ function AddQuestionRequest() {
                                                 class="w-13 form-select"
                                                 aria-label="Default select example"
                                                 id={`question${index}Level`}
+                                                value={
+                                                    questionList[index].levelId
+                                                }
                                                 onChange={(e) =>
                                                     updateLevelEachQuestion(
                                                         index,
