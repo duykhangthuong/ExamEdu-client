@@ -43,13 +43,14 @@ const RequestAddQuestionBank = () => {
         //Khi fetch xong, status code  == 200
         onCompletes: (data) => {
             swal.fire({
-                titleText: "Assined successfully!",
+                titleText: "Assigned successfully!",
                 icon: "success",
                 customClass: {
                     popup: "roundCorner"
                 }
             });
             setSelectedTeacherId();
+            setIsClicked(false);
             fetchData();
         },
         //Khi fetch ko được
@@ -87,7 +88,6 @@ const RequestAddQuestionBank = () => {
 
     if (fetchResult.loading || requestResult.loading) return <Loading />;
     function showModalAsign(id, addQuestionRequestId, teacherId) {
-        console.log(teacherId);
         swal.fire({
             title: "Are you sure?",
             text: "Are you sure to assign this request?",
@@ -130,10 +130,6 @@ const RequestAddQuestionBank = () => {
                     assign: (
                         <div
                             className="d-flex justify-content-center"
-                            onClick={() => {
-                                setIsClicked(true);
-                                setCurrentRequest(record);
-                            }}
                             data-bs-toggle="tooltip"
                             data-bs-placement="right"
                             title="Assign this request"
@@ -142,6 +138,10 @@ const RequestAddQuestionBank = () => {
                                 circle={true}
                                 disabled={record.isAssigned}
                                 btn="primary"
+                                onClick={() => {
+                                    setIsClicked(true);
+                                    setCurrentRequest(record);
+                                }}
                             >
                                 <Icon
                                     icon="user"
@@ -188,40 +188,46 @@ const RequestAddQuestionBank = () => {
                             ? "Final Exam"
                             : "Progress Test"}
                     </p>
-                </div>
-                <div className="d-flex ">
-                    <select
-                        className={style.input_select}
-                        onChange={(e) => {
-                            if (e.target.value !== "-1") {
-                                setSelectedTeacherId(parseInt(e.target.value));
-                            } else {
-                                setSelectedTeacherId();
-                            }
-                        }}
-                    >
-                        <option value={"-1"}>Select Teacher</option>
-                        {data?.map((teacher, index) => {
-                            return (
-                                <option value={teacher.teacherId} key={index}>
-                                    {teacher.fullname}
-                                </option>
-                            );
-                        })}
-                    </select>
-                    <Button
-                        onClick={() => {
-                            showModalAsign(
-                                teacher.accountId,
-                                currentRequest.addQuestionRequestId,
-                                selectedTeacherId
-                            );
-                        }}
-                        className="ms-3"
-                        disabled={requestResult.loading}
-                    >
-                        Confirm
-                    </Button>
+
+                    <div className="d-flex pb-3 mb-3">
+                        <select
+                            className={style.input_select}
+                            onChange={(e) => {
+                                if (e.target.value !== "-1") {
+                                    setSelectedTeacherId(
+                                        parseInt(e.target.value)
+                                    );
+                                } else {
+                                    setSelectedTeacherId();
+                                }
+                            }}
+                        >
+                            <option value={"-1"}>Select Teacher</option>
+                            {data?.map((teacher, index) => {
+                                return (
+                                    <option
+                                        value={teacher.teacherId}
+                                        key={index}
+                                    >
+                                        {teacher.fullname}
+                                    </option>
+                                );
+                            })}
+                        </select>
+                        <Button
+                            onClick={() => {
+                                showModalAsign(
+                                    teacher.accountId,
+                                    currentRequest.addQuestionRequestId,
+                                    selectedTeacherId
+                                );
+                            }}
+                            className="ms-3"
+                            disabled={requestResult.loading}
+                        >
+                            Confirm
+                        </Button>
+                    </div>
                 </div>
             </OurModal>
             <Pagination
