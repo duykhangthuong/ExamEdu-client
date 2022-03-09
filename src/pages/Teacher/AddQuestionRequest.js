@@ -19,7 +19,6 @@ function AddQuestionRequest() {
     }, [fetchModuleResult.loading]);
     const [isFinalExam, setIsFinalExam] = useState(false);
     const [questionType, setQuestionType] = useState(1);
-
     const [postData, postDataResult] = useLazyFetch(`${API}/question/request`, {
         method: "POST",
         body: {
@@ -343,7 +342,6 @@ function AddQuestionRequest() {
 
                 {/* Horizontal line */}
                 <div className={`${styles.horizontal_line} mb-2`}></div>
-
                 {questionList.map((question, index) => {
                     if (questionType === 1)
                         return (
