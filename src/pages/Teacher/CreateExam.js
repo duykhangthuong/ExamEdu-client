@@ -92,11 +92,9 @@ const CreateExam = () => {
                     onCompletes: (data) => setExamStudents(data.payload)
                 }
             );
-            console.log("fetch student from classmodules");
             return;
         } else if (selectedStudents.length > 0) {
             //Set selected students to Exam student
-            console.log("Set exam students");
             setExamStudents(selectedStudents);
         }
     }, [selectedClass, selectedStudents]);
@@ -123,21 +121,15 @@ const CreateExam = () => {
             onCompletes: (data) => {
                 Swal.fire({
                     title: "Success",
-                    text: "Would you like to add questions to the exam now?",
+                    text: "Please begin selecting questions for this exam",
                     icon: "success",
-                    confirmButtonText: "Yes",
-                    cancelButtonText: "No",
-                    showCancelButton: true
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        history.push(
-                            `/teacher/exam/create/question/${data.examId}/${
-                                selectedModule.moduleId
-                            }/${false}`
-                        );
-                    }
+                    confirmButtonText: "Yes"
                 });
-                console.log(data);
+                history.push(
+                    `/teacher/exam/create/question/${data.examId}/${
+                        selectedModule.moduleId
+                    }/${false}`
+                );
             },
             onError: (error) => {
                 Swal.fire("Error", error.message, "error");
@@ -404,15 +396,13 @@ const ClassAndTraineeFormContent = ({
     fetchStudentsResult,
     selectedClass,
     setSelectedClass,
-    selectedStudents,
+    selectedStudents = [],
     setSelectedStudents,
     toggleClassStudent,
     setToggleClassStudent
 }) => {
     //Toggle between class and student select form
     //true for Class, false for Student
-
-    // console.log(fetchStudentsResult);
     return (
         <div>
             {/* Title */}
@@ -463,76 +453,115 @@ const ClassAndTraineeFormContent = ({
                 >
                     {/* Input content (tab content) */}
                     {/* Select input */}
-                    <div className="ps-3 pt-2">
-                        {toggleClassStudent ? (
-                            <select
-                                className={styles.input_select}
-                                onChange={(e) => {
-                                    if (e.target.value !== -1) {
-                                        setSelectedClass(
-                                            fetchClassesResult.data.payload[
-                                                e.target.value
-                                            ]
-                                        );
-                                    } else {
-                                        setSelectedClass(null);
-                                    }
-                                }}
-                            >
-                                <option value={-1}>Select class</option>
-                                {fetchClassesResult.data?.payload.map(
-                                    (classModule, index) => {
-                                        return (
-                                            <option value={index} key={index}>
-                                                {classModule.class.className}
-                                            </option>
-                                        );
-                                    }
-                                )}
-                            </select>
-                        ) : (
-                            <select
-                                className={styles.input_select}
-                                onChange={(e) => {
-                                    if (e.target.value !== "-1") {
-                                        setSelectedStudents([
-                                            ...selectedStudents,
-                                            fetchStudentsResult.data?.payload.find(
-                                                (student) => {
-                                                    return (
-                                                        // student.studentId is of type number, so we need to convert it to string to compare it with e.target.value
-                                                        String(
-                                                            student.studentId
-                                                        ) === e.target.value
-                                                    );
-                                                }
-                                            )
-                                        ]);
-                                    } else {
-                                        setSelectedStudents([]);
-                                    }
-                                }}
-                            >
-                                <option value={"-1"}>Select Student</option>
-                                {/* Make sure to filter out before mapping */}
-                                {fetchStudentsResult.data?.payload
-                                    .filter(
-                                        (student) =>
-                                            !selectedStudents.includes(student)
-                                    )
-                                    .map((student, index) => {
-                                        return (
-                                            <option
-                                                value={student.studentId}
-                                                key={index}
-                                            >
-                                                {student.fullname}
-                                            </option>
-                                        );
-                                    })}
-                            </select>
-                        )}
-                    </div>
+
+                    {toggleClassStudent ? (
+                        //Class select
+                        <select
+                            className={styles.input_select}
+                            onChange={(e) => {
+                                if (e.target.value !== -1) {
+                                    setSelectedClass(
+                                        fetchClassesResult.data.payload[
+                                            e.target.value
+                                        ]
+                                    );
+                                } else {
+                                    setSelectedClass(null);
+                                }
+                            }}
+                        >
+                            <option value={-1}>Select class</option>
+                            {fetchClassesResult.data?.payload.map(
+                                (classModule, index) => {
+                                    return (
+                                        <option value={index} key={index}>
+                                            {classModule.class.className}
+                                        </option>
+                                    );
+                                }
+                            )}
+                        </select>
+                    ) : (
+                        //Student select
+                        // <select
+                        //     className={styles.input_select}
+                        //     onChange={(e) => {
+                        //         if (e.target.value !== "-1") {
+                        //             setSelectedStudents([
+                        //                 ...selectedStudents,
+                        //                 fetchStudentsResult.data?.payload.find(
+                        //                     (student) => {
+                        //                         return (
+                        //                             // student.studentId is of type number, so we need to convert it to string to compare it with e.target.value
+                        //                             String(
+                        //                                 student.studentId
+                        //                             ) === e.target.value
+                        //                         );
+                        //                     }
+                        //                 )
+                        //             ]);
+                        //         } else {
+                        //             setSelectedStudents([]);
+                        //         }
+                        //     }}
+                        // >
+                        //     <option value={"-1"}>Select Student</option>
+                        //     {/* Make sure to filter out before mapping */}
+                        //     {fetchStudentsResult.data?.payload
+                        //         .filter(
+                        //             (student) =>
+                        //                 !selectedStudents.includes(student)
+                        //         )
+                        //         .map((student, index) => {
+                        //             return (
+                        //                 <option
+                        //                     value={student.studentId}
+                        //                     key={index}
+                        //                 >
+                        //                     {student.fullname}
+                        //                 </option>
+                        //             );
+                        //         })}
+                        // </select>
+                        // Select student container
+                        <div
+                            className={`px-3 pt-2 ${styles.chosen_item_container}`}
+                        >
+                            {fetchStudentsResult.data?.payload
+                                .filter(
+                                    (student) =>
+                                        !selectedStudents.includes(student)
+                                )
+                                .map((student, index) => {
+                                    return (
+                                        <div
+                                            className={`d-flex align-items-center px-2 ${styles.chosen_item}  ${styles.select_student}`}
+                                            onClick={() => {
+                                                setSelectedStudents([
+                                                    ...selectedStudents,
+                                                    fetchStudentsResult.data?.payload.find(
+                                                        (s) => {
+                                                            return (
+                                                                String(
+                                                                    s.studentId
+                                                                ) ===
+                                                                String(
+                                                                    student.studentId
+                                                                )
+                                                            );
+                                                        }
+                                                    )
+                                                ]);
+                                            }}
+                                            key={index}
+                                        >
+                                            {student.fullname}
+                                        </div>
+                                    );
+                                })}
+                        </div>
+                    )}
+
                     {/* Chosen item container */}
                     <div
                         className={`px-3 pt-2 ${styles.chosen_item_container}`}
@@ -560,20 +589,38 @@ const ClassAndTraineeFormContent = ({
                             )
                         ) : selectedStudents.length > 0 &&
                           selectedStudents !== undefined ? (
-                            selectedStudents.map((student, index) => (
-                                <div
-                                    className={`d-flex align-items-center px-2 ${styles.chosen_item}`}
-                                    key={index}
+                            <>
+                                <p
+                                    className="mb-0"
+                                    style={{ color: "var(--color-blue)" }}
                                 >
-                                    {/* Play icon */}
-                                    <span
-                                        className={`me-2 ${styles.play_icon}`}
+                                    Selected Students
+                                </p>
+                                {selectedStudents.map((student, index) => (
+                                    <div
+                                        className={`d-flex align-items-center px-2 ${styles.chosen_item} ${styles.remove_student}`}
+                                        onClick={() => {
+                                            // On click remove student from selected students
+                                            setSelectedStudents(
+                                                selectedStudents.filter(
+                                                    (s) =>
+                                                        s.studentId !==
+                                                        student.studentId
+                                                )
+                                            );
+                                        }}
+                                        key={index}
                                     >
-                                        <Icon icon="caret-right" />
-                                    </span>
-                                    {student?.fullname}
-                                </div>
-                            ))
+                                        {/* Play icon */}
+                                        <span
+                                            className={`me-2 ${styles.play_icon}`}
+                                        >
+                                            <Icon icon="caret-right" />
+                                        </span>
+                                        {student?.fullname}
+                                    </div>
+                                ))}
+                            </>
                         ) : (
                             <div
                                 className={`d-flex align-items-center px-2 ${styles.chosen_item}`}
@@ -604,10 +651,6 @@ const ClassAndTraineeFormContent = ({
             </div>
         </div>
     );
-};
-
-const ProctorFormContent = () => {
-    return <div></div>;
 };
 
 const fields = {
