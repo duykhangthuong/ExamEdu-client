@@ -76,6 +76,7 @@
     text-align: right;
     margin-right: 1rem;
     display: inline-block;
+    max-width: 10rem; /*This is added to allow for line breaking within a title*/
 }
 .oneStep {
     margin-bottom: 2.5rem;

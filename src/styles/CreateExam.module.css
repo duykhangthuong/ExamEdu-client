@@ -36,6 +36,7 @@
 
 .chosen_item_container {
     height: 14rem;
+    max-width: 19rem;
     background-color: var(--nav-bar);
     border-radius: 8px;
     display: flex;
@@ -51,6 +52,7 @@
     color: var(--color-blue);
     border-radius: 8px;
     min-height: 2.5rem;
+    max-width: 20rem;
     box-shadow: var(--shadow-medium);
 }
 
@@ -108,8 +110,8 @@
 }
 
 .play_icon {
-    width: 1rem;
-    height: 1rem;
+    min-width: 1rem;
+    min-height: 1rem;
     border-radius: 3px;
     background-color: var(--color-blue);
     justify-self: flex-start;
