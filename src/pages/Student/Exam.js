@@ -4,7 +4,7 @@ import styles from "../../styles/Exam.module.css";
 import Icon from "components/Icon";
 
 import { useParams } from "react-router-dom";
-import { useState, useEffect, useRef, useCallback} from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useLazyFetch, useFetch } from "utilities/useFetch";
 import useOutsideClick from "utilities/useOutsideClick";
 import { useSelector } from "react-redux";
@@ -147,9 +147,7 @@ function Exam() {
     const forceUpdate = useCallback(() => updateState({}), []);
     useEffect(() => {
         data?.questionAnswer.map((question) => {
-            question.answers.sort(
-                (a, b) => 0.5 - Math.random()
-            );
+            question.answers.sort((a, b) => 0.5 - Math.random());
         });
         forceUpdate();
     }, [loading]);
@@ -170,8 +168,8 @@ function Exam() {
                 {
                     studentAnswerContent: answer,
                     studentId: user,
-                    examQuestionId: examQuestion,
-                },
+                    examQuestionId: examQuestion
+                }
             ]); //If list answer does not have the answer of this question, add answer to list
 
             // In case user want to change the answer after choose one
@@ -192,7 +190,7 @@ function Exam() {
             listAnswer.splice(previousAnswerIndex, 1, {
                 studentAnswerContent: answer,
                 studentId: user,
-                examQuestionId: examQuestion,
+                examQuestionId: examQuestion
             });
         }
     };
@@ -205,8 +203,8 @@ function Exam() {
                 {
                     studentAnswerContent: essayAnswerParam,
                     studentId: user,
-                    examQuestionId: examQuestion,
-                },
+                    examQuestionId: examQuestion
+                }
             ]);
         } else {
             //in case list answer have this essay answer, replace the new essay answer to list
@@ -223,7 +221,7 @@ function Exam() {
             listAnswer.splice(previousAnswerIndex, 1, {
                 studentAnswerContent: essayAnswerParam,
                 studentId: user,
-                examQuestionId: examQuestion,
+                examQuestionId: examQuestion
             });
         }
         setEssayAnswer("");
@@ -257,8 +255,8 @@ function Exam() {
             cancelButtonColor: "#363940",
             confirmButtonText: "Confirm",
             customClass: {
-                popup: "roundCorner",
-            },
+                popup: "roundCorner"
+            }
         }).then((result) => {
             //nếu người dùng nhấn OK
             if (result.isConfirmed) {
@@ -278,28 +276,23 @@ function Exam() {
     const [postAnswer, postAnswerResult] = useLazyFetch("", {
         method: "POST",
         body: listAnswer,
-        onCompletes: (data) => {
+        onCompletes: (dataComplete) => {
+            history.push(`/student/mark/report/${data.moduleId}`);
             Swal.fire({
                 title: "Submit exam successfully",
-                text: data.message,
+                html: dataComplete.message,
                 icon: "success",
                 confirmButtonColor: "#7AE765",
                 confirmButtonText: "Ok",
                 allowOutsideClick: false,
                 customClass: {
-                    popup: "roundCorner",
-                },
-            }).then((result) => {
-                //nếu người dùng nhấn OK
-                if (result.isConfirmed) {
-                    // redirect to exam schedule
-                    history.push("/student");
+                    popup: "roundCorner"
                 }
             });
         },
         onError: (error) => {
             Swal.fire("Error", error.message, "error");
-        },
+        }
     });
     // Loading when fetch API
     if (loading || postAnswerResult.loading) {
@@ -432,6 +425,7 @@ function Exam() {
                                                 key={answer.answerId}
                                             >
                                                 <input
+                                                    className="ms-2"
                                                     type="radio"
                                                     id={answer.answerId}
                                                     checked={listAnswer
@@ -565,7 +559,7 @@ function Exam() {
                                     {/* Finish button */}
                                     <button
                                         type="submit"
-                                        className={`btn ${styles.btn_finish} ${styles.exam_btn}`}
+                                        className={`btn ${styles.btn_finish}`}
                                         onClick={() => {
                                             addEssayAnswerToList(
                                                 essayAnswer,

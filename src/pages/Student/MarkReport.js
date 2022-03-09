@@ -31,7 +31,7 @@ const MarkReport = () => {
         return <Loading />;
     }
 
-    if (error.status === 404) {
+    if (error?.status === 404) {
         return (
             <Wrapper>
                 <div className="d-flex flex-column justify-content-center mt-5 ">

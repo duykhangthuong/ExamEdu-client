@@ -22,7 +22,8 @@
     padding: 0.25rem 0.75rem !important;
 }
 .exam_btn:hover {
-    opacity: 0.8;
+    background-color: #8a8888 !important;
+    color: #4e4e4e !important;
 }
 .btn_gray{
     background-color: var(--color-silver-medal)!important;
@@ -31,11 +32,18 @@
 }
 
 .btn_finish{
+    border-radius: 18px!important;
+    width: 7.5rem;
+    margin-right: 1rem;
+    margin-left: 1rem;
+    padding: 0.25rem 0.75rem !important;
     background-color: var(--color-blue)!important;
     color: white !important;
     
 }
-
+.btn_finish:hover{
+    background-color: var(--color-dark-blue) !important;
+}
 
 .exam_question{
     background-color: #ededed;
@@ -47,6 +55,7 @@
     user-select: none;
     overflow: scroll;
     height: 67vh;
+    border-radius: 10px;
 }
 .exam_question textarea{
     font-size: 1rem;
@@ -75,17 +84,24 @@
     width: 100%;
     overflow: scroll;
     height: 50vh;
+    background-color: #ededed;
+    border-radius: 10px;
+    margin-right: 1rem;
+    padding: 1rem;
 }
 .questionButton{
     width: 10vw;
     height: 10vw;
-    margin: 3px;
+    /* margin: 3px; */
     border-radius: 50% !important; 
     padding: 0px !important;
     font-size: 4vw !important;
+    opacity: 0.8;
+    border: none !important;
+    margin: 0 1rem 0.5rem 0;
 }
 .questionButton:hover{
-    opacity: 0.8;
+    opacity: 1;
 }
 .question_modal{
     height: 62vh;
@@ -113,7 +129,7 @@
     }
     .questionBlock{
         width: 20%;
-        height: 87vh;
+        height: 83vh;
     }
     .exam_question{
         height: 83vh;
