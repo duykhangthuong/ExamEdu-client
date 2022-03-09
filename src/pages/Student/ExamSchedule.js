@@ -131,32 +131,40 @@ const Schedule = ({
                         {/* Test name and description container*/}
                         <div className={styles.container_testname}>
                             {/* Test name */}
-                            <div style={{ fontSize: "1.75rem" }}>{name}</div>
+                            <div>{name}</div>
                             {/* Test description */}
                             <p className="mb-0 mt-2">{desc}</p>
                         </div>
                         {/* Vertical separation line */}
                         <div className={styles.line}></div>
                         {/* Module name, allotted time container */}
-                        <div>
+                        <div className={styles.modulename_container}>
                             <Heading
                                 size="3"
                                 style={{ color: "var(--color-blue)" }}
                             >
                                 {subjectName}
                             </Heading>
-                            <div style={{ fontSize: "1.75rem" }}>
+                            <div className={styles.alotted_time}>
                                 {alottedTime} minutes
                             </div>
                         </div>
                         {/* Start button container */}
                         {/* Display start button only if exam date is in the future.
                         If not, display ended */}
-                        {moment(time).isAfter(moment()) ||
-                        moment().isBetween(
-                            moment(time),
-                            moment(time).add(alottedTime, "minutes")
-                        ) ? (
+                        {moment(time).isAfter(moment()) ? (
+                            <div>
+                                <button
+                                    className={`shadow-light ${styles.btn_start} ${styles.btn_notyet}`}
+                                    disabled
+                                >
+                                    Not yet
+                                </button>
+                            </div>
+                        ) : moment().isBetween(
+                              moment(time),
+                              moment(time).add(alottedTime, "minutes")
+                          ) ? (
                             <div>
                                 <button
                                     className={`shadow-light ${styles.btn_start}`}

@@ -28,6 +28,7 @@ const StudentRoutes = () => {
                 <Route path="/student/exam" exact>
                     <ExamRoutes />
                 </Route>
+                
                 <Route path="/student/module/list" exact>
                     <ModuleList />
                 </Route>

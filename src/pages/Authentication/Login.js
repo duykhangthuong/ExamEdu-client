@@ -99,7 +99,7 @@ const Login = () => {
                                 </span>
                             </div>
                         )}
-                        {loading && <span>Loging in...</span>}
+                        {loading && <span>Logging in...</span>}
                         {!loading && <span>Login</span>}
                     </Button>
                     {/* <a href="#" className="mb-3">

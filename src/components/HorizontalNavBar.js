@@ -144,12 +144,7 @@ const HorizontalNavBar = () => {
             {/* Welcome message */}
             <div className="d-none d-md-block me-3">Hi! {name}</div>
             {/* Notification bell */}
-            <div
-                className={`d-flex justify-content-end align-items-center ${styles.grid_c34}`}
-            >
-                <div
-                    className={`shadow-light me-3 ${styles.icon_container_noHover} ${styles.bell_container}`}
-                >
+
                     {/* Notification Navbar */}
                     {user?.role.toLowerCase() == "student" ? (
                         <div className={styles.showNotifi}>
@@ -288,7 +283,7 @@ const HorizontalNavBar = () => {
                     ) : (
                         ""
                     )}
-                </div>
+               
                 {/* Avatar */}
                 <div
                     className={`shadow-light me-md-3 ${styles.avatar_container}`}
@@ -310,7 +305,7 @@ const HorizontalNavBar = () => {
                         className={styles.log_out_btn}
                     ></Icon>
                 </div>
-            </div>
+          
             {/* </div> */}
         </nav>
     );
