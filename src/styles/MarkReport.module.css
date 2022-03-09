@@ -5,6 +5,7 @@
     border-left: 10px solid var(--color-dark-blue);
     color: var(--color-dark-blue);
     box-shadow: var(--shadow-medium);
+    width: 85%;
 }
 .progressbar {
     height: 10px;
@@ -48,6 +49,12 @@ progress::-webkit-progress-value {
 }
 .testName {
     font-size: 2rem;
+}
+.markPillPassed {
+    background-color: #00ff00;
+}
+.markPillNotPassed {
+    background-color: red;
 }
 @media screen and (min-width: 768px) {
     .mark {

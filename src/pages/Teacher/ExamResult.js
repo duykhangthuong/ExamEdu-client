@@ -31,7 +31,7 @@ const ExamResult = () => {
         "Time Spent",
         "Submitted time",
         "Result",
-        size.width > 768 ? "Grade" : "",
+        size.width > 768 ? "Grade" : ""
     ];
 
     const [studentId, setStudentId] = useState();
@@ -77,8 +77,8 @@ const ExamResult = () => {
                 [a]: {
                     validate: REGEX,
                     regex: FLOATNUMBER,
-                    message: "Score must be float number",
-                },
+                    message: "Score must be float number"
+                }
             };
         }
         //set array of examQuestionId when fetch API for student text answer, to set to input later (line 87)
@@ -91,7 +91,7 @@ const ExamResult = () => {
     const input = fieldProp.map((f, index) => {
         return {
             mark: parseFloat(updateScore.values[f]),
-            examQuestionId: examQuestionId[index],
+            examQuestionId: examQuestionId[index]
         };
     });
     //Call API to    post mark
@@ -107,19 +107,19 @@ const ExamResult = () => {
                         "Grade text answer successfully",
                         "success"
                     );
-                    fetchNotifcation(`${API}/notify/trainee`,{
+                    fetchNotifcation(`${API}/notify/trainee`, {
                         method: "POST",
                         body: {
                             sendTo: studentEmail,
                             user: "Notification",
-                            message: `Your text answer in ${fetchResult.data?.payload[0].examName} have been grade`,
-                        },
+                            message: `Your text answer in ${fetchResult.data?.payload[0].examName} have been grade`
+                        }
                     });
                     fetchData();
                 },
                 onError: (error) => {
                     Swal.fire("Error", error.message, "error");
-                },
+                }
             }
         );
     }
@@ -220,11 +220,18 @@ const ExamResult = () => {
                     id: item.studentId,
                     fullName: item.studentName,
                     timeSpent:
-                        moment(item.finishedAt).diff(item.examDay, "minutes") +
-                        " minutes",
-                    submittedTime: moment(item.finishedAt).format(
-                        "DD/MM/YYYY, h:mm A"
-                    ),
+                        item.finishedAt !== null
+                            ? moment(item.finishedAt).diff(
+                                  item.examDay,
+                                  "minutes"
+                              ) + " minutes"
+                            : "Not finished yet",
+                    submittedTime:
+                        item.finishedAt !== null
+                            ? moment(item.finishedAt).format(
+                                  "DD/MM/YYYY, h:mm A"
+                              )
+                            : "Not finished yet",
                     result: (
                         <div
                             className={
@@ -242,15 +249,6 @@ const ExamResult = () => {
                         //Nút chấm điểm tự luận, onClick sẽ trả về studentId vào State ở dòng 37
                         <div
                             className="d-flex justify-content-center"
-                            onClick={() => {
-                                setStudentName(item.studentName);
-                                setStudentId(item.studentId);
-                                setStudentEmail(item.studentEmail);
-                                setIsClicked(true);
-                                fetchDataTA(
-                                    `${API}/Answer/TextAnswer?studentId=${item.studentId}&examId=${param.ExamID}`
-                                );
-                            }}
                             data-bs-toggle="tooltip"
                             data-bs-placement="right"
                             title="Grade Text Question"
@@ -261,6 +259,15 @@ const ExamResult = () => {
                                     fetchResult.loading ||
                                     !item.needToGradeTextQuestion
                                 }
+                                onClick={() => {
+                                    setStudentName(item.studentName);
+                                    setStudentId(item.studentId);
+                                    setStudentEmail(item.studentEmail);
+                                    setIsClicked(true);
+                                    fetchDataTA(
+                                        `${API}/Answer/TextAnswer?studentId=${item.studentId}&examId=${param.ExamID}`
+                                    );
+                                }}
                             >
                                 <Icon
                                     icon="pencil-ruler"
@@ -269,7 +276,7 @@ const ExamResult = () => {
                                 />
                             </Button>
                         </div>
-                    ),
+                    )
                 }))}
             />
             {/* Modal show text answer */}

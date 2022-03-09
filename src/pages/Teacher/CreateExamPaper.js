@@ -181,18 +181,15 @@ const CreateExamPaper = () => {
 
   const loadQuestion1 = () => {
     if (isQuestion1Open[0] === false && isQuestion1Open[1] === false) {
-      fetchQuestion1Data();
-      setIsQuestion1Open([true, true]);
+      fetchQuestion1Data("", {onCompletes: () => {setIsQuestion1Open([true, true])}}); //doan nay ko co gi dac biet dau
       return;
     }
     if (isQuestion1Open[0] === false && isQuestion1Open[1] === true) {
       setIsQuestion1Open([true, true]);
-      console.log(fetchQuestion1Result.data);
       return;
     }
     if (isQuestion1Open[0] === true && isQuestion1Open[1] === true) {
       setIsQuestion1Open([false, true]);
-      console.log(fetchQuestion1Result.data);
       return;
     }
   };
@@ -205,12 +202,10 @@ const CreateExamPaper = () => {
     }
     if (isQuestion2Open[0] === false && isQuestion2Open[1] === true) {
       setIsQuestion2Open([true, true]);
-      console.log(fetchQuestion2Result.data);
       return;
     }
     if (isQuestion2Open[0] === true && isQuestion2Open[1] === true) {
       setIsQuestion2Open([false, true]);
-      console.log(fetchQuestion2Result.data);
       return;
     }
   };
@@ -223,12 +218,10 @@ const CreateExamPaper = () => {
     }
     if (isQuestion3Open[0] === false && isQuestion3Open[1] === true) {
       setIsQuestion3Open([true, true]);
-      console.log(fetchQuestion3Result.data);
       return;
     }
     if (isQuestion3Open[0] === true && isQuestion3Open[1] === true) {
       setIsQuestion3Open([false, true]);
-      console.log(fetchQuestion3Result.data);
       return;
     }
   };
@@ -483,10 +476,12 @@ const CreateExamPaper = () => {
                 <span className="sr-only">Loading...</span>
               </div>
             )}
-            {isQuestion1Open[0] &&
+            {
               fetchQuestion1Result.data?.map((question) => {
                 return (
-                  <div className={`${style.question_answer_div}`}>
+                  <div className={`${style.question_answer_div}`} style={{
+                    display: !isQuestion1Open[0] && 'none'
+                  }}>
                     <div className={`${style.checkbox_column}`}>
                       <input
                         type="checkbox"
@@ -554,10 +549,12 @@ const CreateExamPaper = () => {
                 <span class="sr-only">Loading...</span>
               </div>
             )}
-            {isQuestion2Open[0] &&
+            {
               fetchQuestion2Result.data?.map((question) => {
                 return (
-                  <div className={`${style.question_answer_div}`}>
+                  <div className={`${style.question_answer_div}`}  style={{
+                    display: !isQuestion2Open[0] && 'none'
+                  }}>
                     <div className={`${style.checkbox_column}`}>
                       <input
                         type="checkbox"
@@ -626,10 +623,12 @@ const CreateExamPaper = () => {
                 <span class="sr-only">Loading...</span>
               </div>
             )}
-            {isQuestion3Open[0] &&
+            {
               fetchQuestion3Result.data?.map((question) => {
                 return (
-                  <div className={`${style.question_answer_div}`}>
+                  <div className={`${style.question_answer_div}`}  style={{
+                    display: !isQuestion3Open[0] && 'none'
+                  }}>
                     <div className={`${style.checkbox_column}`}>
                       <input
                         type="checkbox"
