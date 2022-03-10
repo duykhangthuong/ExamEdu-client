@@ -34,6 +34,25 @@
     display: flex;
 }
 
+.select_student {
+    cursor: pointer;
+}
+
+.select_student:hover {
+    background-color: var(--color-blue);
+    color: var(--color-lavender-light);
+    transition: all 0.1s ease-in-out;
+}
+
+.remove_student {
+    cursor: pointer;
+}
+
+.remove_student:hover {
+    background-color: var(--color-orange);
+    transition: all 0.1s ease-in-out;
+}
+
 .chosen_item_container {
     height: 14rem;
     max-width: 19rem;
@@ -71,7 +90,7 @@
 
 .tab_content_container {
     margin: 0;
-    padding: 2rem 1rem 3rem 0;
+    padding: 2rem 1rem 3rem 1rem;
     background-color: var(--nav-bar);
     border-radius: 6px;
 }

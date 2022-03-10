@@ -31,7 +31,7 @@ const MarkReport = () => {
         return <Loading />;
     }
 
-    if (error.status === 404) {
+    if (error?.status === 404) {
         return (
             <Wrapper>
                 <div className="d-flex flex-column justify-content-center mt-5 ">
@@ -53,9 +53,10 @@ const MarkReport = () => {
     return (
         <Wrapper>
             <Heading>Mark Report</Heading>
-            {data?.map((mark) => (
+            {data?.map((mark, index) => (
                 <div
                     className={`${style.frame} d-flex flex-column flex-md-row justify-content-md-between mb-3`}
+                    key={index}
                 >
                     <div className="d-flex">
                         <div

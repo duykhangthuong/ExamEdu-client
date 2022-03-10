@@ -1,7 +1,7 @@
 import Heading from "components/Heading";
 import Wrapper from "components/Wrapper";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom/cjs/react-router-dom.min";
+import { useHistory, useParams } from "react-router-dom/cjs/react-router-dom.min";
 import style from "styles/CreateExamPaper.module.css";
 import { API, REQUIRED } from "utilities/constants";
 import { useLazyFetch } from "utilities/useFetch";
@@ -13,6 +13,8 @@ const CreateExamPaper = () => {
   const { ExamID } = useParams();
   const { moduleId } = useParams();
   const { isFinalExam } = useParams();
+
+  const history = useHistory();
 
   const [selectTabIndex, setSelectTabIndex] = useState(0); //index of the tab which is show
 
@@ -115,7 +117,13 @@ const CreateExamPaper = () => {
         },
       },
       onCompletes: () => {
-        Swal.fire("Success", "Exam paper created", "success");
+        Swal.fire("Success", "Exam paper created", "success").then((result) => {
+          if (result.isConfirmed) {
+            history.push(
+              `/teacher/module/list`
+            );
+          }
+        });;
       },
       onError: (error) => {
         Swal.fire("Error", error.message, "error");
@@ -148,21 +156,27 @@ const CreateExamPaper = () => {
         },
       },
       onCompletes: () => {
-        Swal.fire("Success", "Exam paper created", "success");
+        Swal.fire("Success", "Exam paper created", "success").then((result) => {
+          if (result.isConfirmed) {
+            history.push(
+              `/teacher/module/list`
+            );
+          }
+        });;
       },
       onError: (error) => {
-        Swal.fire("Error", error.message, "error");
+        Swal.fire("Error", error.message, "error")
       },
     }
   );
 
   const SubmitFormByHand = () => {
-    Swal.fire("Success", "Processing", "success");
+    Swal.fire("Status", "Processing", "success");
     fetchdataByHand();
   };
 
   const SubmitFormAuto = () => {
-    Swal.fire("Success", "Processing", "success");
+    Swal.fire("Status", "Processing", "success");
     fetchdataAuto();
   };
 
@@ -181,18 +195,15 @@ const CreateExamPaper = () => {
 
   const loadQuestion1 = () => {
     if (isQuestion1Open[0] === false && isQuestion1Open[1] === false) {
-      fetchQuestion1Data();
-      setIsQuestion1Open([true, true]);
+      fetchQuestion1Data("", { onCompletes: () => { setIsQuestion1Open([true, true]) } }); //doan nay ko co gi dac biet dau
       return;
     }
     if (isQuestion1Open[0] === false && isQuestion1Open[1] === true) {
       setIsQuestion1Open([true, true]);
-      console.log(fetchQuestion1Result.data);
       return;
     }
     if (isQuestion1Open[0] === true && isQuestion1Open[1] === true) {
       setIsQuestion1Open([false, true]);
-      console.log(fetchQuestion1Result.data);
       return;
     }
   };
@@ -205,12 +216,10 @@ const CreateExamPaper = () => {
     }
     if (isQuestion2Open[0] === false && isQuestion2Open[1] === true) {
       setIsQuestion2Open([true, true]);
-      console.log(fetchQuestion2Result.data);
       return;
     }
     if (isQuestion2Open[0] === true && isQuestion2Open[1] === true) {
       setIsQuestion2Open([false, true]);
-      console.log(fetchQuestion2Result.data);
       return;
     }
   };
@@ -223,16 +232,14 @@ const CreateExamPaper = () => {
     }
     if (isQuestion3Open[0] === false && isQuestion3Open[1] === true) {
       setIsQuestion3Open([true, true]);
-      console.log(fetchQuestion3Result.data);
       return;
     }
     if (isQuestion3Open[0] === true && isQuestion3Open[1] === true) {
       setIsQuestion3Open([false, true]);
-      console.log(fetchQuestion3Result.data);
       return;
     }
   };
-  if(width < 1400)
+  if (width < 1400)
     return <Wrapper>Not support small screen</Wrapper>
   // `${API}/Question/${fetchExamResult.data["moduleId"]}/3/${fetchExamResult.data["isFinalExam"]}`
   return (
@@ -455,9 +462,8 @@ const CreateExamPaper = () => {
         </div>
         {/* question bank tab */}
         <div
-          className={`${style.questionbank_tab} ${
-            selectTabIndex !== 2 && style.hide
-          }`}
+          className={`${style.questionbank_tab} ${selectTabIndex !== 2 && style.hide
+            }`}
         >
           <div style={{ margin: "0 auto" }}>
             <div
@@ -483,10 +489,12 @@ const CreateExamPaper = () => {
                 <span className="sr-only">Loading...</span>
               </div>
             )}
-            {isQuestion1Open[0] &&
+            {
               fetchQuestion1Result.data?.map((question) => {
                 return (
-                  <div className={`${style.question_answer_div}`}>
+                  <div className={`${style.question_answer_div}`} style={{
+                    display: !isQuestion1Open[0] && 'none'
+                  }}>
                     <div className={`${style.checkbox_column}`}>
                       <input
                         type="checkbox"
@@ -519,9 +527,8 @@ const CreateExamPaper = () => {
                       {question.answers.map((answer) => {
                         return (
                           <div
-                            className={`${style.anwer_content_div} ${
-                              answer.isCorrect && style.blue_color_text
-                            }`}
+                            className={`${style.anwer_content_div} ${answer.isCorrect && style.blue_color_text
+                              }`}
                           >
                             {answer.answerContent}
                           </div>
@@ -554,10 +561,12 @@ const CreateExamPaper = () => {
                 <span class="sr-only">Loading...</span>
               </div>
             )}
-            {isQuestion2Open[0] &&
+            {
               fetchQuestion2Result.data?.map((question) => {
                 return (
-                  <div className={`${style.question_answer_div}`}>
+                  <div className={`${style.question_answer_div}`} style={{
+                    display: !isQuestion2Open[0] && 'none'
+                  }}>
                     <div className={`${style.checkbox_column}`}>
                       <input
                         type="checkbox"
@@ -590,9 +599,8 @@ const CreateExamPaper = () => {
                       {question.answers.map((answer) => {
                         return (
                           <div
-                            className={`${style.anwer_content_div} ${
-                              answer.isCorrect && style.blue_color_text
-                            }`}
+                            className={`${style.anwer_content_div} ${answer.isCorrect && style.blue_color_text
+                              }`}
                           >
                             {answer.answerContent}
                           </div>
@@ -626,10 +634,12 @@ const CreateExamPaper = () => {
                 <span class="sr-only">Loading...</span>
               </div>
             )}
-            {isQuestion3Open[0] &&
+            {
               fetchQuestion3Result.data?.map((question) => {
                 return (
-                  <div className={`${style.question_answer_div}`}>
+                  <div className={`${style.question_answer_div}`} style={{
+                    display: !isQuestion3Open[0] && 'none'
+                  }}>
                     <div className={`${style.checkbox_column}`}>
                       <input
                         type="checkbox"
@@ -662,9 +672,8 @@ const CreateExamPaper = () => {
                       {question.answers.map((answer) => {
                         return (
                           <div
-                            className={`${style.anwer_content_div} ${
-                              answer.isCorrect && style.blue_color_text
-                            }`}
+                            className={`${style.anwer_content_div} ${answer.isCorrect && style.blue_color_text
+                              }`}
                           >
                             {answer.answerContent}
                           </div>
