@@ -132,9 +132,15 @@ function Exam() {
     const history = useHistory();
     const param = useParams();
     let examId = param.examId;
-    const { data, loading, error } = useFetch(`${API}/ExamQuestions/${examId}`);
 
     const user = useSelector((state) => state.user.accountId);
+    const { data, loading, error } = useFetch(`${API}/ExamQuestions/${examId}?studentId=${user}`);
+    
+    if(error?.status){
+        Swal.fire("Error", error.message, "error");
+        history.push(`/student`);
+    }
+    
     const [question, setQuestion] = useState(0);
     const [answerChecked, setAnswerChecked] = useState();
     const [listAnswer, setListAnswer] = useState([]);
@@ -151,8 +157,6 @@ function Exam() {
         });
         forceUpdate();
     }, [loading]);
-    // console.log("After: ");
-    // console.log(data?.questionAnswer[0].answers);
 
     const addAnswerToList = (answer, examQuestion) => {
         answer = String(answer);
