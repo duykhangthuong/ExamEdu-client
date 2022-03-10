@@ -55,6 +55,10 @@
     flex: 0 1 20em;
 }
 
+.container_testname div {
+    font-size: 1.75rem;
+}
+
 .notification_box {
     display: flex;
     justify-content: center;
@@ -65,4 +69,90 @@
     border-radius: 8px;
 
     box-shadow: var(--shadow-light);
+}
+
+.alotted_time {
+    font-size: 1.75rem;
+}
+
+.btn_notyet {
+    background-color: var(--color-dark-blue);
+    cursor: default;
+}
+
+.btn_notyet:hover {
+    background-color: var(--color-dark-blue);
+    color: white;
+}
+
+@media screen and (max-width: 768px) {
+    .container_testname {
+        flex: 0 0 0;
+    }
+
+    .container_bell_time {
+        font-size: 1.25rem;
+        padding: 0 1rem;
+    }
+
+    /* Modify container_testname heading to be smaller */
+    .container_testname div {
+        font-size: 1.25rem;
+    }
+
+    /* Modify container_test description to be smaller */
+    .container_testname p {
+        font-size: 1rem;
+    }
+
+    /* Modify Module code fontsize */
+    .modulename_container div {
+        font-size: 1.25rem;
+    }
+}
+
+@media screen and (max-width: 426px) {
+    .container_testname {
+        flex: 0 0 7rem;
+        justify-self: stretch;
+    }
+
+    .container_bell_time {
+        font-size: 1rem;
+    }
+
+    /* Modify container_testname heading to be smaller */
+    .container_testname div {
+        font-size: 1rem;
+    }
+
+    /* Modify container_test description to be smaller */
+    .container_testname p {
+        font-size: 0.8rem;
+    }
+
+    /* Modify Module code fontsize */
+    .modulename_container div {
+        font-size: 1rem;
+    }
+
+    /* Make bell container smaller */
+    .container_bell_time {
+        padding: 0 0.3rem;
+    }
+
+    .alotted_time {
+        font-size: 0.8rem !important;
+    }
+
+    /* Make button smaller */
+    .btn_start {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+    }
+
+    .btn_end {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.75rem;
+    }
 }

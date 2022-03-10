@@ -41,7 +41,7 @@
 
 .class_grid_container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(10rem, 15rem));
+    grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
     row-gap: 1rem;
     column-gap: 1.5rem;
     align-items: flex-start;
@@ -54,6 +54,9 @@
 
     padding: 0.5rem 0.75rem;
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .class:hover {

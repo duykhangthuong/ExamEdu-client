@@ -24,10 +24,10 @@ const ModuleList = () => {
     return (
         <Wrapper>
             <Heading size="1">Your Module</Heading>
-            <div className="d-flex flex-column flex-md-row">
+            <div className="d-flex flex-column flex-md-row justify-content-center flex-wrap">
                 {data?.payload.map((module) => (
                     <div
-                        className={`${style.frame} d-flex flex-column align-items-center p-3 `}
+                        className={`${style.frame} d-flex flex-column align-items-center p-3 mb-3 `}
                     >
                         <Icon
                             icon="bookmark"

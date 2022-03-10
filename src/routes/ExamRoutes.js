@@ -6,6 +6,7 @@ import KhaMinh from "pages/KhaMinh";
 import React from "react";
 
 import { useUserAuthorization } from "utilities/useAuthorization";
+import StudentRoutes from "./StudentRoutes";
 const ExamRoutes = () => {
     const { redirect, path } = useUserAuthorization("student");
 
@@ -14,13 +15,13 @@ const ExamRoutes = () => {
         <>
             <Switch>
                 {/* Chưa xong */}
-                <Route path="student/exam/:examId" exact>
+                <Route path="/exam/:examId" exact>
                     <Exam />
                 </Route>
 
                 {/* Chưa xong */}
-                <Route path="/exam" exact>
-                    <KhaMinh />
+                <Route path="*" exact>
+                    <StudentRoutes />
                 </Route>
             </Switch>
         </>
