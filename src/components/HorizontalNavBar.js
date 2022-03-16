@@ -41,14 +41,16 @@ const HorizontalNavBar = () => {
     const [fetchNotifi] = useLazyFetch(
         `${API}/Notify/history?email=${user?.email.toLowerCase()}&pageNumber=${pageNumber}&pageSize=${pageSize}`,
         {
-            method: "GET",
-            onCompleted: (data) =>
-                setNotifications(notifications.concat(data.payload))
+            method: "get",
+            onCompletes: (data) =>{
+                setNotifications(notifications.concat(data.payload));
+            }
         }
     );
 
     useEffect(() => {
-        if (user?.role.toLowerCase() == "Student") {
+  
+        if (user?.role.toLowerCase() === "student") {
             fetchNotifi();
         }
     }, [pageNumber]);
