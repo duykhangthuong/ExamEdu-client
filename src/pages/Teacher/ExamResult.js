@@ -52,15 +52,32 @@ const ExamResult = () => {
         `${API}/ClassModule/${param.classModuleId}`
     );
     const [fetchNotifcation, fetchNotifcationResult] = useLazyFetch("");
-    //Fetch classModule info
-    // const { data, loading, error } = useFetch(
-    //     `${API}/ClassModule/${param.classModuleId}`,
-    //     {
-    //         onCompletes: (data) => {},
-    //         onError: (error) => {},
-    //     }
-    // );
 
+    //Fetch report data to download report file
+    const [fetchReportData, fetchReportDataResult] = useLazyFetch(
+        `${API}/exam/result/report/${param.ExamID}/${param.classModuleId}`,
+        {
+            method: "get",
+            responseType: "blob",
+            //Oncompleted -> download file
+            onCompletes: (dataStream) => {
+                const fileURL = URL.createObjectURL(dataStream);
+
+                const anchor = document.createElement("a");
+                anchor.href = fileURL;
+                anchor.download = `Report_${data?.class.className}_${data?.module.moduleCode}_${fetchResult.data?.payload[0].examName}`;
+                document.body.appendChild(anchor);
+                anchor.click();
+                document.body.removeChild(anchor);
+
+                URL.revokeObjectURL(fileURL);
+            },
+            onError: (error) => {
+                // Alert message if fail
+                Swal.fire("Error!", error.message, "error");
+            }
+        }
+    );
     useEffect(() => {
         fetchData();
     }, [currentPage]);
@@ -94,7 +111,7 @@ const ExamResult = () => {
             examQuestionId: examQuestionId[index]
         };
     });
-    //Call API to    post mark
+    //Call API to post mark
     function handleUpdateScore() {
         postScore(
             `${API}/Mark/textAnswer?studentId=${studentId}&examId=${param.ExamID}`,
@@ -127,7 +144,8 @@ const ExamResult = () => {
     let { isClicked, setIsClicked } = useOutsideClick(modalRef);
 
     //Check if the page is loaded and if there is any data record
-    if (fetchResult.loading) return <Loading />;
+    if (fetchResult.loading || fetchReportDataResult.loading)
+        return <Loading />;
     if (fetchResult.error?.status === 404) {
         return (
             <Wrapper className="d-flex justify-content-center align-items-center">
@@ -170,44 +188,57 @@ const ExamResult = () => {
                     history.push("/teacher/exam/create/info");
                 }}
             />
-            <div className="d-flex flex-md-row">
-                <div className="d-flex flex-md-column me-5">
-                    {/* Class name */}
-                    <div
-                        className="mb-2"
-                        style={{ color: "var(--color-dark-blue)" }}
-                    >
-                        <Icon icon="id-card" className="me-2" />
-                        {data?.class.className}
+            <div className="d-flex justify-content-between">
+                <div className="d-flex flex-md-row">
+                    <div className="d-flex flex-md-column me-5">
+                        {/* Class name */}
+                        <div
+                            className="mb-2"
+                            style={{ color: "var(--color-dark-blue)" }}
+                        >
+                            <Icon icon="id-card" className="me-2" />
+                            {data?.class.className}
+                        </div>
+                        {/* Module code and name */}
+                        <div
+                            className="mb-2"
+                            style={{ color: "var(--color-dark-blue)" }}
+                        >
+                            <Icon icon="cube" className="me-2" />
+                            {`${data?.module.moduleCode} - ${data?.module.moduleName}`}
+                        </div>
                     </div>
-                    {/* Module code and name */}
-                    <div
-                        className="mb-2"
-                        style={{ color: "var(--color-dark-blue)" }}
-                    >
-                        <Icon icon="cube" className="me-2" />
-                        {`${data?.module.moduleCode} - ${data?.module.moduleName}`}
+                    <div className="d-flex flex-md-column">
+                        {/* Exam name */}
+                        <div
+                            className="mb-2"
+                            style={{ color: "var(--color-dark-blue)" }}
+                        >
+                            <Icon icon="clipboard-list" className="me-2" />
+                            {`${fetchResult.data?.payload[0].examName}`}
+                        </div>
+                        {/* Exam time */}
+                        <div
+                            className="mb-2"
+                            style={{ color: "var(--color-dark-blue)" }}
+                        >
+                            <Icon icon="calendar" className="me-2" />
+                            {`${moment(
+                                fetchResult.data?.payload[0].examDay
+                            ).format("DD/MM/YYYY, h:mm A")}`}
+                        </div>
                     </div>
                 </div>
-                <div className="d-flex flex-md-column">
-                    {/* Exam name */}
-                    <div
-                        className="mb-2"
-                        style={{ color: "var(--color-dark-blue)" }}
+                <div className="">
+                    <Button
+                        btn="secondary"
+                        circle={true}
+                        onClick={() => {
+                            fetchReportData();
+                        }}
                     >
-                        <Icon icon="clipboard-list" className="me-2" />
-                        {`${fetchResult.data?.payload[0].examName}`}
-                    </div>
-                    {/* Exam time */}
-                    <div
-                        className="mb-2"
-                        style={{ color: "var(--color-dark-blue)" }}
-                    >
-                        <Icon icon="calendar" className="me-2" />
-                        {`${moment(fetchResult.data?.payload[0].examDay).format(
-                            "DD/MM/YYYY, h:mm A"
-                        )}`}
-                    </div>
+                        <Icon icon="file-export"></Icon>
+                    </Button>
                 </div>
             </div>
 

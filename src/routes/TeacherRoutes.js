@@ -13,7 +13,6 @@ import AddQuestionRequest from "pages/Teacher/AddQuestionRequest";
 import RequestAddQuestionBank from "pages/Teacher/RequestAddQuestionBank";
 import RequestAddQuestionList from "pages/Teacher/RequestAddQuestionList";
 import ApproveRequests from "pages/Teacher/ApproveRequests";
-import Wrapper from "components/Wrapper";
 const TeacherRoutes = () => {
     const { redirect, path } = useUserAuthorization("teacher");
 
