@@ -35,10 +35,10 @@ function AddQuestionRequest() {
             Swal.fire("Error", error.message, "error");
         }
     });
-
-    // console.log("question List: ");
-    // console.log(questionList);
+    /* Use this function when click on add new question button,
+         add a question with 2 blank answer (multiple choice) or 1 blank answer (text question)*/
     const addNewQuestion = () => {
+        // if Question type is multiple choice
         if (questionType === 1) {
             setQuestionList([
                 ...questionList,
@@ -61,6 +61,7 @@ function AddQuestionRequest() {
                 }
             ]);
         } else {
+            // If question type is text question
             setQuestionList([
                 ...questionList,
                 {
@@ -79,10 +80,15 @@ function AddQuestionRequest() {
             ]);
         }
     };
+    /* NOTE: All function about delete question, add answer, delete answer, update content... below is about
+        update question list and then pass that question list to setQuestionList to update State  */
+
+    // delete a question when clicking on trash button 
     const deleteQuestion = (index) => {
         const updateList = questionList.filter((question, i) => index !== i);
         setQuestionList(updateList);
     };
+    // add new answer option in a question
     const addNewAnswer = (index) => {
         let updateList = questionList.map((question, i) => {
             if (index === i) {
@@ -97,6 +103,7 @@ function AddQuestionRequest() {
         });
         setQuestionList(updateList);
     };
+    // delete an answer in a question
     const deleteAnswer = (idxQ, idxA) => {
         const updateList = questionList.map((question, i) => {
             if (idxQ === i) {
@@ -108,6 +115,7 @@ function AddQuestionRequest() {
         });
         setQuestionList(updateList);
     };
+    // Update question content of question when user type in question textarea
     const addQuestionContentToQuestion = (index, value) => {
         const updateList = questionList.map((question, i) => {
             if (index === i) {
@@ -117,6 +125,9 @@ function AddQuestionRequest() {
         });
         setQuestionList(updateList);
     };
+
+    // Update answer content of question when user type in answer textarea
+    // must pass index of question and answer to find exactly that answer textarea
     const addAnswerContentToQuestion = (idxQ, idxA, value) => {
         const updateList = questionList.map((question, index) => {
             if (index === idxQ) {
@@ -131,6 +142,7 @@ function AddQuestionRequest() {
         });
         setQuestionList(updateList);
     };
+    // update module of all question when user choose in select option
     const updateModuleQuestion = (moduleId) => {
         moduleId = parseInt(moduleId); //phải parse thành int thì setModule mới set lại cái state là kiểu number
         setModule(moduleId);
@@ -140,6 +152,7 @@ function AddQuestionRequest() {
         });
         setQuestionList(updateList);
     };
+    // update level of each question when user choose in select option (param: question index)
     const updateLevelEachQuestion = (index, levelId) => {
         levelId = parseInt(levelId);
         const updateList = questionList.map((question, i) => {
@@ -150,6 +163,7 @@ function AddQuestionRequest() {
         });
         setQuestionList(updateList);
     };
+    // user check on radio button to update which answer is true
     const updateTrueAnswer = (idxQ, idxA) => {
         const updateList = questionList.map((question, index) => {
             if (index === idxQ) {
@@ -166,9 +180,16 @@ function AddQuestionRequest() {
         });
         setQuestionList(updateList);
     };
+    // return boolean if this answer is Correct
     const checkTrueAnswer = (idxQ, idxA) => {
         return questionList[idxQ].answers[idxA].isCorrect;
     };
+
+    // User choose select option to change question type
+    /* if there are question in multiple choice type but user want to change, 
+        show a confirm dialog that all previous question will be deleted (Or vice versa). 
+        Else if there is no question, change question type
+     */
     const changeQuestionType = (questionTypeId) => {
         if (questionList.length !== 0) {
             Swal.fire({
@@ -230,20 +251,6 @@ function AddQuestionRequest() {
             }
         }
     );
-    const [fetchDataAdd, fetchResultAdd] = useLazyFetch(
-        "http://127.0.0.1:2022/add/question",
-        {
-            method: "post",
-            body: {
-                questions: questionList.map((question) => {
-                    return question["questionContent"];
-                })
-            },
-            onError: (error) => {
-                Swal.fire("Error", error.message, "error");
-            }
-        }
-    );
 
     useEffect(() => {
         //set question list state but add content to duplicatedQuestion field
@@ -253,9 +260,6 @@ function AddQuestionRequest() {
         });
         setQuestionList(updateList);
 
-        // console.log(fetchResultCheck.data);
-        // console.log("sau khi check");
-        // console.log(questionList);
     }, [fetchResultCheck.loading]);
 
     if (
@@ -273,23 +277,17 @@ function AddQuestionRequest() {
                 <Heading size={2} className={`text-center mb-3`}>
                     New Question
                 </Heading>
+               
                 <div
                     className={`${styles.totalOption} d-flex justify-content-around`}
                 >
+                     {/* Question type select option*/}
                     <div className="text-center">
                         <label htmlFor="questionType">Question Type</label>
                         <select
                             class="w-30 form-select"
                             aria-label="Default select example"
                             id="questionType"
-                            // onChange={() =>
-                            //     changeQuestionType(
-                            //         parseInt(
-                            //             document.getElementById("questionType")
-                            //                 .value
-                            //         )
-                            //     )
-                            // }
                             onChange={(e) =>
                                 changeQuestionType(parseInt(e.target.value))
                             }
@@ -299,6 +297,7 @@ function AddQuestionRequest() {
                             <option value={2}>Text</option>
                         </select>
                     </div>
+                    {/* Module type select option */}
                     <div className="text-center">
                         <label htmlFor="questionModule">Module</label>
                         <select
@@ -323,6 +322,7 @@ function AddQuestionRequest() {
                             )}
                         </select>
                     </div>
+                    {/* Bank type select option */}
                     <div className="text-center">
                         <label htmlFor="bank">Bank</label>
                         <select
@@ -342,6 +342,7 @@ function AddQuestionRequest() {
 
                 {/* Horizontal line */}
                 <div className={`${styles.horizontal_line} mb-2`}></div>
+                {/* Render array of question list */}
                 {questionList.map((question, index) => {
                     if (questionType === 1)
                         return (
@@ -351,6 +352,7 @@ function AddQuestionRequest() {
                                         <span className="fw-bold">
                                             Question {index + 1}
                                         </span>
+                                        {/* Question level select option */}
                                         <div className="d-flex">
                                             <select
                                                 class="w-13 form-select"
@@ -376,6 +378,7 @@ function AddQuestionRequest() {
                                                     Level 3
                                                 </option>
                                             </select>
+                                            {/* Delete question button */}
                                             <Button
                                                 circle={true}
                                                 className="ms-2"
