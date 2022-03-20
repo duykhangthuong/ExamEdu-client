@@ -13,7 +13,7 @@ import { useHistory } from "react-router-dom";
 const ModuleList = () => {
     const user = useSelector((state) => state.user.accountId);
     const history = useHistory();
-    const { data, loading, error } = useFetch(`${API}/Module/${user}`);
+    const { data, loading} = useFetch(`${API}/Module/${user}`);
     function onClickMarkReport(moduleId) {
         console.log(moduleId);
         history.push(`/student/mark/report/${moduleId}`);
@@ -25,9 +25,10 @@ const ModuleList = () => {
         <Wrapper>
             <Heading size="1">Your Module</Heading>
             <div className="d-flex flex-column flex-md-row justify-content-center flex-wrap">
-                {data?.payload.map((module) => (
+                {data?.payload.map((module,index) => (
                     <div
                         className={`${style.frame} d-flex flex-column align-items-center p-3 mb-3 `}
+                        key={index}
                     >
                         <Icon
                             icon="bookmark"
