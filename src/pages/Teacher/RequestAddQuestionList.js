@@ -12,7 +12,8 @@ import Button from "components/Button";
 import Icon from "components/Icon";
 import Table from "components/Table";
 import moment from "moment";
-
+import Heading from "components/Heading";
+import styles from "../../styles/ExamSchedule.module.css";
 const RequestAddQuestionList = () => {
     const history = useHistory();
     //Lưu các giá trị tìm kiếm
@@ -39,6 +40,9 @@ const RequestAddQuestionList = () => {
         {
             onCompletes: (data) => {
                 console.log(data);
+            },
+            onError: (error) => {
+                console.log(error.message);
             }
         }
     );
@@ -51,7 +55,18 @@ const RequestAddQuestionList = () => {
         fetchData();
     }
 
-    if (fetchResult.loading) return <Loading />;
+    if (fetchResult.error?.status === 404) {
+        return (
+            <Wrapper className="d-flex justify-content-center align-items-center">
+                <div className={styles.notification_box}>
+                    <Heading size="3">Request list cannot be found</Heading>
+                </div>
+            </Wrapper>
+        );
+    }
+    if (fetchResult.loading) {
+        return <Loading />;
+    }
     return (
         <Wrapper>
             <SearchBar

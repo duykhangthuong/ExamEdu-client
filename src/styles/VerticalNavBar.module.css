@@ -12,6 +12,7 @@
     z-index: 20;
     left: 0;
     top: 0;
+    overflow: scroll;
 }
 .sidebar ul {
     position: relative;
