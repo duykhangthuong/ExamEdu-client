@@ -87,11 +87,6 @@ const RequestAddQuestionList = () => {
                     detail: (
                         <div
                             className="d-flex justify-content-center"
-                            onClick={() => {
-                                history.push(
-                                    `/teacher/question/process/${record.addQuestionRequestId}`
-                                );
-                            }}
                             data-bs-toggle="tooltip"
                             data-bs-placement="right"
                             title="View this request"
@@ -102,6 +97,11 @@ const RequestAddQuestionList = () => {
                                     fetchResult.loading || record.isApproved
                                 }
                                 btn="primary"
+                                onClick={() => {
+                                    history.push(
+                                        `/teacher/question/process/${record.addQuestionRequestId}`
+                                    );
+                                }}
                             >
                                 <Icon
                                     icon="arrow-right"
