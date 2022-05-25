@@ -12,6 +12,7 @@ import { useHistory } from "react-router-dom";
 import styles from "../../styles/ExamSchedule.module.css";
 import Swal from "sweetalert2";
 import Loading from "pages/Loading";
+import StudentCall from "./StudentCall";
 
 const ExamSchedule = () => {
     const user = useSelector((store) => store.user);
@@ -28,6 +29,7 @@ const ExamSchedule = () => {
                         You don't have any exam scheduled
                     </Heading>
                 </div>
+                <StudentCall/>
             </Wrapper>
         );
     }
