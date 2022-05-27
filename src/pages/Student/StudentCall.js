@@ -1,25 +1,32 @@
 import Peer from "peerjs";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 const StudentCall = () => {
     const roomID = "test";
     const user = useSelector((state) => state.user);
-    var local_stream;
+    
+	const local_stream = useRef();
 
-    const changeLocalVideoState = () => {
-        local_stream.getVideoTracks()[0].enabled = !local_stream.getVideoTracks()[0].enabled;
-        console.log(user)
-    }
-    const changeLocalAudioState = () => {
-        local_stream.getAudioTracks()[0].enabled = !local_stream.getAudioTracks()[0].enabled;
-    }
+	const changeLocalVideoState = () => {
+		local_stream.current.getVideoTracks()[0].enabled = !local_stream.current.getVideoTracks()[0].enabled;
+	}
+	const changeLocalAudioState = () => {
+		local_stream.current.getAudioTracks()[0].enabled = !local_stream.current.getAudioTracks()[0].enabled;
+	}
 
-    var peer = new Peer();
+    
+
+    useEffect(() => {
+        window.addEventListener("beforeunload", (ev) => {
+            ev.preventDefault();
+            return ev.returnValue = 'Are you sure you want to close?';
+        });
+        var peer = new Peer();
     peer.on('open', (id) => {
         console.log("Connected with Id: " + id)
         navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
             let video = document.getElementById("local-video");
-            local_stream = stream;
+            local_stream.current = stream;
             video.srcObject = stream;
             video.muted = true;
             video.play();
@@ -40,12 +47,6 @@ const StudentCall = () => {
         })
 
     })
-
-    useEffect(() => {
-        window.addEventListener("beforeunload", (ev) => {
-            ev.preventDefault();
-            return ev.returnValue = 'Are you sure you want to close?';
-        });
     }, []);
 
 
