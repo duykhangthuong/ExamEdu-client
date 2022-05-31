@@ -78,7 +78,8 @@ const Invigilate = () => {
 							<CallWindow
 								stream={stream.stream}
 								userFullname={stream.userFullname}
-								userEmail={stream.userEmail} />
+								userEmail={stream.userEmail}
+								index={index} />
 							<hr></hr>
 						</div>
 					)
