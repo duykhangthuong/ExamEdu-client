@@ -5,6 +5,7 @@ import { DataAcademic } from "utilities/VerticalNavbarData";
 import React from "react";
 import { useUserAuthorization } from "utilities/useAuthorization";
 import ModuleList from "pages/AcademicDepartment/ModuleList";
+import ClassList from "pages/AcademicDepartment/ClassList";
 const AcademicRoutes = () => {
     const { redirect, path } = useUserAuthorization("academicdepartment");
 
@@ -18,7 +19,9 @@ const AcademicRoutes = () => {
                     <ModuleList />
                 </Route>
 
-                {/* <Route path="/academicdeparment/class/list" exact></Route> */}
+                <Route path="/AcademicDepartment/class/" exact>
+                    <ClassList/>
+                </Route>
                 {/* <Route path="/academic/class/create" exact></Route>
                 <Route path="/academic/class/update" exact></Route>
                 <Route path="/academic/class" exact></Route>
