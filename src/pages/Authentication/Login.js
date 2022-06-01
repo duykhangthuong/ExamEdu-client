@@ -1,8 +1,8 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-
-import { EMAIL, REGEX, REQUIRED, API } from "utilities/constants";
+import { API } from "utilities/constants";
+import { EMAIL, REGEX, REQUIRED } from "utilities/constants";
 import { useForm } from "utilities/useForm";
 import Swal from "sweetalert2";
 import ValidateMessage from "components/ValidateMessage";

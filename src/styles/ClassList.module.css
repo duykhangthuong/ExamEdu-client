@@ -1,0 +1,23 @@
+.class_card {
+    color: var(--color-blue);
+    width: 15rem;
+    height: 12rem;
+    background-color: var(--nav-bar);
+    border-radius: 8px;
+
+    box-shadow: var(--shadow-light);
+    text-align: center;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+}
+
+.class_card_container{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+
+    row-gap: 1rem;
+    column-gap: 0.5rem;
+    grid-auto-flow: row;
+    margin-bottom: 1rem;
+}

@@ -4,7 +4,13 @@ import styles from "../../styles/Exam.module.css";
 import Icon from "components/Icon";
 
 import { useParams } from "react-router-dom";
-import { useState, useEffect, useRef, useCallback } from "react";
+import {
+    useState,
+    useEffect,
+    useRef,
+    useCallback,
+    useLayoutEffect
+} from "react";
 import { useLazyFetch, useFetch } from "utilities/useFetch";
 import useOutsideClick from "utilities/useOutsideClick";
 import { useSelector } from "react-redux";
@@ -134,13 +140,15 @@ function Exam() {
     let examId = param.examId;
 
     const user = useSelector((state) => state.user.accountId);
-    const { data, loading, error } = useFetch(`${API}/ExamQuestions/${examId}?studentId=${user}`);
-    
-    if(error?.status){
+    const { data, loading, error } = useFetch(
+        `${API}/ExamQuestions/${examId}?studentId=${user}`
+    );
+
+    if (error?.status) {
         Swal.fire("Error", error.message, "error");
         history.push(`/student`);
     }
-    
+
     const [question, setQuestion] = useState(0);
     const [answerChecked, setAnswerChecked] = useState();
     const [listAnswer, setListAnswer] = useState([]);
@@ -156,6 +164,32 @@ function Exam() {
             question.answers.sort((a, b) => 0.5 - Math.random());
         });
         forceUpdate();
+    }, [loading]);
+
+    // make exam page full screen
+    useEffect(() => {
+        if (loading === false) {
+            let element = document.getElementById("ExamPage");
+            element.addEventListener("click", function (e) {
+                element
+                    .requestFullscreen()
+                    .then(function () {
+                        // element has entered fullscreen mode successfully
+                        // prevent user press f11
+                        document.addEventListener("keydown", function (e) {
+                            if (e.keyCode === 122 || e.keyCode === 27) {
+                                e.preventDefault();
+                            }
+                        });
+                    })
+                    .catch(function (error) {
+                        // element could not enter fullscreen mode
+                        // error message
+                        console.log(error.message);
+                    });
+            });
+            element.click();
+        }
     }, [loading]);
 
     const addAnswerToList = (answer, examQuestion) => {
@@ -250,23 +284,40 @@ function Exam() {
 
     //hàm để hiện lên SweetAlert để hỏi lại khi nhấn submit
     function showModalConfirmSubmit() {
-        Swal.fire({
-            title: "Are you sure?",
-            text: "Do you really want to submit the exam?",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#e76565",
-            cancelButtonColor: "#363940",
-            confirmButtonText: "Confirm",
-            customClass: {
-                popup: "roundCorner"
-            }
-        }).then((result) => {
-            //nếu người dùng nhấn OK
-            if (result.isConfirmed) {
-                submitAnswer();
-            }
-        });
+        // nếu có câu hỏi chưa được chọn thì hiện sweetalert
+        if (listAnswer.length < data?.questionAnswer.length) {
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You have some question not answered yet!",
+                icon: "error",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, submit it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    submitAnswer();
+                }
+            });
+        } else {
+            Swal.fire({
+                title: "Are you sure?",
+                text: "Do you really want to submit the exam?",
+                icon: "info",
+                showCancelButton: true,
+                confirmButtonColor: "#e76565",
+                cancelButtonColor: "#363940",
+                confirmButtonText: "Confirm",
+                customClass: {
+                    popup: "roundCorner"
+                }
+            }).then((result) => {
+                //nếu người dùng nhấn OK
+                if (result.isConfirmed) {
+                    submitAnswer();
+                }
+            });
+        }
     }
     const submitAnswer = () => {
         if (data?.isFinalExam) {
@@ -298,13 +349,34 @@ function Exam() {
             Swal.fire("Error", error.message, "error");
         }
     });
+    document.onkeydown = function (e) {
+        switch (e.keyCode) {
+            case 37:
+                //arrow left button to previous question
+                addEssayAnswerToList(
+                    essayAnswer,
+                    data?.questionAnswer[question].examQuestionId
+                );
+                if (question > 0) setQuestion(question - 1);
+                break;
+            case 39:
+                // arrow right button to next question
+                addEssayAnswerToList(
+                    essayAnswer,
+                    data?.questionAnswer[question].examQuestionId
+                );
+                if (data?.questionAnswer.length - 1 > question)
+                    setQuestion(question + 1);
+                break;
+        }
+    };
     // Loading when fetch API
     if (loading || postAnswerResult.loading) {
         return <Loading />;
     }
-
+    
     return (
-        <div>
+        <div id="ExamPage">
             <ExamHeader result={data} submitAnswer={submitAnswer} />
             <NumberQuestionModal>
                 {data?.questionAnswer.map((number, index) => {
@@ -315,6 +387,8 @@ function Exam() {
                     let toBeReView = reviewQuestion.some(
                         (r) => r === number.examQuestionId
                     );
+                    let currentQuestion = question + 1 === index + 1;
+
                     return (
                         <NumberQuestion
                             key={index}
@@ -328,7 +402,9 @@ function Exam() {
                                 setQuestion(index);
                             }}
                             color={
-                                toBeReView
+                                currentQuestion
+                                    ? "#000000"
+                                    : toBeReView
                                     ? "var(--color-blue)"
                                     : isDone
                                     ? "#7AE765"
@@ -345,9 +421,13 @@ function Exam() {
                         let isDone = listAnswer.some(
                             (r) => r.examQuestionId === number.examQuestionId
                         );
+                        //boolean check nếu examQuestionId nằm trong list review question
                         let toBeReView = reviewQuestion.some(
                             (r) => r === number.examQuestionId
                         );
+                        //boolean check nếu question hiện tại là question đang hiển thị
+                        let currentQuestion = question + 1 === index + 1;
+
                         return (
                             <NumberQuestion
                                 key={index}
@@ -361,7 +441,9 @@ function Exam() {
                                     setQuestion(index);
                                 }}
                                 color={
-                                    toBeReView
+                                    currentQuestion
+                                        ? "#000000"
+                                        : toBeReView
                                         ? "var(--color-blue)"
                                         : isDone
                                         ? "#7AE765"
