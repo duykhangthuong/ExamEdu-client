@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 
-import { EMAIL, REGEX, REQUIRED } from "utilities/constants";
+import { EMAIL, REGEX, REQUIRED, API } from "utilities/constants";
 import { useForm } from "utilities/useForm";
 import Swal from "sweetalert2";
 import ValidateMessage from "components/ValidateMessage";
@@ -19,7 +19,7 @@ const Login = () => {
     const { values, onChange, onSubmit, errors } = useForm(form, handleSubmit);
 
     const [fetchData, { loading }] = useLazyFetch(
-        "https://localhost:5001/api/Authentication/login",
+        `${API}/Authentication/login`,
         {
             method: "post",
             body: {
