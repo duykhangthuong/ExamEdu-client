@@ -39,7 +39,11 @@ function ClassList() {
             <div className={styles.class_card_container}>
                 {fetchResult.data?.payload.map((classes, index) => {
                     return (
-                        <ClassCard key={index} className={classes.className} />
+                        <ClassCard
+                            key={index}
+                            className={classes.className}
+                            classId={classes.classId}
+                        />
                     );
                 })}
             </div>
@@ -53,15 +57,12 @@ function ClassList() {
     );
 }
 
-function ClassCard({ className }) {
+function ClassCard({ className, classId }) {
     const history = useHistory();
     return (
         <div className="d-flex justify-content-center">
             <article className={`${styles.class_card} txt-blue`}>
-                <div
-                    className={`h3 m-3 txt-blue`}
-                    
-                >
+                <div className={`h3 m-3 txt-blue`}>
                     <b>{className}</b>
                 </div>
                 <div className="m-3">
@@ -69,7 +70,7 @@ function ClassCard({ className }) {
                     <Icon
                         icon="arrow-right"
                         className="ms-2"
-                        onClick={() => history.push(`/`)}
+                        onClick={() => history.push(`class/${classId}`)}
                     />
                 </div>
             </article>
