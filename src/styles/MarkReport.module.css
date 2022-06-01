@@ -31,7 +31,9 @@ progress::-webkit-progress-value {
     padding-right: 1rem;
     padding-left: 1rem;
     margin-right: 2rem;
+    width: 10rem;
 }
+
 .markAndProgress {
     margin-top: 1rem;
 }
@@ -44,11 +46,12 @@ progress::-webkit-progress-value {
     color: white;
 }
 .moduleName {
-    font-size: 1.7rem;
+    font-size: 1.3rem;
     font-weight: bold;
 }
 .testName {
-    font-size: 2rem;
+    font-size: 1.5rem;
+    width: 20%;
 }
 .markPillPassed {
     background-color: #00ff00;
@@ -71,5 +74,8 @@ progress::-webkit-progress-value {
     }
     .markAndProgress {
         width: 30%;
+    }
+    .nameAndDate {
+        width: 24rem;
     }
 }
