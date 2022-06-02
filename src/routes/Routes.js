@@ -13,6 +13,7 @@ import MarkReport from "pages/Student/MarkReport";
 import ModuleList from "pages/Student/ModuleList";
 import AcademicRoutes from "./AcademicRoutes";
 import InvigilationRoutes from "./InvigilationRoutes";
+import PrejoinRoomRoutes from "./PrejoinRoomRoutes";
 
 const Routes = () => {
     return (
@@ -37,6 +38,9 @@ const Routes = () => {
 
             <Route path="/invigilate">
                 <InvigilationRoutes />
+            </Route>
+            <Route path="/prejoin">
+                <PrejoinRoomRoutes />
             </Route>
 
             <Route path="/teacher">
