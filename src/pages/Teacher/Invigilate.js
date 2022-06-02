@@ -28,6 +28,13 @@ const Invigilate = () => {
 			fetchRoomId();
 		}
 	});
+	const [startRoom, startRoomResponse] = useLazyFetch(`${API}/invigilate/startRoom`, {
+		method: "POST",
+		body: {
+			ExamId: examId,
+			RoomId: ""
+		},
+	});
 	const [fetchRoomId, fetchRoomIdResult] = useLazyFetch(
 		`${API}/invigilate/roomId/${examId}`, {
 		method: "GET",
@@ -86,6 +93,7 @@ const Invigilate = () => {
 		}
 	},[fetchSate])
 
+
 	//var remoteStreamTemp;
 	const [forceRender, setForceRender] = useState(1);
 	const changeLocalVideoState = () => {
@@ -97,7 +105,7 @@ const Invigilate = () => {
 
 	return (
 		<div>
-			<video id="local-video" style={{ height: "10vh" }}></video>
+			<video id="local-video" style={{ height: "10vh" }}></video> 
 			<div id="remote-video"></div>
 			<button onClick={() => {changeLocalVideoState(); setForceRender(Math.random)}}>video state</button> {/*tu mute hoac tu tat cam minh*/}
 			<button onClick={() => changeLocalAudioState()}>audio</button>
@@ -115,6 +123,7 @@ const Invigilate = () => {
 					)
 				})
 			}
+			<button onClick={() => startRoom()}>Start Room</button>
 			<h5>{forceRender}</h5>
 		</div>
 	);
