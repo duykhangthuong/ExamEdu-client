@@ -161,7 +161,7 @@ const CreateExam = () => {
                         },
                         {
                             stepIcon: ["fas", "user-graduate"],
-                            stepName: "Assign Class & Trainee"
+                            stepName: "Assign Class & Students"
                         }
                     ]}
                     currentStep={formStep}
