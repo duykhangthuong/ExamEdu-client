@@ -16,15 +16,7 @@ const MarkReport = () => {
     console.log(param);
 
     const { data, loading, error } = useFetch(
-        `${API}/Student/markReport/${user}/${param.moduleID}`,
-        {
-            onCompletes: (data) => {
-                console.log(data);
-            },
-            onError: (error) => {
-                console.log(error);
-            }
-        }
+        `${API}/Student/markReport/${user}/${param.moduleID}`
     );
 
     if (loading) {
@@ -53,12 +45,12 @@ const MarkReport = () => {
     return (
         <Wrapper>
             <Heading>Mark Report</Heading>
-            {data?.map((mark,index) => (
+            {data?.map((mark, index) => (
                 <div
-                    className={`${style.frame} d-flex flex-column flex-md-row justify-content-md-between mb-3`}
+                    className={`${style.frame} d-flex flex-column flex-md-row justify-content-md-between mb-4`}
                     key={index}
                 >
-                    <div className="d-flex">
+                    <div className={`d-flex ${style.nameDateAndExamName}`}>
                         <div
                             className={`${style.nameAndDate} align-self-center`}
                         >
