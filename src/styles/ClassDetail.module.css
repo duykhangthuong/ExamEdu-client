@@ -36,7 +36,7 @@
 .moduleWrap {
     color: var(--color-dark-blue);
     width: 14vw;
-    height: 14rem;
+    height: 15rem;
     background-color: var(--color-lavender-light);
     padding: 1.5rem;
     border-radius: 10px;
@@ -45,16 +45,46 @@
     margin-bottom: 1.3rem;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
 }
 .moduleWrap h3 {
     font-weight: bold;
 }
 .description {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     margin-bottom: 0.5rem;
+    flex-grow: 1;
+}
+.teacherName {
+    font-size: 0.9rem;
 }
 .moduleContainer {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
+}
+.heading {
+    padding: 1rem;
+    color: var(--color-blue);
+    font-size: 1.2rem;
+    height: fit-content;
+}
+.bodyModal {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    padding: 0.5rem;
+    color: var(--color-gray);
+    font-weight: 100;
+}
+.inputGroup {
+    margin: 1rem 7rem 1rem 1rem;
+    display: flex;
+    justify-content: space-between;
+}
+.inputGroup input {
+    width: 20rem;
+    border-radius: 9px;
+    border: 1px solid var(--color-gray);
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    padding: 0.3rem;
 }
