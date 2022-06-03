@@ -1,9 +1,16 @@
+import Button from "components/Button";
+import Icon from "components/Icon";
 import Table from "components/Table";
 import Wrapper from "components/Wrapper";
-import React, { Children } from "react";
+import React from "react";
+import { useHistory } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import styles from "../../styles/ExamDetail.module.css";
 const ExamDetail = () => {
     const column = ["Student ID", "Student Name", "Email", "Mark"];
+
+    const param = useParams();
+    const history = useHistory();
     const data = [
         {
             "Student ID": "1",
@@ -135,20 +142,45 @@ const ExamDetail = () => {
                         </div>
                     </div>
                 </div>
-                <div className={styles.basicDiv}>
-                    <h5>PROCTOR & SUPERVISOR</h5>
-                    <hr />
-                    <div className={styles.content}>
-                        <div className={styles.column1}>
-                            <p className="mb-0">Luong Hoang Huong</p>
-                            <p className="mb-0">huonghl@fpt.edu.vn</p>
-                        </div>
-                        <div className={styles.verticalLine}></div>
-                        <div className={styles.column2}>
-                            <p className="mb-0">Luong Hoang Huong</p>
-                            <p className="mb-0">huonghl@fpt.edu.vn</p>
+                <div className="d-flex align-items-end w-100">
+                    <div className={`${styles.basicDiv} me-auto`}>
+                        <h5>PROCTOR & SUPERVISOR</h5>
+                        <hr />
+                        <div className={styles.content}>
+                            <div className={styles.column1}>
+                                <p className="mb-0">Luong Hoang Huong</p>
+                                <p className="mb-0">huonghl@fpt.edu.vn</p>
+                            </div>
+                            <div className={styles.verticalLine}></div>
+                            <div className={styles.column2}>
+                                <p className="mb-0">Luong Hoang Huong</p>
+                                <p className="mb-0">huonghl@fpt.edu.vn</p>
+                            </div>
                         </div>
                     </div>
+                    <Button
+                        className="me-3"
+                        onClick={() => {
+                            history.push(
+                                `/AcademicDepartment/exam/update/info/${param.examId}`
+                            );
+                        }}
+                    >
+                        Update
+                        <Icon
+                            icon="pencil-ruler"
+                            color="#fff"
+                            className="ms-1"
+                        />
+                    </Button>
+                    <Button btn="secondary">
+                        Cancel
+                        <Icon
+                            icon="times-circle"
+                            color="#fff"
+                            className="ms-1"
+                        />
+                    </Button>
                 </div>
             </div>
             <div className={styles.studentListDiv}>

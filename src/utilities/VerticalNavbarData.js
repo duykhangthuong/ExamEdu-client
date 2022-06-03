@@ -211,19 +211,19 @@ export const DataAcademic = [
             </NavLink>
         )
     },
-    // {
-    //     link: (
-    //         <NavLink
-    //             className="d-flex flex-sm-row flex-md-column"
-    //             to="/academic/exam"
-    //             activeClassName={style.active_link}
-    //             exact={true}
-    //         >
-    //             <div className={style.icon}>
-    //                 <Icon icon="file-alt" className="" size="2x"></Icon>
-    //             </div>
-    //             <div className={style.title}>Exam</div>
-    //         </NavLink>
-    //     )
-    // }
+    {
+        link: (
+            <NavLink
+                className="d-flex flex-sm-row flex-md-column"
+                to="/AcademicDepartment/exam"
+                activeClassName={style.active_link}
+                exact={true}
+            >
+                <div className={style.icon}>
+                    <Icon icon="file-alt" className="" size="2x"></Icon>
+                </div>
+                <div className={style.title}>Exam</div>
+            </NavLink>
+        )
+    }
 ];

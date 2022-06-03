@@ -8,6 +8,8 @@ import ModuleList from "pages/AcademicDepartment/ModuleList";
 import ClassList from "pages/AcademicDepartment/ClassList";
 import ClassDetail from "pages/AcademicDepartment/ClassDetail";
 import UpdateExam from "pages/AcademicDepartment/UpdateExam";
+import ExamList from "pages/AcademicDepartment/ExamList";
+import ExamDetail from "pages/AcademicDepartment/ExamDetail";
 const AcademicRoutes = () => {
     const { redirect, path } = useUserAuthorization("academicdepartment");
 
@@ -26,8 +28,14 @@ const AcademicRoutes = () => {
                 <Route path="/AcademicDepartment/class/" exact>
                     <ClassList />
                 </Route>
+                <Route path="/AcademicDepartment/exam" exact>
+                    <ExamList />
+                </Route>
                 <Route path="/AcademicDepartment/class/:classId" exact>
                     <ClassDetail />
+                </Route>
+                <Route path="/AcademicDepartment/exam/:examId" exact>
+                    <ExamDetail />
                 </Route>
 
                 {/* <Route path="/academic/class/create" exact></Route>
