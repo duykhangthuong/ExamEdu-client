@@ -13,6 +13,7 @@ import AddQuestionRequest from "pages/Teacher/AddQuestionRequest";
 import RequestAddQuestionBank from "pages/Teacher/RequestAddQuestionBank";
 import RequestAddQuestionList from "pages/Teacher/RequestAddQuestionList";
 import ApproveRequests from "pages/Teacher/ApproveRequests";
+import UpdateExam from "pages/AcademicDepartment/UpdateExam";
 const TeacherRoutes = () => {
     const { redirect, path } = useUserAuthorization("teacher");
 
@@ -23,6 +24,11 @@ const TeacherRoutes = () => {
             <VerticalNavBar VerticalNavbarData={DataTeacher} />
 
             <Switch>
+                {/* Update exam info */}
+                <Route path="/teacher/exam/update/info/:examId" exact>
+                    <UpdateExam isFinalExam={false} />
+                </Route>
+
                 {/* Create Exam info */}
                 <Route path="/teacher/exam/create/info" exact>
                     <CreateExam />
