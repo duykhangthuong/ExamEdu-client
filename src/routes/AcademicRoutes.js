@@ -19,8 +19,6 @@ const AcademicRoutes = () => {
             <HorizontalNavBar />
             <VerticalNavBar VerticalNavbarData={DataAcademic} />
             <Switch>
-            
-
                 <Route path="/AcademicDepartment/module/list" exact>
                     <ModuleList />
                 </Route>
@@ -45,8 +43,11 @@ const AcademicRoutes = () => {
                 <Route path="/academic/exam/create" exact></Route>
                 <Route path="/academic/exam/update" exact></Route> */}
 
-                <Route path="/AcademicDepartment/exam/update/info/:examId" exact>
-                    <UpdateExam isFinalExam={true}/>
+                <Route
+                    path="/AcademicDepartment/exam/update/info/:examId"
+                    exact
+                >
+                    <UpdateExam isFinalExam={true} />
                 </Route>
 
                 <Route path="*">
