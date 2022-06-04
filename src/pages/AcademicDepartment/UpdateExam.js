@@ -12,15 +12,20 @@ import styles from "../../styles/UpdateExam.module.css";
 import moment from "moment";
 import { useParams } from "react-router-dom";
 
-const UpdateExam = () => {
+const UpdateExam = ({ isFinalExam }) => {
     //Get id from url
     const param = useParams();
 
     //Load exam information
-    const { data, loading, error } = useFetch(`${API}/Exam/update-exam-info/${param.examId}`);
+    const { data, loading, error } = useFetch(
+        `${API}/Exam/update-exam-info/${param.examId}`
+    );
 
     //Load teacher list
     const teacherFetchResult = useFetch(`${API}/Teacher/idName`);
+
+    //Load Academic Deparment member list
+    const academicFetchResult = useFetch(`${API}/AcademicDepartment/list`);
 
     //Load module list
     const moduleFetchResult = useFetch(`${API}/Module`);
@@ -36,7 +41,7 @@ const UpdateExam = () => {
             description: data?.description,
             moduleId: data?.moduleId,
             proctorId: data?.proctorId,
-            supervisorId: data?.supervisorId,
+            supervisorId: data?.supervisorId
         },
         validate,
         onSubmit: () => {
@@ -45,34 +50,43 @@ const UpdateExam = () => {
     });
 
     //Post data to server
-    const [updateExam, updateExamResult] = useLazyFetch(`${API}/Exam/update-exam-info/`, {
-        method: "PUT",
-        body: {
-            examId: data?.examId,
-            examName: formik.values.examName,
-            password: formik.values.password,
-            examDay: formik.values.date,
-            durationInMinute: formik.values.duration,
-            room: formik.values.room,
-            description: formik.values.description,
-            moduleId: formik.values.moduleId,
-            proctorId: formik.values.proctorId,
-            supervisorId: formik.values.supervisorId,
-            studentIds: [0]
-        },
-        onCompletes: () => {
-            Swal.fire("Update exam successfully!", "", "success");
-        },
-        onError: (error) => {
-            Swal.fire("Update exam failed!", error.message, "error");
+    const [updateExam, updateExamResult] = useLazyFetch(
+        `${API}/Exam/update-exam-info/`,
+        {
+            method: "PUT",
+            body: {
+                examId: data?.examId,
+                examName: formik.values.examName,
+                password: formik.values.password,
+                examDay: formik.values.date,
+                durationInMinute: formik.values.duration,
+                room: formik.values.room,
+                description: formik.values.description,
+                moduleId: formik.values.moduleId,
+                proctorId: formik.values.proctorId,
+                supervisorId: formik.values.supervisorId,
+                isFinalExam: isFinalExam,
+                studentIds: [0]
+            },
+            onCompletes: () => {
+                Swal.fire("Update exam successfully!", "", "success");
+            },
+            onError: (error) => {
+                Swal.fire("Update exam failed!", error.message, "error");
+            }
         }
-    })
+    );
 
     function handleSubmit() {
         updateExam();
     }
 
-    if (loading || teacherFetchResult.loading || moduleFetchResult.loading || updateExamResult.loading) {
+    if (
+        loading ||
+        teacherFetchResult.loading ||
+        moduleFetchResult.loading ||
+        updateExamResult.loading || academicFetchResult.loading
+    ) {
         return <Loading></Loading>;
     }
 
@@ -105,9 +119,8 @@ const UpdateExam = () => {
                         <InputBox
                             name="date"
                             label={"Date"}
-                            value={moment(formik.values.date).format("yyyy-MM-DD")}
-                            
-                            type={"date"}
+                            value={formik.values.date}
+                            type={"datetime-local"}
                             onChange={formik.handleChange}
                         />
                         <InputBox
@@ -134,6 +147,7 @@ const UpdateExam = () => {
                     </div>
                     {/* Right column */}
                     <div className={`${styles.column} ${styles.column_right}`}>
+                        {/* Select Module for the exam */}
                         <div className={styles.input_select_container}>
                             <label className={styles.input_label}>Module</label>
                             <select
@@ -156,50 +170,64 @@ const UpdateExam = () => {
                                 )}
                             </select>
                         </div>
-                        <div className={styles.input_select_container}>
-                            <label className={styles.input_label}>
-                                Proctor
-                            </label>
-                            <select
-                                name="proctorId"
-                                value={formik.values.proctorId}
-                                onChange={formik.handleChange}
-                                className={`${styles.input_select} `}
-                            >
-                                {teacherFetchResult.data.map((teacher) => {
-                                    return (
-                                        <option
-                                            key={teacher.teacherId}
-                                            value={teacher.teacherId}
-                                        >
-                                            {teacher.fullname}
-                                        </option>
-                                    );
-                                })}
-                            </select>
-                        </div>
-                        <div className={styles.input_select_container}>
-                            <label className={styles.input_label}>
-                                Supervisor
-                            </label>
-                            <select
-                                name="supervisorId"
-                                value={formik.values.supervisorId}
-                                onChange={formik.handleChange}
-                                className={`${styles.input_select} `}
-                            >
-                                {teacherFetchResult.data.map((teacher) => {
-                                    return (
-                                        <option
-                                            key={teacher.teacherId}
-                                            value={teacher.teacherId}
-                                        >
-                                            {teacher.fullname}
-                                        </option>
-                                    );
-                                })}
-                            </select>
-                        </div>
+
+                        {isFinalExam && (
+                            <>
+                                <div className={styles.input_select_container}>
+                                    <label className={styles.input_label}>
+                                        Proctor
+                                    </label>
+                                    <select
+                                        name="proctorId"
+                                        value={formik.values.proctorId}
+                                        onChange={formik.handleChange}
+                                        className={`${styles.input_select} `}
+                                    >
+                                        {teacherFetchResult.data.map(
+                                            (teacher) => {
+                                                return (
+                                                    <option
+                                                        key={teacher.teacherId}
+                                                        value={
+                                                            teacher.teacherId
+                                                        }
+                                                    >
+                                                        {teacher.fullname}
+                                                    </option>
+                                                );
+                                            }
+                                        )}
+                                    </select>
+                                </div>
+
+                                <div className={styles.input_select_container}>
+                                    <label className={styles.input_label}>
+                                        Supervisor
+                                    </label>
+                                    <select
+                                        name="supervisorId"
+                                        value={formik.values.supervisorId}
+                                        onChange={formik.handleChange}
+                                        className={`${styles.input_select} `}
+                                    >
+                                        {academicFetchResult.data.map(
+                                            (aca) => {
+                                                return (
+                                                    <option
+                                                        key={aca.id}
+                                                        value={
+                                                            aca.id
+                                                        }
+                                                    >
+                                                        {aca.email}
+                                                    </option>
+                                                );
+                                            }
+                                        )}
+                                    </select>
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
                 {/* Submit button */}
@@ -216,29 +244,24 @@ const UpdateExam = () => {
 
 export default UpdateExam;
 
-const validate = (values) => 
-{
+const validate = (values) => {
     const errors = {};
     //Exam name validation
-    if(!values.examName)
-    {
+    if (!values.examName) {
         errors.examName = "Exam name is required";
     }
-    
+
     //Duration validation
-    if(!values.duration)
-    {
+    if (!values.duration) {
         errors.duration = "Duration is required";
-    }else if((values.duration <= 0))
-    {
+    } else if (values.duration <= 0) {
         errors.duration = "Duration must be greater than 0";
     }
 
     //Room validation
-    if(!values.room)
-    {
-        errors.room = "Room is required"
+    if (!values.room) {
+        errors.room = "Room is required";
     }
 
     return errors;
-}
+};

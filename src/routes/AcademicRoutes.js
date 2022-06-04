@@ -47,7 +47,7 @@ const AcademicRoutes = () => {
                     path="/AcademicDepartment/exam/update/info/:examId"
                     exact
                 >
-                    <UpdateExam />
+                    <UpdateExam isFinalExam={true} />
                 </Route>
 
                 <Route path="*">
