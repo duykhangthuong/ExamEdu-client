@@ -13,7 +13,7 @@ import AddQuestionRequest from "pages/Teacher/AddQuestionRequest";
 import RequestAddQuestionBank from "pages/Teacher/RequestAddQuestionBank";
 import RequestAddQuestionList from "pages/Teacher/RequestAddQuestionList";
 import ApproveRequests from "pages/Teacher/ApproveRequests";
-import UpdateExam from "pages/AcademicDepartment/UpdateExam";
+import ExamDetail from "pages/AcademicDepartment/ExamDetail";
 const TeacherRoutes = () => {
     const { redirect, path } = useUserAuthorization("teacher");
 
@@ -24,11 +24,6 @@ const TeacherRoutes = () => {
             <VerticalNavBar VerticalNavbarData={DataTeacher} />
 
             <Switch>
-                {/* Update exam info */}
-                <Route path="/teacher/exam/update/info/:examId" exact>
-                    <UpdateExam isFinalExam={false} />
-                </Route>
-
                 {/* Create Exam info */}
                 <Route path="/teacher/exam/create/info" exact>
                     <CreateExam />
@@ -78,6 +73,11 @@ const TeacherRoutes = () => {
                 {/* Exam list of a teacher */}
                 <Route path="/teacher/class/progress_exam/:classModuleId" exact>
                     <ExamList />
+                </Route>
+
+                {/* Exam Detail chung với trường hợp của Academic Department */}
+                <Route path="/teacher/exam/detail/:examId" exact>
+                    <ExamDetail />
                 </Route>
 
                 {/* Head of department view request add question */}

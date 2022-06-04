@@ -45,7 +45,7 @@ const ExamList = () => {
                 columns={columns}
                 data={fetchResult.data?.payload.map((exam) => ({
                     examName: exam.examName,
-                    examDate: moment(exam.examDate).format("HH:MM DD/MM/YYYY"),
+                    examDate: moment(exam.examDay).format("HH:MM DD/MM/YYYY"),
                     module:
                         exam.module.moduleCode + " - " + exam.module.moduleName
                 }))}
