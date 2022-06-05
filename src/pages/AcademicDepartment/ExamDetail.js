@@ -5,7 +5,11 @@ import Wrapper from "components/Wrapper";
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import { useLazyFetch } from "utilities/useFetch";
 import styles from "../../styles/ExamDetail.module.css";
+import { API } from "utilities/constants";
+import Swal from "sweetalert2";
+import Loading from "pages/Loading";
 const ExamDetail = () => {
     const column = ["Student ID", "Student Name", "Email", "Mark"];
 
@@ -103,6 +107,34 @@ const ExamDetail = () => {
             Mark: "10"
         }
     ];
+    const [fetchDataCancel, { loading }] = useLazyFetch(
+        `${API}/exam/cancel/${param.examId}`,
+        {
+            method: "PUT",
+            onCompletes: (res) => {
+                if (res.status === 200) {
+                    Swal.fire({
+                        title: "Cancelled",
+                        text: "Cancelled successfully",
+                        icon: "success",
+                        confirmButtonText: "OK"
+                    });
+                    //fetch lại hàm exam detail
+                    //fetchDataExaMDetail();
+                }
+            },
+            onError: (err) => {
+                Swal.fire({
+                    title: "Error",
+                    text: err.message,
+                    icon: "error",
+                    confirmButtonText: "OK"
+                });
+            }
+        }
+    );
+
+    if (loading) return <Loading />;
     return (
         <Wrapper>
             <div className="d-flex justify-content-between flex-wrap">
@@ -173,7 +205,24 @@ const ExamDetail = () => {
                             className="ms-1"
                         />
                     </Button>
-                    <Button btn="secondary">
+                    <Button
+                        btn="secondary"
+                        onClick={() => {
+                            Swal.fire({
+                                title: "Are you Sure",
+                                text: "Press OK to continue",
+                                icon: "question",
+                                showCancelButton: true,
+                                confirmButtonColor: "#3b5af1",
+                                cancelButtonColor: "#e76565",
+                                confirmButtonText: "OK"
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    fetchDataCancel();
+                                }
+                            });
+                        }}
+                    >
                         Cancel
                         <Icon
                             icon="times-circle"

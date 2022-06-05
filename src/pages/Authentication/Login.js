@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { API } from "utilities/constants";
@@ -42,6 +42,21 @@ const Login = () => {
     function handleSubmit() {
         fetchData();
     }
+
+    // Testing
+    useEffect(() => {
+        window.addEventListener("beforeunload", (ev) => {
+            ev.preventDefault();
+            return (ev.returnValue = "Are you sure you want to close?");
+        });
+        console.log("Use effect called");
+
+        return () => {
+            window.open("Google.com");
+            window.removeEventListener("beforeunload", () => {});         
+        };
+    }, []);
+
     return (
         <div
             style={{
