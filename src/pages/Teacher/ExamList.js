@@ -26,7 +26,7 @@ const ExamList = () => {
     );
     //Fetching exams
     const [fetchData, fetchResult] = useLazyFetch(
-        `${API}/Exam/progressExam/${param.classModuleId}?pageNumber=${currentPage}&pageSize=${pageSize}`
+        `${API}/Exam/progressExam/${param.classModuleId}/${param.moduleId}?pageNumber=${currentPage}&pageSize=${pageSize}`
     );
     // console.log(fetchResult);
 
@@ -39,7 +39,7 @@ const ExamList = () => {
     }, [currentPage]);
 
     if (fetchResult.loading || loading) return <Loading />;
-
+    
     return (
         <Wrapper>
             <SearchBar
@@ -49,40 +49,48 @@ const ExamList = () => {
             {/* Class name */}
             <div style={{ color: "var(--color-dark-blue)" }}>
                 <Icon icon="id-card" className="me-2" />
-                {data.class.className}
+                {data?.class.className}
             </div>
             {/* Module code and name */}
             <div className="mb-2" style={{ color: "var(--color-dark-blue)" }}>
                 <Icon icon="cube" className="me-2" />
-                {`${data.module.moduleCode} - ${data.module.moduleName}`}
+                {`${data?.module.moduleCode} - ${data?.module.moduleName}`}
             </div>
             {/* Horizontal line */}
             <div className={`${styles.horizontal_line} mb-2 mb-md-3`}></div>
 
-            {/* Progress tests container */}
-            <section className={styles.exam_card_container}>
-                {/* Progress test card */}
-                {fetchResult.data?.payload.map((exam) => {
-                    return (
-                        <ExamCard
-                            date={exam.examDay}
-                            duration={exam.durationInMinute}
-                            isCancelled={exam.isCancelled}
-                            examId={exam.examId}
-                            moduleId={data.module.moduleId}
-                            examName={exam.examName}
-                            key={exam.examId}
-                            classModuleId={param.classModuleId}
-                        />
-                    );
-                })}
-            </section>
-            <Pagination
-                totalRecords={fetchResult.data?.totalRecords}
-                currentPage={currentPage}
-                onPageChange={setCurrentPage}
-                pageSize={pageSize}
-            />
+            {fetchResult.error?.status === 404 ? (
+                <div className="d-flex justify-content-center">
+                    <Heading size={2}>There are no exams yet</Heading>
+                </div>
+            ) : (
+                <>
+                    {/* Progress tests container */}
+                    <section className={styles.exam_card_container}>
+                        {/* Progress test card */}
+                        {fetchResult.data?.payload.map((exam) => {
+                            return (
+                                <ExamCard
+                                    date={exam.examDay}
+                                    duration={exam.durationInMinute}
+                                    isCancelled={exam.isCancelled}
+                                    examId={exam.examId}
+                                    moduleId={data.module.moduleId}
+                                    examName={exam.examName}
+                                    key={exam.examId}
+                                    classModuleId={param.classModuleId}
+                                />
+                            );
+                        })}
+                    </section>
+                    <Pagination
+                        totalRecords={fetchResult.data?.totalRecords}
+                        currentPage={currentPage}
+                        onPageChange={setCurrentPage}
+                        pageSize={pageSize}
+                    />
+                </>
+            )}
         </Wrapper>
     );
 };
@@ -100,6 +108,10 @@ const ExamCard = ({
 }) => {
     const history = useHistory();
     function onClickViewDetail(examId, classModuleId) {
+        history.push(`/teacher/exam/list/result/${examId}/${classModuleId}`);
+    }
+
+    function onClickViewResult(examId, classModuleId) {
         history.push(`/teacher/exam/list/result/${examId}/${classModuleId}`);
     }
 
@@ -134,14 +146,30 @@ const ExamCard = ({
                         {`${duration} minutes`}
                     </div>
                 </div>
-                {/* Button */}
-                <Button
-                    onClick={() => {
-                        onClickViewDetail(examId, classModuleId);
-                    }}
-                >
-                    View Detail <Icon icon="arrow-right" className="ms-2" />
-                </Button>
+                {/* Buttons */}
+                <div className={styles.btn_container}>
+                    <Button
+                        onClick={() => {
+                            onClickViewResult(examId, classModuleId);
+                        }}
+                        className="mr-2"
+                        style={{ backgroundColor: "var(--color-dark-blue)" }}
+                        {...(isCancelled && { disabled: true })}
+                        {...(moment(date).isAfter(moment().toDate()) && {
+                            disabled: true
+                        })}
+                    >
+                        Result <Icon icon="arrow-right" className="ms-2" />
+                    </Button>
+
+                    <Button
+                        onClick={() => {
+                            onClickViewDetail(examId, classModuleId);
+                        }}
+                    >
+                        Detail <Icon icon="arrow-right" className="ms-2" />
+                    </Button>
+                </div>
             </article>
         </div>
     );

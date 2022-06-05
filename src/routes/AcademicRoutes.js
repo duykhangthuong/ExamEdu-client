@@ -19,6 +19,8 @@ const AcademicRoutes = () => {
             <HorizontalNavBar />
             <VerticalNavBar VerticalNavbarData={DataAcademic} />
             <Switch>
+            
+
                 <Route path="/AcademicDepartment/module/list" exact>
                     <ModuleList />
                 </Route>

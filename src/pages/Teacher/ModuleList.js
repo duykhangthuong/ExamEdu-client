@@ -20,7 +20,7 @@ const ModuleList = () => {
     const { data, loading } = useFetch(
         `${API}/Teacher/ClassModule/${teacher.accountId}`
     );
-    console.log(data);
+    
     if (loading) {
         return <Loading />;
     }
@@ -35,6 +35,7 @@ const ModuleList = () => {
                 {data?.payload.map((module) => {
                     return (
                         <ModuleCard
+                            moduleId={module.moduleId}
                             moduleName={module.moduleCode}
                             classes={module.classModules}
                             key={module.moduleCode}
@@ -54,12 +55,14 @@ const ModuleList = () => {
 
 export default ModuleList;
 
-const ModuleCard = ({ moduleName, classes }) => {
+const ModuleCard = ({ moduleId, moduleName, classes }) => {
     const [isExpanded, setIsExpanded] = useState(false);
     //Hook to send to Teacher's classmodule
     const history = useHistory();
-    function goToExamList(classModuleId) {
-        history.push(`/teacher/class/progress_exam/${classModuleId}`);
+    function goToExamList(classModuleId, moduleId) {
+        history.push(
+            `/teacher/class/progress_exam/${classModuleId}/${moduleId}`
+        );
     }
     return (
         <article className={styles.module_card}>
@@ -98,7 +101,10 @@ const ModuleCard = ({ moduleName, classes }) => {
                             <div
                                 className={`mb-2 ${styles.class}`}
                                 onClick={() =>
-                                    goToExamList(classModule.classModuleId)
+                                    goToExamList(
+                                        classModule.classModuleId,
+                                        moduleId
+                                    )
                                 }
                                 key={classModule.classModuleId}
                             >
