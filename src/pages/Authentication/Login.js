@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { API } from "utilities/constants";
@@ -42,6 +42,7 @@ const Login = () => {
     function handleSubmit() {
         fetchData();
     }
+
     return (
         <div
             style={{
