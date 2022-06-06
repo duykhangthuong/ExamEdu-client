@@ -1,9 +1,20 @@
+import Button from "components/Button";
+import Icon from "components/Icon";
 import Table from "components/Table";
 import Wrapper from "components/Wrapper";
-import React, { Children } from "react";
+import React from "react";
+import { useHistory } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { useLazyFetch } from "utilities/useFetch";
 import styles from "../../styles/ExamDetail.module.css";
+import { API } from "utilities/constants";
+import Swal from "sweetalert2";
+import Loading from "pages/Loading";
 const ExamDetail = () => {
     const column = ["Student ID", "Student Name", "Email", "Mark"];
+
+    const param = useParams();
+    const history = useHistory();
     const data = [
         {
             "Student ID": "1",
@@ -96,6 +107,34 @@ const ExamDetail = () => {
             Mark: "10"
         }
     ];
+    const [fetchDataCancel, { loading }] = useLazyFetch(
+        `${API}/exam/cancel/${param.examId}`,
+        {
+            method: "PUT",
+            onCompletes: (res) => {
+                if (res.status === 200) {
+                    Swal.fire({
+                        title: "Cancelled",
+                        text: "Cancelled successfully",
+                        icon: "success",
+                        confirmButtonText: "OK"
+                    });
+                    //fetch lại hàm exam detail
+                    //fetchDataExaMDetail();
+                }
+            },
+            onError: (err) => {
+                Swal.fire({
+                    title: "Error",
+                    text: err.message,
+                    icon: "error",
+                    confirmButtonText: "OK"
+                });
+            }
+        }
+    );
+
+    if (loading) return <Loading />;
     return (
         <Wrapper>
             <div className="d-flex justify-content-between flex-wrap">
@@ -135,20 +174,62 @@ const ExamDetail = () => {
                         </div>
                     </div>
                 </div>
-                <div className={styles.basicDiv}>
-                    <h5>PROCTOR & SUPERVISOR</h5>
-                    <hr />
-                    <div className={styles.content}>
-                        <div className={styles.column1}>
-                            <p className="mb-0">Luong Hoang Huong</p>
-                            <p className="mb-0">huonghl@fpt.edu.vn</p>
-                        </div>
-                        <div className={styles.verticalLine}></div>
-                        <div className={styles.column2}>
-                            <p className="mb-0">Luong Hoang Huong</p>
-                            <p className="mb-0">huonghl@fpt.edu.vn</p>
+                <div className="d-flex align-items-end w-100">
+                    <div className={`${styles.basicDiv} me-auto`}>
+                        <h5>PROCTOR & SUPERVISOR</h5>
+                        <hr />
+                        <div className={styles.content}>
+                            <div className={styles.column1}>
+                                <p className="mb-0">Luong Hoang Huong</p>
+                                <p className="mb-0">huonghl@fpt.edu.vn</p>
+                            </div>
+                            <div className={styles.verticalLine}></div>
+                            <div className={styles.column2}>
+                                <p className="mb-0">Luong Hoang Huong</p>
+                                <p className="mb-0">huonghl@fpt.edu.vn</p>
+                            </div>
                         </div>
                     </div>
+                    <Button
+                        className="me-3"
+                        onClick={() => {
+                            history.push(
+                                `/AcademicDepartment/exam/update/info/${param.examId}`
+                            );
+                        }}
+                    >
+                        Update
+                        <Icon
+                            icon="pencil-ruler"
+                            color="#fff"
+                            className="ms-1"
+                        />
+                    </Button>
+                    <Button
+                        btn="secondary"
+                        onClick={() => {
+                            Swal.fire({
+                                title: "Are you Sure",
+                                text: "Press OK to continue",
+                                icon: "question",
+                                showCancelButton: true,
+                                confirmButtonColor: "#3b5af1",
+                                cancelButtonColor: "#e76565",
+                                confirmButtonText: "OK"
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    fetchDataCancel();
+                                }
+                            });
+                        }}
+                    >
+                        Cancel
+                        <Icon
+                            icon="times-circle"
+                            color="#fff"
+                            className="ms-1"
+                        />
+                    </Button>
                 </div>
             </div>
             <div className={styles.studentListDiv}>
