@@ -1,0 +1,86 @@
+.studentListDiv {
+    width: 100%;
+
+    border-radius: 10px;
+    padding: 1rem 1.3rem;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+        rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+    margin-top: 2rem;
+}
+.tableDiv {
+    width: 100%;
+    height: fit-content;
+    max-height: 25rem;
+    overflow: scroll;
+}
+.studentListDiv h5 {
+    color: var(--color-dark-blue);
+    font-weight: bold;
+    margin-left: 1rem;
+}
+/* .basicClassInfo{
+    width: 100%;
+    height: fit-content;
+    max-height: 25rem;
+    overflow: scroll;
+} */
+.basicClassInfo h5 {
+    color: var(--color-dark-blue);
+    font-weight: bold;
+}
+.modal {
+    background-color: var(--color-lavender-light);
+    padding: 1.25rem 1rem 1rem 1rem;
+    width: 70rem;
+    height: 40rem;
+    display: flex;
+    justify-content: stretch;
+    align-items: stretch;
+    flex-direction: column;
+}
+.studentList{
+    width: 50%;
+    background-color: #fff;
+    text-align: center;
+    border-radius: 8px;
+    max-height: 30rem;
+    overflow: scroll;
+}
+.table {
+    width: 100%;
+    margin: 1rem;
+}
+.table tr:hover{
+    background-color: var(--color-lavender-light);
+    cursor: pointer;
+}
+.chosen_item_container {
+    height: 30rem;
+    width: 40%;
+    background-color: var(--nav-bar);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    box-shadow: var(--shadow-medium);
+    row-gap: 0.75rem;
+    overflow-y: scroll;
+}
+.chosen_item {
+    background-color: var(--color-lavender-light);
+    color: var(--color-blue);
+    border-radius: 8px;
+    min-height: 3.5rem;
+    width: 24rem;
+    box-shadow: var(--shadow-medium);
+    display: flex;
+    justify-content: space-around;
+    margin: 1rem;
+    align-items: center;
+}
+.chosen_item:hover {
+    background-color: red;
+    color: var(--color-lavender-light);
+    transition: all 0.1s ease-in-out;
+    cursor: pointer;
+}
