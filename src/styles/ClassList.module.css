@@ -21,3 +21,6 @@
     grid-auto-flow: row;
     margin-bottom: 1rem;
 }
+.go_to_class{
+    cursor: pointer;
+}
