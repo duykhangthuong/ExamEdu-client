@@ -7,6 +7,7 @@ import { useUserAuthorization } from "utilities/useAuthorization";
 import ModuleList from "pages/AcademicDepartment/ModuleList";
 import ClassList from "pages/AcademicDepartment/ClassList";
 import ClassDetail from "pages/AcademicDepartment/ClassDetail";
+import ClassModuleStudent from "pages/AcademicDepartment/ClassModuleStudent";
 const AcademicRoutes = () => {
     const { redirect, path } = useUserAuthorization("academicdepartment");
 
@@ -26,8 +27,11 @@ const AcademicRoutes = () => {
                 <Route path="/AcademicDepartment/class/:classId" exact>
                     <ClassDetail />
                 </Route>
+                <Route path="/AcademicDepartment/class/:classId/module/:moduleId" exact>
+                    <ClassModuleStudent/>
+                </Route>
                 {/* <Route path="/academic/class/create" exact></Route>
-                <Route path="/academic/class/update" exact></Route>
+                
                 
                 <Route path="/academic/exam/list" exact></Route>
                 <Route path="/academic/exam/create" exact></Route>
