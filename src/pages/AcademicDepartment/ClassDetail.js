@@ -208,8 +208,9 @@ const ClassDetail = () => {
                             nameModule={module.moduleName}
                             teacherName={module.teacherName}
                             onClick={() => {
+                                console.log(`/class/${fetchDataResult.data?.classId}/module/${module.moduleId}`);
                                 history.push(
-                                    `/class/classModule/${module.classModuleId}`
+                                    `/class/${fetchDataResult.data?.classId}/module/${module.moduleId}`
                                 );
                             }}
                         />
