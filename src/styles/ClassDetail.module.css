@@ -1,0 +1,90 @@
+.basicDiv {
+    display: inline-block;
+    width: 30vw;
+    border-radius: 10px;
+    padding: 1rem 1.3rem;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+        rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+    margin-top: 2rem;
+}
+.basicDiv h5 {
+    color: var(--color-dark-blue);
+    font-weight: bold;
+}
+.basicDiv hr {
+    margin: 0 0 0.5rem 0;
+    color: #707070;
+}
+.content {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    margin-top: 1rem;
+    color: #707070;
+}
+.column2 {
+    width: 50%;
+}
+.moduleDiv {
+    margin: 1rem;
+}
+
+.moduleDiv h4 {
+    font-weight: bold;
+    color: var(--color-dark-blue);
+}
+.moduleWrap {
+    color: var(--color-dark-blue);
+    width: 14vw;
+    height: 15rem;
+    background-color: var(--color-lavender-light);
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    text-align: center;
+    margin-bottom: 1.3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.moduleWrap h3 {
+    font-weight: bold;
+}
+.description {
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+    flex-grow: 1;
+}
+.teacherName {
+    font-size: 0.9rem;
+}
+.moduleContainer {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.heading {
+    padding: 1rem;
+    color: var(--color-blue);
+    font-size: 1.2rem;
+    height: fit-content;
+}
+.bodyModal {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    padding: 0.5rem;
+    color: var(--color-gray);
+    font-weight: 100;
+}
+.inputGroup {
+    margin: 1rem 7rem 1rem 1rem;
+    display: flex;
+    justify-content: space-between;
+}
+.inputGroup input {
+    width: 20rem;
+    border-radius: 9px;
+    border: 1px solid var(--color-gray);
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    padding: 0.3rem;
+}
