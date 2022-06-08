@@ -11,6 +11,8 @@ import ClassModuleStudent from "pages/AcademicDepartment/ClassModuleStudent";
 import UpdateExam from "pages/AcademicDepartment/UpdateExam";
 import ExamList from "pages/AcademicDepartment/ExamList";
 import ExamDetail from "pages/AcademicDepartment/ExamDetail";
+import CreateExam from "pages/Teacher/CreateExam";
+import CreateExamPaper from "pages/Teacher/CreateExamPaper";
 const AcademicRoutes = () => {
     const { redirect, path } = useUserAuthorization("academicdepartment");
 
@@ -20,8 +22,6 @@ const AcademicRoutes = () => {
             <HorizontalNavBar />
             <VerticalNavBar VerticalNavbarData={DataAcademic} />
             <Switch>
-            
-
                 <Route path="/AcademicDepartment/module/list" exact>
                     <ModuleList />
                 </Route>
@@ -35,8 +35,11 @@ const AcademicRoutes = () => {
                 <Route path="/AcademicDepartment/class/:classId" exact>
                     <ClassDetail />
                 </Route>
-                <Route path="/AcademicDepartment/class/:classId/module/:moduleId" exact>
-                    <ClassModuleStudent/>
+                <Route
+                    path="/AcademicDepartment/class/:classId/module/:moduleId"
+                    exact
+                >
+                    <ClassModuleStudent />
                 </Route>
                 <Route path="/AcademicDepartment/exam/:examId" exact>
                     <ExamDetail />
@@ -48,6 +51,17 @@ const AcademicRoutes = () => {
                 <Route path="/academic/exam/list" exact></Route>
                 <Route path="/academic/exam/create" exact></Route>
                 <Route path="/academic/exam/update" exact></Route> */}
+
+                <Route
+                    path="/AcademicDepartment/exam/create/question/:ExamID/:moduleId/:isFinalExam"
+                    exact
+                >
+                    <CreateExamPaper />
+                </Route>
+
+                <Route path="/AcademicDepartment/exam/create/info" exact>
+                    <CreateExam isFinalExam={true} />
+                </Route>
 
                 <Route
                     path="/AcademicDepartment/exam/update/info/:examId"
