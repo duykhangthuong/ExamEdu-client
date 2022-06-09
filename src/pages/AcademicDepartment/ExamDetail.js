@@ -5,108 +5,64 @@ import Wrapper from "components/Wrapper";
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import { useLazyFetch } from "utilities/useFetch";
+import { useLazyFetch, useFetch } from "utilities/useFetch";
 import styles from "../../styles/ExamDetail.module.css";
 import { API } from "utilities/constants";
 import Swal from "sweetalert2";
 import Loading from "pages/Loading";
+import { useEffect, useState } from "react";
+import moment from "moment";
 const ExamDetail = () => {
     const column = ["Student ID", "Student Name", "Email", "Mark"];
 
     const param = useParams();
     const history = useHistory();
-    const data = [
+    //Fetch data exam question
+    const fetchDataExamInforResult = useFetch(
+        `${API}/Exam/examDetail/${param.examId}`,
         {
-            "Student ID": "1",
-            "Student Name": "Nguyễn Văn A",
-            Email: "etst@gmail.com",
-            Mark: "10"
-        },
-        {
-            "Student ID": "1",
-            "Student Name": "Nguyễn Văn A",
-            Email: "etst@gmail.com",
-            Mark: "10"
-        },
-        {
-            "Student ID": "1",
-            "Student Name": "Nguyễn Văn A",
-            Email: "etst@gmail.com",
-            Mark: "10"
-        },
-        {
-            "Student ID": "1",
-            "Student Name": "Nguyễn Văn A",
-            Email: "etst@gmail.com",
-            Mark: "10"
-        },
-        {
-            "Student ID": "1",
-            "Student Name": "Nguyễn Văn A",
-            Email: "etst@gmail.com",
-            Mark: "10"
-        },
-        {
-            "Student ID": "1",
-            "Student Name": "Nguyễn Văn A",
-            Email: "etst@gmail.com",
-            Mark: "10"
-        },
-        {
-            "Student ID": "1",
-            "Student Name": "Nguyễn Văn A",
-            Email: "etst@gmail.com",
-            Mark: "10"
-        },
-        {
-            "Student ID": "1",
-            "Student Name": "Nguyễn Văn A",
-            Email: "etst@gmail.com",
-            Mark: "10"
-        },
-        {
-            "Student ID": "1",
-            "Student Name": "Nguyễn Văn A",
-            Email: "etst@gmail.com",
-            Mark: "10"
-        },
-        {
-            "Student ID": "1",
-            "Student Name": "Nguyễn Văn A",
-            Email: "etst@gmail.com",
-            Mark: "10"
-        },
-        {
-            "Student ID": "1",
-            "Student Name": "Nguyễn Văn A",
-            Email: "etst@gmail.com",
-            Mark: "10"
-        },
-        {
-            "Student ID": "1",
-            "Student Name": "Nguyễn Văn A",
-            Email: "etst@gmail.com",
-            Mark: "10"
-        },
-        {
-            "Student ID": "1",
-            "Student Name": "Nguyễn Văn A",
-            Email: "etst@gmail.com",
-            Mark: "10"
-        },
-        {
-            "Student ID": "1",
-            "Student Name": "Nguyễn Văn A",
-            Email: "etst@gmail.com",
-            Mark: "10"
-        },
-        {
-            "Student ID": "1",
-            "Student Name": "Nguyễn Văn A",
-            Email: "etst@gmail.com",
-            Mark: "10"
+            onError: (err) => {
+                Swal.fire({
+                    title: "Error",
+                    text: err.message,
+                    icon: "error",
+                    confirmButtonText: "OK"
+                });
+            }
         }
-    ];
+    );
+
+    //Fetch data exam question
+    const fetchDataExamStudentResult = useFetch(
+        `${API}/Exam/result/${param.examId}`,
+        {
+            // onError: (err) => {
+            //     Swal.fire({
+            //         title: "Error",
+            //         text: err.message,
+            //         icon: "error",
+            //         confirmButtonText: "OK"
+            //     });
+            // }
+        }
+    );
+
+    //Fetch data exam question
+    const fetchDataExamQuestionResult = useFetch(
+        `${API}/ExamQuestions/ExamDetail/${param.examId}`,
+        {
+            onError: (err) => {
+                Swal.fire({
+                    title: "Error",
+                    text: err.message,
+                    icon: "error",
+                    confirmButtonText: "OK"
+                });
+            }
+        }
+    );
+
+    //Fetch cancel exam
     const [fetchDataCancel, { loading }] = useLazyFetch(
         `${API}/exam/cancel/${param.examId}`,
         {
@@ -133,7 +89,9 @@ const ExamDetail = () => {
             }
         }
     );
-
+    console.log(
+        moment(fetchDataExamInforResult.data?.examDay).isAfter(moment())
+    );
     if (loading) return <Loading />;
     return (
         <Wrapper>
@@ -149,10 +107,16 @@ const ExamDetail = () => {
                             <p>Password</p>
                         </div>
                         <div className={styles.column2}>
-                            <p>SE1501</p>
-                            <p>24-2-2022</p>
-                            <p>24-2-2022</p>
-                            <p>24-2-2022</p>
+                            <p>{fetchDataExamInforResult.data?.examName}</p>
+                            <p>{fetchDataExamInforResult.data?.moduleName}</p>
+                            <p>
+                                {fetchDataExamInforResult.data?.description ===
+                                ""
+                                    ? "No description"
+                                    : fetchDataExamInforResult.data
+                                          ?.description}
+                            </p>
+                            <p>{fetchDataExamInforResult.data?.password}</p>
                         </div>
                     </div>
                 </div>
@@ -165,12 +129,40 @@ const ExamDetail = () => {
                             <p>Duration</p>
                             <p>Room</p>
                             <p>Status</p>
+                            <p>Exam type</p>
                         </div>
                         <div className={styles.column2}>
-                            <p>SE1501</p>
-                            <p>24-2-2022</p>
-                            <p>24-2-2022</p>
-                            <Status>DONE</Status>
+                            <p>
+                                {moment(
+                                    fetchDataExamInforResult.data?.examDay
+                                ).format("HH:MM DD-MM-YYYY")}
+                            </p>
+                            <p>
+                                {
+                                    fetchDataExamInforResult.data
+                                        ?.durationInMinute
+                                }{" "}
+                                minutes
+                            </p>
+                            <p>
+                                {fetchDataExamInforResult.data?.room === ""
+                                    ? "No Room"
+                                    : fetchDataExamInforResult.data?.room}
+                            </p>
+                            <Status>
+                                {moment(
+                                    fetchDataExamInforResult.data?.examDay
+                                ).isBefore(moment())
+                                    ? "DONE"
+                                    : fetchDataExamInforResult.data?.isCancelled
+                                    ? "CANCELLED"
+                                    : "NOT YET"}
+                            </Status>
+                            <p>
+                                {fetchDataExamInforResult.data?.isFinalExam
+                                    ? "Final Exam"
+                                    : "Progress Test"}
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -180,13 +172,28 @@ const ExamDetail = () => {
                         <hr />
                         <div className={styles.content}>
                             <div className={styles.column1}>
-                                <p className="mb-0">Luong Hoang Huong</p>
-                                <p className="mb-0">huonghl@fpt.edu.vn</p>
+                                <p className="mb-0">
+                                    {
+                                        fetchDataExamInforResult.data
+                                            ?.proctorFullName
+                                    }
+                                </p>
+                                <p className="mb-0">
+                                    {
+                                        fetchDataExamInforResult.data
+                                            ?.proctorEmail
+                                    }
+                                </p>
                             </div>
                             <div className={styles.verticalLine}></div>
                             <div className={styles.column2}>
-                                <p className="mb-0">Luong Hoang Huong</p>
-                                <p className="mb-0">huonghl@fpt.edu.vn</p>
+                                <p className="mb-0">Super Visor</p>
+                                <p className="mb-0">
+                                    {
+                                        fetchDataExamInforResult.data
+                                            ?.supervisorEmail
+                                    }
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -222,6 +229,12 @@ const ExamDetail = () => {
                                 }
                             });
                         }}
+                        disabled={
+                            moment(
+                                fetchDataExamInforResult.data?.examDay
+                            ).isBefore(moment()) ||
+                            fetchDataExamInforResult.data?.isCancelled
+                        }
                     >
                         Cancel
                         <Icon
@@ -235,24 +248,56 @@ const ExamDetail = () => {
             <div className={styles.studentListDiv}>
                 <h5>STUDENT LIST</h5>
                 <hr />
-                <div className={styles.tableDiv}>
-                    <Table columns={column} data={data} />
-                </div>
+                {fetchDataExamStudentResult.loading ? (
+                    <Loading className="w-100" />
+                ) : (
+                    <div className={styles.tableDiv}>
+                        <Table
+                            columns={column}
+                            data={fetchDataExamStudentResult.data?.payload.map(
+                                (item) => ({
+                                    studentId: item.studentId,
+                                    studentName: item.studentName,
+                                    email: item.studentEmail,
+                                    mark: (
+                                        <div
+                                            className={
+                                                item.mark >= 5
+                                                    ? styles["markPillPassed"]
+                                                    : styles[
+                                                          "markPillNotPassed"
+                                                      ]
+                                            }
+                                        >
+                                            {Number.isInteger(item.mark)
+                                                ? item.mark + ".0"
+                                                : item.mark}
+                                        </div>
+                                    )
+                                })
+                            )}
+                        />
+                    </div>
+                )}
             </div>
             <div className={styles.questionDiv}>
                 <h5>QUESTIONS</h5>
                 <hr />
-                <div className={styles.questionList}>
-                    <Question />
-                    <Question />
-                    <Question />
-                    <Question />
-                    <Question />
-                    <Question />
-                    <Question />
-                    <Question />
-                    <Question />
-                </div>
+                {fetchDataExamQuestionResult.loading ? (
+                    <Loading className="w-100" />
+                ) : (
+                    <div className={styles.questionList}>
+                        {fetchDataExamQuestionResult.data?.map(
+                            (item, index) => (
+                                <Question
+                                    level={item.levelName}
+                                    question={item.questionContent}
+                                    answers={item.answers}
+                                />
+                            )
+                        )}
+                    </div>
+                )}
             </div>
         </Wrapper>
     );
@@ -270,26 +315,54 @@ const Status = ({ children }) => {
     } else return <p>{children}</p>;
 };
 
-const Question = () => {
+const Question = ({ level, question, answers }) => {
+    const alphabet = [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "M",
+        "N",
+        "O",
+        "P",
+        "Q",
+        "R",
+        "S",
+        "T",
+        "U",
+        "V",
+        "W",
+        "X",
+        "Y",
+        "Z"
+    ];
     return (
         <div className={styles.question}>
-            <p className="m-2 me-3 fw-bold fs-5 ">LV1</p>
+            <p className="m-2 me-3 fw-bold fs-5 ">
+                {level === "Easy" ? "LV1" : level === "Medium" ? "LV2" : "LV3"}
+            </p>
             <div>
-                <p className="mb-1 fw-bold">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Mauris eu nunc nec neque lobortis rutrum eu fermentum
-                    tellus. Orci varius natoque penatibus et magnis dis
-                    parturient montes, nascetur ridiculus mus.
-                </p>
-
-                <div className="d-flex">
-                    <p className="me-5 mb-1">A. Dap an Aasdsa</p>
-                    <p className="mb-1">B. Dap an B</p>
-                </div>
-                <div className="d-flex">
-                    <p className="me-5 mb-1">C. Dap anssss </p>
-                    <p className="mb-1">D.sa</p>
-                </div>
+                <p className="mb-1 fw-bold">{question}</p>
+                {answers?.map((item, index) => (
+                    <p
+                        className="mb-1"
+                        key={index}
+                        style={item.isCorrect ? { fontWeight: "bold" } : {}}
+                    >
+                        {/* Check if the question is the text question */}
+                        {answers.length === 1
+                            ? "Require:"
+                            : alphabet[index]}. {item.answerContent}
+                    </p>
+                ))}
             </div>
         </div>
     );
