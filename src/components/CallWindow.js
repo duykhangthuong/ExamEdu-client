@@ -2,7 +2,7 @@ import hark from "hark";
 import React, { useEffect, useState } from "react";
 import style from "styles/CallWindow.module.css";
 
-const CallWindow = ({ stream, userEmail, index, size }) => {
+const CallWindow = ({ stream, userEmail, index }) => {
 
     const [isSpeaking, setIsSpeaking] = useState(false);
     const [audioState, setAudioState] = useState(true);
@@ -51,8 +51,8 @@ const CallWindow = ({ stream, userEmail, index, size }) => {
     }
     return (
         <div
-            style={isSpeaking ? { border: "solid red" } : {}}> {/* nho style lai cai nay, t de style vay cho de hieu thoi */}
-            className={`${style.wrapper_general}`}
+            style={isSpeaking ? { border: "solid red" } : {}}
+            className={`${style.wrapper_general}`}> {/* nho style lai cai nay, t de style vay cho de hieu thoi */}
             <div className={`${style.infor_wrapper}`}>
                 <div className={`${style.content_name}`}>{userEmail}</div>
                 <div className={`${style.media_button}`}
