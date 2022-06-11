@@ -4,7 +4,7 @@ import Peer from "peerjs";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLazyFetch } from "utilities/useFetch";
-import { API } from "utilities/constants";
+import { API, HUB } from "utilities/constants";
 import style from "styles/Invigilate.module.css";
 
 const Invigilate = () => {
@@ -18,6 +18,7 @@ const Invigilate = () => {
 	const [forceRender, setForceRender] = useState(1);
 	const [videoState, setVideoState] = useState(true);
 	const [audioState, setAudioState] = useState(true);
+	const [numberOfGridColumn, setNumberOfGridColumn] = useState(1);
 	const [createRoomId, createRoomIdResponse] = useLazyFetch(`${API}/invigilate/GenerateRoomId`, {
 		method: "POST",
 		body: {
@@ -57,7 +58,7 @@ const Invigilate = () => {
 		});
 
 		const newConnection = new HubConnectionBuilder()
-			.withUrl("https://localhost:5001/hubs/notification")
+			.withUrl(`${HUB}/notification`)
 			.withAutomaticReconnect()
 			.build();
 
@@ -120,6 +121,9 @@ const Invigilate = () => {
 							stream: stream,
 							userEmail: call.metadata.userEmail,
 						}];
+						if (remoteStreamList.current.length <= 4) {
+							setNumberOfGridColumn(remoteStreamList.current.length);
+						}
 						setForceRender(Math.random()); //dung de force rerender
 					})
 				})
@@ -142,7 +146,7 @@ const Invigilate = () => {
 
 	return (
 		<div>
-			<div className={`${style.all_videos_container}`}>
+			<div className={`${style.all_videos_container}`} style={{ gridTemplateColumns: `repeat(${numberOfGridColumn}, minmax(250px, 60vw))` }}>
 				{
 					remoteStreamList.current.map((stream, index) => {
 						return (
@@ -150,8 +154,8 @@ const Invigilate = () => {
 								<CallWindow
 									stream={stream.stream}
 									userEmail={stream.userEmail}
-									index={index} 
-									size={remoteStreamList.current.length}/>
+									index={index}
+								/>
 							</div>
 						)
 					})
@@ -177,6 +181,7 @@ const Invigilate = () => {
 						: `bi bi-camera-video-off-fill ${style.media_icon}`}></i>
 				</div>
 				<button onClick={() => startRoom()}>Start Room</button>
+				<input type="number" onChange={e => setNumberOfGridColumn(e.target.value)} />
 			</div>
 			<h5 style={{ display: "none" }}>{forceRender}</h5>
 		</div>
