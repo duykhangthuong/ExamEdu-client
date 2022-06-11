@@ -80,7 +80,6 @@ const HorizontalNavBar = () => {
 
                     // Get Notifications are sended in Real Time
                     connection.on("ReceiveNotification", (message) => {
-                        console.log("test");
                         const updatedChat = [...latestChat.current];
                         updatedChat.unshift(message);
                         setNotifications(updatedChat);
