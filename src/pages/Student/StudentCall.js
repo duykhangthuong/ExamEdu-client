@@ -1,6 +1,7 @@
 import Peer from "peerjs";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
 import { API } from "utilities/constants";
 import { useLazyFetch } from "utilities/useFetch";
 const StudentCall = () => {
@@ -26,13 +27,15 @@ const StudentCall = () => {
 		}
 	});
 
-    
+    const [studentDisconnect, studentDisconnectResponse] = useLazyFetch(`${API}/invigilate/studentDisconnect`, {
+		method: "POST",
+		body: {
+			ExamId: examId,
+			RoomId: user.email
+		}
+	});
 
     useEffect(() => {
-        window.addEventListener("beforeunload", (ev) => {
-            ev.preventDefault();
-            return ev.returnValue = 'Are you sure you want to close?';
-        });
         fetchRoomId();
     }, []);
 
@@ -70,6 +73,12 @@ const StudentCall = () => {
                 })
     
             })
+            window.addEventListener("beforeunload", (ev) => {
+                //studentDisconnect();  //nho bo commet cai nay
+                peer.destroy();
+                ev.preventDefault();
+                return ev.returnValue = 'Are you sure you want to close?';
+            });
         }
     }, [fetchSate]);
 
@@ -77,9 +86,8 @@ const StudentCall = () => {
         <div>
             <video id="local-video"></video>
             <video id="remote-video" autoPlay></video>
-            <button onClick={() => {changeLocalVideoState(); setForceRender(Math.random)}}>local video state</button>
+            <button onClick={() => changeLocalVideoState()}>local video state</button>
             <button onClick={() => changeLocalAudioState()}>Local audio state</button>
-            <div>{forceRender}</div>
         </div>
     );
 }

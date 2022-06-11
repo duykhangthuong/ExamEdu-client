@@ -2,7 +2,7 @@ import { HubConnectionBuilder } from "@microsoft/signalr";
 import Loading from "pages/Loading";
 import { useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { API } from "utilities/constants";
+import { API, HUB } from "utilities/constants";
 import { useLazyFetch } from "utilities/useFetch";
 
 
@@ -34,7 +34,7 @@ const PrejoinRoom = () => {
         })
         fetchRoomId();
         const newConnection = new HubConnectionBuilder()
-            .withUrl("https://localhost:5001/hubs/notification")
+            .withUrl(`${HUB}/notification`)
             .withAutomaticReconnect()
             .build();
 

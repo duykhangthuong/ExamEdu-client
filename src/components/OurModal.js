@@ -32,8 +32,10 @@ const OurModal = ({
     isClicked,
     setIsClicked,
     modalRef,
+    className = "",
+    style = {},
     modalClassName,
-    children,
+    children
 }) => {
     //We shall pass in the setOutsideClick function to the component from it's parent.
     // The parent will be able to set isClicked to true or false.
@@ -46,8 +48,9 @@ const OurModal = ({
             } `}
         >
             <div
-                className={`${styles.modal_container} ${modalClassName}`}
+                className={`${styles.modal_container} ${modalClassName} ${className}`}
                 ref={modalRef}
+                style={{ ...style }}
             >
                 {children}
             </div>

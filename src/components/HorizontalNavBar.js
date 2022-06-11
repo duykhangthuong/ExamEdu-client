@@ -5,7 +5,7 @@ import logo from "../static/logo-ExamEdu.png";
 import { useLazyFetch } from "utilities/useFetch";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { useSelector } from "react-redux";
-import { API } from "utilities/constants";
+import { API, HUB } from "utilities/constants";
 import { HubConnectionBuilder } from "@microsoft/signalr";
 import moment from "moment";
 
@@ -59,7 +59,7 @@ const HorizontalNavBar = () => {
     useEffect(() => {
         if (user?.role.toLowerCase() == "student") {
             const newConnection = new HubConnectionBuilder()
-                .withUrl("https://localhost:5001/hubs/notification")
+                .withUrl(`${HUB}/notification`)
                 .withAutomaticReconnect()
                 .build();
 
@@ -80,7 +80,6 @@ const HorizontalNavBar = () => {
 
                     // Get Notifications are sended in Real Time
                     connection.on("ReceiveNotification", (message) => {
-                        console.log("test");
                         const updatedChat = [...latestChat.current];
                         updatedChat.unshift(message);
                         setNotifications(updatedChat);

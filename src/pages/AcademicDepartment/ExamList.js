@@ -33,7 +33,7 @@ const ExamList = () => {
     return (
         <Wrapper>
             <SearchBar
-                pageName={"Exam Result"}
+                pageName={"Exam List"}
                 onSubmit={handleSubmit}
                 keyWord={searchName}
                 setKeyWord={setSearchName}
