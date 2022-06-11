@@ -10,7 +10,6 @@ import styles from "../../styles/ExamDetail.module.css";
 import { API } from "utilities/constants";
 import Swal from "sweetalert2";
 import Loading from "pages/Loading";
-import { useEffect, useState } from "react";
 import moment from "moment";
 const ExamDetail = () => {
     const column = ["Student ID", "Student Name", "Email", "Mark"];
@@ -88,9 +87,6 @@ const ExamDetail = () => {
                 });
             }
         }
-    );
-    console.log(
-        moment(fetchDataExamInforResult.data?.examDay).isAfter(moment())
     );
     if (loading) return <Loading />;
     return (

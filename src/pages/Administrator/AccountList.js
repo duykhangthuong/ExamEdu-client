@@ -3,19 +3,27 @@ import SearchBar from "components/SearchBar";
 import Pill from "components/Pill";
 import Wrapper from "components/Wrapper";
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Icon from "components/Icon";
 import { useLazyFetch } from "utilities/useFetch";
 import { API } from "utilities/constants";
-import swal from "sweetalert2";
+import Swal from "sweetalert2";
 import Button from "components/Button";
 import { useWindowSize } from "utilities/useWindowSize";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import Pagination from "components/Pagination";
 import Loading from "pages/Loading";
+import OurModal from "components/OurModal";
+import useOutsideClick from "utilities/useOutsideClick";
+import styles from "../../styles/AccountList.module.css";
+import * as Yup from "yup";
+import { useFormik } from "formik";
 const AccountList = () => {
     const history = useHistory();
     const size = useWindowSize();
+    const [accounts, setAccounts] = useState();
+    const modalRef = useRef(null);
+    let { isClicked, setIsClicked } = useOutsideClick(modalRef);
 
     //Các cột trong bảng
     const columns = [
@@ -43,7 +51,7 @@ const AccountList = () => {
         method: "delete",
         //Khi fetch xong, status code  == 200
         onCompletes: (data) => {
-            swal.fire({
+            Swal.fire({
                 titleText: "Account deleted",
                 icon: "success",
                 customClass: {
@@ -55,12 +63,40 @@ const AccountList = () => {
         //Khi fetch ko được
         onError: (error) => {
             console.log(error);
-            swal.fire({
+            Swal.fire({
                 titleText: "Operation failed!",
                 text: "The account hasn't been deleted.",
                 icon: "error",
                 customClass: {
                     popup: "roundCorner"
+                }
+            });
+        }
+    });
+    const formik = useFormik({
+        initialValues: {
+            fullName: accounts?.fullname,
+            email: accounts?.email,
+            role: accounts?.roleName
+        },
+        validationSchema: Yup.object({
+            fullName: Yup.string().required("Full Name is required"),
+            email: Yup.string().required("Email is required"),
+            role: Yup.string().required("Role is required")
+        }),
+        enableReinitialize: true,
+        onSubmit: () => {
+            Swal.fire({
+                title: "Are you Sure",
+                text: "Press OK to continue",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonColor: "#3b5af1",
+                cancelButtonColor: "#e76565",
+                confirmButtonText: "OK"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // fetchDataEdit();
                 }
             });
         }
@@ -73,7 +109,7 @@ const AccountList = () => {
 
     //hàm để hiện lên SweetAlert để hỏi lại khi nhấn xóa account
     function showModalDelete(deleteId, deleteRole) {
-        swal.fire({
+        Swal.fire({
             title: "Are you sure?",
             text: "Do you really want to delete this account?",
             icon: "warning",
@@ -96,7 +132,7 @@ const AccountList = () => {
     useEffect(() => {
         fetchData();
     }, [currentPage]);
-    
+
     if (fetchResult.loading) return <Loading />;
     return (
         //phải có cái Wrapper này để căn giữa
@@ -129,19 +165,34 @@ const AccountList = () => {
                         />
                     ),
                     action: (
-                        <div
-                            className="d-flex justify-content-center"
-                            onClick={() => {
-                                showModalDelete(record.id, record.roleID);
-                            }}
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="right"
-                            title="Delete this account"
-                        >
+                        <div className="d-flex justify-content-center">
                             <Button
                                 circle={true}
                                 disabled={requestResult.loading}
                                 btn="primary"
+                                tooltipDirection="right"
+                                titleTooltip="Edit this account"
+                                className="me-2"
+                                onClick={() => {
+                                    setIsClicked(true);
+                                    setAccounts(record);
+                                }}
+                            >
+                                <Icon
+                                    icon="pen"
+                                    color="#fff"
+                                    className="fs-4"
+                                />
+                            </Button>
+                            <Button
+                                circle={true}
+                                disabled={requestResult.loading}
+                                btn="secondary"
+                                tooltipDirection="right"
+                                titleTooltip="Delete this account"
+                                onClick={() => {
+                                    showModalDelete(record.id, record.roleID);
+                                }}
                             >
                                 <Icon
                                     icon="trash-alt"
@@ -159,6 +210,104 @@ const AccountList = () => {
                 pageSize={pageSize}
                 onPageChange={setcurrentPage}
             />
+            {/* Modal Popup for Edit Account */}
+            <OurModal
+                modalRef={modalRef}
+                isClicked={isClicked}
+                setIsClicked={setIsClicked}
+                style={{ height: "fit-content" }}
+            >
+                <header
+                    className={`${styles.heading} d-flex justify-content-between`}
+                >
+                    <h4 className="fw-bold">Update Account Information</h4>
+                    <b></b>
+                    <Icon
+                        icon="times"
+                        className="me-2 fs-3"
+                        onClick={() => setIsClicked(false)}
+                        style={{ cursor: "pointer" }}
+                    ></Icon>
+                </header>
+                <div className={styles.bodyModal}>
+                    <form onSubmit={formik.handleSubmit}>
+                        <div className={styles.inputGroup}>
+                            <label>Full name</label>
+                            <input
+                                type="text"
+                                id="fullName"
+                                name="fullName"
+                                value={formik.values.fullName}
+                                onChange={formik.handleChange}
+                            />
+                        </div>
+                        {formik.errors.fullName && formik.touched.fullName && (
+                            <p className="text-danger ms-5 text-center">
+                                {formik.errors.fullName}
+                            </p>
+                        )}
+                        <div className={styles.inputGroup}>
+                            <label>Email</label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                value={formik.values.email}
+                                onChange={formik.handleChange}
+                            />
+                        </div>
+                        {formik.errors.email && formik.touched.email && (
+                            <p className="text-danger ms-5 text-center">
+                                {formik.errors.email}
+                            </p>
+                        )}
+                        <div className={styles.inputGroup}>
+                            <label>Role</label>
+                            <select
+                                className="form-select"
+                                id="role"
+                                name="role"
+                                value={formik.values.color}
+                                onChange={formik.handleChange}
+                                style={{ display: "block" }}
+                            >
+                                <option
+                                    value={accounts?.roleName}
+                                    label={accounts?.roleName}
+                                >
+                                    {accounts?.roleName}
+                                </option>
+                                <option
+                                    value="Administrator"
+                                    label="Administrator"
+                                >
+                                    Administrator
+                                </option>
+                                <option
+                                    value="AcademicDepartment"
+                                    label="Academic department"
+                                >
+                                    Academic department
+                                </option>
+                                <option value="Teacher" label="Teacher">
+                                    Teacher
+                                </option>
+                                <option value="Student" label="Student">
+                                    Student
+                                </option>
+                            </select>
+                        </div>
+                        {formik.errors.role && formik.touched.role && (
+                            <p className="text-danger ms-5 text-center">
+                                {formik.errors.role}
+                            </p>
+                        )}
+                        <Button className="ms-auto me-5 mt-4" type="submit">
+                            Save Changes
+                        </Button>
+                    </form>
+                </div>
+            </OurModal>
         </Wrapper>
     );
 };
