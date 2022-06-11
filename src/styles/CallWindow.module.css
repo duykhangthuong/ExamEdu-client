@@ -2,27 +2,11 @@
     color: white;
     display: inline-block;
 }
-
 .wrapper_general{
     background-color: rgba(240, 248, 255, 0.193);
     border: solid 1px rgba(255, 255, 255, 0.5);
 }
 
-.wrapper_1{
-    width: 60vw;
-}
-.wrapper_2{
-    width: 48vw;
-}
-.wrapper_3{
-    width: 33.3vw;
-}
-.wrapper_4{
-    width: 29.5vw;
-}
-.wrapper_9{
-    width: 25vw;
-}
 .video_style{
     display: block;
     margin: 0 auto;
