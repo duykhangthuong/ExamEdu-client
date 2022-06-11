@@ -24,26 +24,26 @@ const CallWindow = ({ stream, userEmail, index, size }) => {
         }
     }, []);
 
-    useEffect(() => {
-        let windowWrapper = document.getElementById("windowWrapper" + index);
-        switch (size) {
-            case 1:
-                windowWrapper.className = `${style.wrapper_1} + ${style.wrapper_general}`;
-                break;
-            case 2:
-                windowWrapper.className = `${style.wrapper_2} + ${style.wrapper_general}`;
-                break;
-            case 3:
-                windowWrapper.className = `${style.wrapper_3} + ${style.wrapper_general}`;
-                break;
-            case 4: case 5: case 6:
-                windowWrapper.className = `${style.wrapper_4} + ${style.wrapper_general}`;
-                break;
-            default:
-                windowWrapper.className = `${style.wrapper_9} + ${style.wrapper_general}`;
-                break;
-        }
-    }, [size]);
+    // useEffect(() => {
+    //     let windowWrapper = document.getElementById("windowWrapper" + index);
+    //     switch (size) {
+    //         case 1:
+    //             windowWrapper.className = `${style.wrapper_1} + ${style.wrapper_general}`;
+    //             break;
+    //         case 2:
+    //             windowWrapper.className = `${style.wrapper_2} + ${style.wrapper_general}`;
+    //             break;
+    //         case 3:
+    //             windowWrapper.className = `${style.wrapper_3} + ${style.wrapper_general}`;
+    //             break;
+    //         case 4: case 5: case 6:
+    //             windowWrapper.className = `${style.wrapper_4} + ${style.wrapper_general}`;
+    //             break;
+    //         default:
+    //             windowWrapper.className = `${style.wrapper_9} + ${style.wrapper_general}`;
+    //             break;
+    //     }
+    // }, [size]);
 
     const changeLocalAudioState = () => {
         stream.getAudioTracks()[0].enabled = !stream.getAudioTracks()[0].enabled;
@@ -51,10 +51,14 @@ const CallWindow = ({ stream, userEmail, index, size }) => {
     }
     return (
         <div
-            id={"windowWrapper" + index}
             style={isSpeaking ? { border: "solid red" } : {}}> {/* nho style lai cai nay, t de style vay cho de hieu thoi */}
+            className={`${style.wrapper_general}`}
             <div className={`${style.infor_wrapper}`}>
                 <div className={`${style.content_name}`}>{userEmail}</div>
+                <div className={`${style.media_button}`}
+                    data-toggle="tooltip" data-placement="bottom" title="Mark this student as cheating">
+                    <i className={`bi bi-bookmark-x-fill`}></i>
+                </div>
                 <div className={audioState
                     ? `${style.media_button}`
                     : `${style.media_button_off}`}

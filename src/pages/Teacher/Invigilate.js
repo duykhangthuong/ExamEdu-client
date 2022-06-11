@@ -4,7 +4,7 @@ import Peer from "peerjs";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLazyFetch } from "utilities/useFetch";
-import { API } from "utilities/constants";
+import { API, HUB } from "utilities/constants";
 import style from "styles/Invigilate.module.css";
 
 const Invigilate = () => {
@@ -57,7 +57,7 @@ const Invigilate = () => {
 		});
 
 		const newConnection = new HubConnectionBuilder()
-			.withUrl("https://localhost:5001/hubs/notification")
+			.withUrl(`${HUB}/notification`)
 			.withAutomaticReconnect()
 			.build();
 
