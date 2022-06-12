@@ -1,0 +1,80 @@
+.container {
+    height: 100vh;
+}
+.videoContainer {
+    height: 50vh;
+    width: 45vw;
+    margin-right: 8rem;
+}
+.mainVideo {
+    min-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    background-size: cover;
+    overflow: hidden;
+    border-radius: 20px;
+    object-fit: cover;
+    border: 2px solid #fff;
+}
+
+/* Start Button CSS */
+.joinButton {
+    background-color: transparent;
+    border: 0;
+    font: inherit;
+    height: auto;
+    width: 9rem;
+    height: 3rem;
+    margin: 0;
+    padding: 0;
+    /* position: relative; */
+    text-decoration: none;
+    user-select: none;
+    align-self: center;
+}
+.Button_inner {
+    align-items: center;
+    justify-content: center;
+    background: var(--color-dark-blue);
+    border: 2px solid transparent;
+    border-radius: 99em;
+    font-weight: bold;
+    color: #fff;
+    display: flex;
+    height: 100%;
+    min-width: 2.5em;
+    padding: 0 1em;
+    position: relative; /* WebKit Bug 173872 */
+    transition: 0.2s ease;
+    width: 100%;
+}
+.joinButton:focus {
+    outline: none;
+}
+
+.joinButton::-moz-focus-inner {
+    border: 0;
+}
+.joinButton:focus .Button_inner {
+    border-color: #fff;
+    box-shadow: 0 0 0 2px var(--color-dark-blue);
+}
+
+.joinButton:hover .Button_inner {
+    filter: brightness(1.1);
+}
+
+.joinButton:active .Button_inner {
+    filter: brightness(0.9);
+}
+/* End Button CSS */
+.readyText {
+    margin-bottom: 1rem;
+}
+@media screen and (max-width: 768px) {
+    .videoContainer {
+        height: 15rem;
+        margin-bottom: 2rem;
+    }
+}
