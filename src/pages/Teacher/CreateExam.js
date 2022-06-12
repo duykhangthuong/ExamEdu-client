@@ -193,7 +193,7 @@ const CreateExam = ({ isFinalExam = false }) => {
     }
 
     return (
-        <Wrapper className={styles.background}>
+        <Wrapper className={`${styles.background}`}>
             {/* Title */}
             <Heading>Create Exam</Heading>
 
@@ -762,7 +762,7 @@ const ProctorSupervisorGraderFormContent = ({
             {/* Input container */}
             <div className={styles.input_container_grid}>
                 {/* Proctor selector (Teachers)*/}
-                <div>
+                <div className={styles.input_select_container}>
                     <label className="fw-bold txt-blue">Proctor</label>
                     <select
                         className={styles.input_select}
@@ -783,7 +783,7 @@ const ProctorSupervisorGraderFormContent = ({
                     </select>
                 </div>
                 {/* Supervisor selector (Academic Department Member) */}
-                <div>
+                <div className={styles.input_select_container}>
                     <label className="fw-bold txt-blue">Supervisor</label>
                     <select
                         className={styles.input_select}
@@ -800,7 +800,7 @@ const ProctorSupervisorGraderFormContent = ({
                     </select>
                 </div>
                 {/* Grader selector (Teacher) */}
-                <div>
+                <div className={styles.input_select_container}>
                     <label className="fw-bold txt-blue">Grader</label>
                     <select
                         className={styles.input_select}
