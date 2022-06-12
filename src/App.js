@@ -8,11 +8,9 @@ function App() {
         document.title = "ExamEdu";
     }, []);
     return (
-        <div>
-            <Router>
-                <Routes />
-            </Router>
-        </div>
+        <Router>
+            <Routes />
+        </Router>
     );
 }
 
