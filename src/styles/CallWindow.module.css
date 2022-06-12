@@ -1,6 +1,7 @@
 .content_name{
     color: white;
     display: inline-block;
+    font-size: 13px;
 }
 .wrapper_general{
     background-color: rgba(240, 248, 255, 0.193);

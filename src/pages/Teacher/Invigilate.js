@@ -46,6 +46,9 @@ const Invigilate = () => {
 			setFetchSate(true);
 		}
 	});
+	const [fetchCheatingTypeList, fetchCheatingTypeListResponse] = useLazyFetch(`${API}/Cheat/CheatingTypeList`, {
+		method: "GET",
+	});
 
 	const notifyLeaveRoom = (email) => {
 		console.log(email + "Have leave room");
@@ -63,7 +66,7 @@ const Invigilate = () => {
 			.build();
 
 		setConnection(newConnection);
-
+		fetchCheatingTypeList();
 		createRoomId();
 	}, []);
 
@@ -155,6 +158,8 @@ const Invigilate = () => {
 									stream={stream.stream}
 									userEmail={stream.userEmail}
 									index={index}
+									cheatingTypeList={fetchCheatingTypeListResponse.data}
+									examId={examId}
 								/>
 							</div>
 						)
