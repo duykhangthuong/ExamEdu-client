@@ -43,7 +43,12 @@ const AccountList = () => {
 
     //Fetch data của cái bảng
     const [fetchData, fetchResult] = useLazyFetch(
-        `${API}/Account/list?pageNumber=${currentPage}&pageSize=${pageSize}&searchName=${searchName}`
+        `${API}/Account/list?pageNumber=${currentPage}&pageSize=${pageSize}&searchName=${searchName}`,
+        {
+            onCompletes: (data) => {
+                setIsClicked(false);
+            }
+        }
     );
 
     //Fetch delete account
@@ -73,16 +78,15 @@ const AccountList = () => {
             });
         }
     });
+
     const formik = useFormik({
         initialValues: {
             fullName: accounts?.fullname,
-            email: accounts?.email,
-            role: accounts?.roleName
+            email: accounts?.email
         },
         validationSchema: Yup.object({
             fullName: Yup.string().required("Full Name is required"),
-            email: Yup.string().required("Email is required"),
-            role: Yup.string().required("Role is required")
+            email: Yup.string().required("Email is required")
         }),
         enableReinitialize: true,
         onSubmit: () => {
@@ -96,12 +100,42 @@ const AccountList = () => {
                 confirmButtonText: "OK"
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // fetchDataEdit();
+                    fetchDataUpdate();
                 }
             });
         }
     });
+    const [fetchDataUpdate, fetchDataUpdateResult] = useLazyFetch(
+        `${API}/Account/Update?roleId=${accounts?.roleID}&currentEmail=${accounts?.email}`,
+        {
+            method: "put",
+            body: {
+                email: formik.values.email,
+                fullname: formik.values.fullName
+            },
 
+            onCompletes: (data) => {
+                Swal.fire({
+                    titleText: "Account successfully updated",
+                    icon: "success",
+                    customClass: {
+                        popup: "roundCorner"
+                    }
+                });
+                fetchData();
+            },
+            onError: (error) => {
+                Swal.fire({
+                    titleText: "Operation failed!",
+                    text: error.message,
+                    icon: "error",
+                    customClass: {
+                        popup: "roundCorner"
+                    }
+                });
+            }
+        }
+    );
     //Gọi lại hàm Fetch khi nhập vô ô search
     function handleSubmit() {
         fetchData();
@@ -133,7 +167,8 @@ const AccountList = () => {
         fetchData();
     }, [currentPage]);
 
-    if (fetchResult.loading) return <Loading />;
+    if (fetchResult.loading || fetchDataUpdateResult.loading)
+        return <Loading />;
     return (
         //phải có cái Wrapper này để căn giữa
         <Wrapper>
@@ -259,47 +294,6 @@ const AccountList = () => {
                         {formik.errors.email && formik.touched.email && (
                             <p className="text-danger ms-5 text-center">
                                 {formik.errors.email}
-                            </p>
-                        )}
-                        <div className={styles.inputGroup}>
-                            <label>Role</label>
-                            <select
-                                className="form-select"
-                                id="role"
-                                name="role"
-                                value={formik.values.color}
-                                onChange={formik.handleChange}
-                                style={{ display: "block" }}
-                            >
-                                <option
-                                    value={accounts?.roleName}
-                                    label={accounts?.roleName}
-                                >
-                                    {accounts?.roleName}
-                                </option>
-                                <option
-                                    value="Administrator"
-                                    label="Administrator"
-                                >
-                                    Administrator
-                                </option>
-                                <option
-                                    value="AcademicDepartment"
-                                    label="Academic department"
-                                >
-                                    Academic department
-                                </option>
-                                <option value="Teacher" label="Teacher">
-                                    Teacher
-                                </option>
-                                <option value="Student" label="Student">
-                                    Student
-                                </option>
-                            </select>
-                        </div>
-                        {formik.errors.role && formik.touched.role && (
-                            <p className="text-danger ms-5 text-center">
-                                {formik.errors.role}
                             </p>
                         )}
                         <Button className="ms-auto me-5 mt-4" type="submit">
