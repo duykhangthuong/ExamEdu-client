@@ -75,6 +75,12 @@
     box-shadow: var(--shadow-medium);
 }
 
+.input_select_container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
 .input_select {
     border: none;
     border-radius: 8px;
