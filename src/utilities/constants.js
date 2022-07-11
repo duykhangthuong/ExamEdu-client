@@ -13,3 +13,4 @@ export const FULLNAME =
 export const FLOATNUMBER= /^[+-]?\d+(\.\d+)?$/;
 // API
 export const API = process.env.REACT_APP_EXAM_EDU_API;
+export const HUB = process.env.REACT_APP_EXAM_EDU_HUB;

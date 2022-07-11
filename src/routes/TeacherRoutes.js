@@ -13,6 +13,7 @@ import AddQuestionRequest from "pages/Teacher/AddQuestionRequest";
 import RequestAddQuestionBank from "pages/Teacher/RequestAddQuestionBank";
 import RequestAddQuestionList from "pages/Teacher/RequestAddQuestionList";
 import ApproveRequests from "pages/Teacher/ApproveRequests";
+import ExamDetail from "pages/AcademicDepartment/ExamDetail";
 import UpdateExam from "pages/AcademicDepartment/UpdateExam";
 const TeacherRoutes = () => {
     const { redirect, path } = useUserAuthorization("teacher");
@@ -76,7 +77,19 @@ const TeacherRoutes = () => {
                 </Route>
 
                 {/* Exam list of a teacher */}
-                <Route path="/teacher/class/progress_exam/:classModuleId/:moduleId" exact>
+                <Route path="/teacher/class/progress_exam/:classModuleId" exact>
+                    <ExamList />
+                </Route>
+
+                {/* Exam Detail chung với trường hợp của Academic Department */}
+                <Route path="/teacher/exam/detail/:examId" exact>
+                    <ExamDetail />
+                </Route>
+
+                <Route
+                    path="/teacher/class/progress_exam/:classModuleId/:moduleId"
+                    exact
+                >
                     <ExamList />
                 </Route>
 

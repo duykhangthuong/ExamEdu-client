@@ -30,17 +30,20 @@
     color: #00ff5d;
     font-weight: bold;
     font-size: large;
+    margin-bottom: 0.5rem;
 }
 
 .NotYet {
     color: #ffdc2d;
     font-weight: bold;
     font-size: large;
+    margin-bottom: 0.5rem;
 }
 .Cancel {
     color: var(--color-orange);
     font-weight: bold;
     font-size: large;
+    margin-bottom: 0.5rem;
 }
 .verticalLine {
     border-left: 1px solid #707070;
@@ -93,4 +96,24 @@
     height: fit-content;
     max-height: 25rem;
     overflow: scroll;
+}
+.markPillPassed {
+    width: 75px;
+    min-width: fit-content;
+    border-radius: 35px;
+    padding: 5px;
+    display: inline-block;
+    background-color: #00ff00;
+    color: white;
+    font-weight: bold;
+}
+.markPillNotPassed {
+    width: 75px;
+    min-width: fit-content;
+    border-radius: 35px;
+    padding: 5px;
+    display: inline-block;
+    background-color: red;
+    color: white;
+    font-weight: bold;
 }

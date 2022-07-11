@@ -14,16 +14,18 @@ const Button = ({
     style = {},
     children,
     disabled = false,
+    tooltipDirection = "right",
+    titleTooltip = ""
 }) => {
     const btnStyle = circle
         ? {
               borderRadius: "50%",
               width: "2.5rem",
               height: "2.5rem",
-              fontSize: "1.2rem",
+              fontSize: "1.2rem"
           }
         : {
-              borderRadius: "6px",
+              borderRadius: "6px"
           };
 
     return (
@@ -37,9 +39,12 @@ const Button = ({
                 ...buttonOptions[btn],
                 ...style,
                 opacity: disabled ? "0.75" : "1",
-                filter: disabled ? "brightness(0.9375)" : "",
+                filter: disabled ? "brightness(0.9375)" : ""
             }}
             disabled={disabled}
+            data-bs-toggle="tooltip"
+            data-bs-placement={tooltipDirection}
+            title={titleTooltip}
         >
             {children}
         </button>
@@ -52,12 +57,12 @@ export default Button;
 const buttonOptions = {
     primary: {
         backgroundColor: "var(--color-blue)",
-        color: "var(--nav-bar)",
+        color: "var(--nav-bar)"
     },
     secondary: {
         backgroundColor: "var(--color-orange)",
-        color: "var(--nav-bar)",
-    },
+        color: "var(--nav-bar)"
+    }
     // tertiary: {
     //     backgroundColor: "var(--table-selected)",
     //     color: "var(--color-cyan)",

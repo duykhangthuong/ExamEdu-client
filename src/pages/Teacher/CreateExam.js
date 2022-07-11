@@ -10,20 +10,20 @@ import { API, REQUIRED } from "../../utilities/constants";
 import { useState } from "react";
 import { useForm } from "utilities/useForm";
 import moment from "moment";
-import { useLazyFetch } from "utilities/useFetch";
+import { useLazyFetch, useFetch } from "utilities/useFetch";
 import { useSelector } from "react-redux";
 import Loading from "pages/Loading";
 import Swal from "sweetalert2";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
-const CreateExam = () => {
+const CreateExam = ({ isFinalExam = false }) => {
     const [formStep, setFormStep] = useState(0);
     const { values, setValues, errors, onChange, onSubmit, clearForm } =
         useForm(fields, handleSubmit);
 
     const teacher = useSelector((state) => state.user);
 
-    //----------- Handles selecting module ------------
+    //----------------------------------------------- Handles selecting module ------------------------------------------------
     const [selectedModule, setSelectedModule] = useState(null);
 
     //Lazy fetch for teacher's modules
@@ -31,31 +31,43 @@ const CreateExam = () => {
         `${API}/Module/teacher/${teacher.accountId}`
     );
 
+    // Lazy fetch for all modules (ONLY FOR FINAL EXAMS)
+    const [fetchAllModules, fetchAllModulesResult] = useLazyFetch(
+        `${API}/Module`
+    );
+
     //Fetch modules in background
     useEffect(() => {
-        fetchModules();
+        isFinalExam ? fetchAllModules() : fetchModules();
     }, []);
-    //----------- End Handles selecting module ------------
+    //----------------------------------------------- End Handles selecting module ------------------------------------------------
 
-    //----------- Handles selecting class ------------
+    //----------------------------------------------- Handles selecting class ------------------------------------------------
     const [selectedClass, setSelectedClass] = useState(null);
     //Lazy fetch for teacher's classes of chosen module
     const [fetchClasses, fetchClassesResult] = useLazyFetch();
 
     //Fetch classes in background
     useEffect(() => {
+        //In case of resetting module to no value
         if (selectedModule === null || selectedModule === undefined) {
             return;
         }
-        fetchClasses(
-            `${API}/ClassModule/${teacher.accountId}/${selectedModule.moduleId}`
-        );
+
+        //Fetch all classes of chosen module if is creating final exam
+        //else
+        //Fetch only the classes of the chosen module that belongs to the teacher creating the exam
+        isFinalExam
+            ? fetchClasses(`${API}/ClassModule/list/${selectedModule.moduleId}`)
+            : fetchClasses(
+                  `${API}/ClassModule/${teacher.accountId}/${selectedModule.moduleId}`
+              );
         setSelectedClass(null);
     }, [selectedModule]);
 
-    //----------- End Handles selecting class ------------
+    //----------------------------------------------- End Handles selecting class ------------------------------------------------
 
-    //----------- Handles selecting students ------------
+    //----------------------------------------------- Handles selecting students ------------------------------------------------
     const [selectedStudents, setSelectedStudents] = useState([]);
     //Lazy fetch for students of a teacher in a module
     const [fetchStudents, fetchStudentsResult] = useLazyFetch();
@@ -66,18 +78,46 @@ const CreateExam = () => {
             return;
         }
         //Fetch students to be selected
-        fetchStudents(
-            `${API}/Student/${teacher.accountId}/${selectedModule.moduleId}`
-        );
+        //Fetch all students of chosen module if is creating final exam
+        //else
+        //Fetch only the students of the chosen module that belongs to the teacher creating the exam
+
+        isFinalExam
+            ? fetchStudents(`${API}/Student/list/${selectedModule.moduleId}`)
+            : fetchStudents(
+                  `${API}/Student/${teacher.accountId}/${selectedModule.moduleId}`
+              );
         setSelectedStudents([]);
     }, [selectedModule]);
-    //----------- End Handles selecting students ------------
+    //----------------------------------------------- END Handles selecting students ------------------------------------------------
 
-    //----------- Handles Tabbing for assign class and students ------------
+    //----------------------------------------------- Handles Tabbing for assign class and students ------------------------------------------------
     const [toggleClassStudent, setToggleClassStudent] = useState(true);
-    //----------- End Handles Tabbing for assign class and students ------------
+    //----------------------------------------------- END Handles Tabbing for assign class and students ------------------------------------------------
 
-    //----------- Handles posting exam information ------------
+    //----------------------------------------------- Handles selecting Proctor, Supervisor, Grader ------------------------------------------------
+    const [selectedProctor, setSelectedProctor] = useState(null);
+    const [selectedSupervisor, setSelectedSupervisor] = useState(null);
+    const [selectedGrader, setSelectedGrader] = useState(null);
+
+    //Why the hell am I using lazy fetch? I could just use useFetch
+    //Fetch for teacher
+    const fetchTeacherResult = useFetch(`${API}/Teacher/idName`, {
+        onCompletes: (data) => {
+            setSelectedProctor(data[0].teacherId);
+            setSelectedGrader(data[0].teacherId);
+        }
+    });
+
+    //Fetch academic department members
+    const fetchAcaDeptMembersResult = useFetch(
+        `${API}/AcademicDepartment/list`,
+        { onCompletes: (data) => setSelectedSupervisor(data[0].id) }
+    );
+
+    // ----------------------------------------------- END Handles selecting Proctor, Supervisor, Grader ------------------------------------------------
+
+    //----------------------------------------------- Handles posting exam information ------------------------------------------------
     const [postExam, postExamResult] = useLazyFetch();
 
     const [examStudents, setExamStudents] = useState([]);
@@ -111,12 +151,14 @@ const CreateExam = () => {
                 examDay: values.examDate,
                 room: values.room,
                 password: values.password,
-                isFinalExam: false,
+                isFinalExam: isFinalExam,
                 studentIds: examStudents.map((student) => student.studentId),
                 moduleId: selectedModule.moduleId,
-                proctorId: teacher.accountId,
-                supervisorId: teacher.accountId,
-                graderId: teacher.accountId
+                proctorId: isFinalExam ? selectedProctor : teacher.accountId,
+                supervisorId: isFinalExam
+                    ? selectedSupervisor
+                    : teacher.accountId,
+                graderId: isFinalExam ? selectedGrader : teacher.accountId
             },
             onCompletes: (data) => {
                 Swal.fire({
@@ -125,11 +167,18 @@ const CreateExam = () => {
                     icon: "success",
                     confirmButtonText: "Yes"
                 });
-                history.push(
-                    `/teacher/exam/create/question/${data.examId}/${
-                        selectedModule.moduleId
-                    }/${false}`
-                );
+
+                isFinalExam
+                    ? history.push(
+                          `/AcademicDepartment/exam/create/question/${
+                              data.examId
+                          }/${selectedModule.moduleId}/${false}`
+                      )
+                    : history.push(
+                          `/teacher/exam/create/question/${data.examId}/${
+                              selectedModule.moduleId
+                          }/${false}`
+                      );
             },
             onError: (error) => {
                 Swal.fire("Error", error.message, "error");
@@ -137,12 +186,14 @@ const CreateExam = () => {
         });
     }
 
+    //----------------------------------------------- End Handles posting exam information ------------------------------------------------
+
     if (postExamResult.loading) {
         return <Loading />;
     }
 
     return (
-        <Wrapper className={styles.background}>
+        <Wrapper className={`${styles.background}`}>
             {/* Title */}
             <Heading>Create Exam</Heading>
 
@@ -162,6 +213,10 @@ const CreateExam = () => {
                         {
                             stepIcon: ["fas", "user-graduate"],
                             stepName: "Assign Class & Students"
+                        },
+                        isFinalExam && {
+                            stepIcon: ["fas", "chalkboard-teacher"],
+                            stepName: "Assign Administration"
                         }
                     ]}
                     currentStep={formStep}
@@ -188,7 +243,11 @@ const CreateExam = () => {
                         <ModuleFormContent
                             formStep={formStep}
                             setFormStep={setFormStep}
-                            fetchModulesResult={fetchModulesResult}
+                            fetchModulesResult={
+                                isFinalExam
+                                    ? fetchAllModulesResult
+                                    : fetchModulesResult
+                            }
                             selectedModule={selectedModule}
                             setSelectedModule={setSelectedModule}
                         />
@@ -205,6 +264,21 @@ const CreateExam = () => {
                             setSelectedStudents={setSelectedStudents}
                             toggleClassStudent={toggleClassStudent}
                             setToggleClassStudent={setToggleClassStudent}
+                            isFinalExam={isFinalExam}
+                        />
+                    )}
+                    {formStep === 3 && (
+                        <ProctorSupervisorGraderFormContent
+                            formStep={formStep}
+                            setFormStep={setFormStep}
+                            teacherList={fetchTeacherResult.data}
+                            acaDeptMemberList={fetchAcaDeptMembersResult.data}
+                            selectedGrader={selectedGrader}
+                            setSelectedGrader={setSelectedGrader}
+                            selectedProctor={selectedProctor}
+                            setSelectedProctor={setSelectedProctor}
+                            selectedSupervisor={selectedSupervisor}
+                            setSelectedSupervisor={setSelectedSupervisor}
                         />
                     )}
                 </form>
@@ -399,7 +473,8 @@ const ClassAndTraineeFormContent = ({
     selectedStudents = [],
     setSelectedStudents,
     toggleClassStudent,
-    setToggleClassStudent
+    setToggleClassStudent,
+    isFinalExam
 }) => {
     //Toggle between class and student select form
     //true for Class, false for Student
@@ -640,11 +715,121 @@ const ClassAndTraineeFormContent = ({
                     <Icon icon="angle-double-left" className="me-2" />
                     Back
                 </Button>
+                {isFinalExam ? (
+                    <Button
+                        onClick={() => setFormStep(formStep + 1)}
+                        {...(selectedClass ||
+                            selectedStudents.length > 0 || { disabled: true })}
+                    >
+                        <Icon icon="angle-double-right" className="me-2" />
+                        Next
+                    </Button>
+                ) : (
+                    <Button
+                        {...(selectedClass ||
+                            selectedStudents.length > 0 || { disabled: true })}
+                        type="submit"
+                    >
+                        <Icon icon="save" className="me-2" />
+                        Save
+                    </Button>
+                )}
+            </div>
+        </div>
+    );
+};
+
+const ProctorSupervisorGraderFormContent = ({
+    teacherList,
+    acaDeptMemberList,
+    formStep,
+    setFormStep,
+    selectedProctor,
+    setSelectedProctor,
+    selectedGrader,
+    setSelectedGrader,
+    selectedSupervisor,
+    setSelectedSupervisor
+}) => {
+    return (
+        <div>
+            {/* Heading */}
+            <Heading size={2} style={{ color: "var(--color-blue)" }}>
+                Exam Administration
+            </Heading>
+            {/* Horizontal line */}
+            <div className={styles.horizontal_line}></div>
+            {/* Input container */}
+            <div className={styles.input_container_grid}>
+                {/* Proctor selector (Teachers)*/}
+                <div className={styles.input_select_container}>
+                    <label className="fw-bold txt-blue">Proctor</label>
+                    <select
+                        className={styles.input_select}
+                        onChange={(e) => {
+                            //Set the selected Proctor's id
+                            setSelectedProctor(e.target.value);
+                        }}
+                        value={selectedProctor}
+                    >
+                        {teacherList.map((teacher) => (
+                            <option
+                                key={teacher.teacherId}
+                                value={teacher.teacherId}
+                            >
+                                {teacher.fullname}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                {/* Supervisor selector (Academic Department Member) */}
+                <div className={styles.input_select_container}>
+                    <label className="fw-bold txt-blue">Supervisor</label>
+                    <select
+                        className={styles.input_select}
+                        onChange={(e) => {
+                            setSelectedSupervisor(e.target.value);
+                        }}
+                        value={selectedSupervisor}
+                    >
+                        {acaDeptMemberList.map((member) => (
+                            <option key={member.id} value={member.id}>
+                                {member.email}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                {/* Grader selector (Teacher) */}
+                <div className={styles.input_select_container}>
+                    <label className="fw-bold txt-blue">Grader</label>
+                    <select
+                        className={styles.input_select}
+                        onChange={(e) => {
+                            setSelectedGrader(e.target.value);
+                        }}
+                        value={selectedGrader}
+                    >
+                        {teacherList.map((teacher) => (
+                            <option
+                                key={teacher.teacherId}
+                                value={teacher.teacherId}
+                            >
+                                {teacher.fullname}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            </div>
+            {/* Button group for navigating back and forth */}
+            <div className="d-flex justify-content-end align-items-center">
                 <Button
-                    {...(selectedClass ||
-                        selectedStudents.length > 0 || { disabled: true })}
-                    type="submit"
+                    className="me-3"
+                    onClick={() => setFormStep(formStep - 1)}
                 >
+                    <Icon icon="angle-double-left" className="me-2" />
+                    Back
+                </Button>
+                <Button type="submit">
                     <Icon icon="save" className="me-2" />
                     Save
                 </Button>
