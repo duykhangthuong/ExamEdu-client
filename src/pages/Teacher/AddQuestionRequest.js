@@ -19,6 +19,7 @@ function AddQuestionRequest() {
     }, [fetchModuleResult.loading]);
     const [isFinalExam, setIsFinalExam] = useState(false);
     const [questionType, setQuestionType] = useState(1);
+    const [imgQuestionList, setImgQuestionList] = useState([]);
     const [postData, postDataResult] = useLazyFetch(`${API}/question/request`, {
         method: "POST",
         body: {
@@ -30,11 +31,18 @@ function AddQuestionRequest() {
         onCompletes: () => {
             Swal.fire("Success", "Add question request created", "success");
             setQuestionList([]);
+            setImgQuestionList([]);
         },
         onError: (error) => {
             Swal.fire("Error", error.message, "error");
         }
     });
+    const [fetchUploadImages, fetchUploadImagesResult] = useLazyFetch(
+        `${API}/question/images`,
+        {
+            method: "POST"
+        }
+    );
     /* Use this function when click on add new question button,
          add a question with 2 blank answer (multiple choice) or 1 blank answer (text question)*/
     const addNewQuestion = () => {
@@ -83,10 +91,16 @@ function AddQuestionRequest() {
     /* NOTE: All function about delete question, add answer, delete answer, update content... below is about
         update question list and then pass that question list to setQuestionList to update State  */
 
-    // delete a question when clicking on trash button 
+    // delete a question when clicking on trash button
     const deleteQuestion = (index) => {
         const updateList = questionList.filter((question, i) => index !== i);
         setQuestionList(updateList);
+
+        // delete image of question if question is deleted
+        const updateImgList = imgQuestionList.filter((imgQuestion, i) => {
+            return imgQuestion.index !== index; // because question index start from 0, but question image index start from 1
+        });
+        setImgQuestionList(updateImgList);
     };
     // add new answer option in a question
     const addNewAnswer = (index) => {
@@ -208,11 +222,55 @@ function AddQuestionRequest() {
                 if (result.isConfirmed) {
                     setQuestionType(questionTypeId);
                     setQuestionList([]);
+                    setImgQuestionList([]);
                 }
             });
         } else {
             setQuestionType(questionTypeId);
         }
+    };
+
+    // Upload image to ImgBB and add image url to question, then call postQuestion to add request question to database
+    const uploadImageAndSubmitData = () => {
+        var formdata = new FormData();
+        // submit image to ImgBB and get image url array
+        for (let i = 0; i < imgQuestionList.length; i++) {
+            formdata.append(`inputs`, imgQuestionList[i].image);
+        }
+
+        fetchUploadImages("", {
+            body: formdata,
+            onCompletes: (res) => {
+                // res is array of image url
+                res.map((imgUrl, i) => {
+                    // add image url to question
+                    const imgQuestion = {
+                        index: imgQuestionList[i].index,
+                        imgUrl: imgUrl
+                    };
+                    addImgUrlToQuestionList(
+                        imgQuestion.index,
+                        imgQuestion.imgUrl
+                    );
+                });
+                // submit question to database after upload image
+                postData();
+            },
+            onError: (err) => {
+                Swal("Error", err, "error");
+            }
+        });
+    };
+
+    // add ImgUrl to each question in questionList
+    const addImgUrlToQuestionList = (index, imgUrl) => {
+        const updateList = questionList.map((question, i) => {
+            if (index === i) {
+                question.questionImageURL = imgUrl;
+            }
+            return question;
+        });
+        setQuestionList(updateList);
     };
 
     //hàm để hiện lên SweetAlert để hỏi lại khi nhấn submit
@@ -231,7 +289,11 @@ function AddQuestionRequest() {
         }).then((result) => {
             //nếu người dùng nhấn OK
             if (result.isConfirmed) {
-                postData();
+                if (imgQuestionList.length === 0) {
+                    postData();
+                } else {
+                    uploadImageAndSubmitData();
+                }
                 // fetchDataAdd();
             }
         });
@@ -259,7 +321,6 @@ function AddQuestionRequest() {
             return question;
         });
         setQuestionList(updateList);
-
     }, [fetchResultCheck.loading]);
 
     if (
@@ -277,15 +338,15 @@ function AddQuestionRequest() {
                 <Heading size={2} className={`text-center mb-3`}>
                     New Question
                 </Heading>
-               
+
                 <div
                     className={`${styles.totalOption} d-flex justify-content-around`}
                 >
-                     {/* Question type select option*/}
+                    {/* Question type select option*/}
                     <div className="text-center">
                         <label htmlFor="questionType">Question Type</label>
                         <select
-                            class="w-30 form-select"
+                            className="w-30 form-select"
                             aria-label="Default select example"
                             id="questionType"
                             onChange={(e) =>
@@ -301,7 +362,7 @@ function AddQuestionRequest() {
                     <div className="text-center">
                         <label htmlFor="questionModule">Module</label>
                         <select
-                            class="w-35 form-select"
+                            className="w-35 form-select"
                             aria-label="Default select example"
                             id="questionModule"
                             onChange={(e) =>
@@ -326,7 +387,7 @@ function AddQuestionRequest() {
                     <div className="text-center">
                         <label htmlFor="bank">Bank</label>
                         <select
-                            class="w-30 form-select"
+                            className="w-30 form-select"
                             aria-label="Default select example"
                             id="bank"
                             onChange={(e) => {
@@ -355,7 +416,7 @@ function AddQuestionRequest() {
                                         {/* Question level select option */}
                                         <div className="d-flex">
                                             <select
-                                                class="w-13 form-select"
+                                                className="w-13 form-select"
                                                 aria-label="Default select example"
                                                 id={`question${index}Level`}
                                                 value={
@@ -378,6 +439,7 @@ function AddQuestionRequest() {
                                                     Level 3
                                                 </option>
                                             </select>
+
                                             {/* Delete question button */}
                                             <Button
                                                 circle={true}
@@ -398,6 +460,11 @@ function AddQuestionRequest() {
                                             </Button>
                                         </div>
                                     </div>
+                                    <ImageUpload
+                                        questionIndex={index}
+                                        addImgToList={setImgQuestionList}
+                                        listImg={imgQuestionList}
+                                    />
                                     <div className="d-flex flex-column justify-content-center">
                                         <textarea
                                             value={question.questionContent}
@@ -441,7 +508,7 @@ function AddQuestionRequest() {
                                                 >
                                                     <div className="d-flex align-items-center">
                                                         <input
-                                                            class="form-check-input"
+                                                            className="form-check-input"
                                                             type="radio"
                                                             value={true}
                                                             name={`answerOfQuestion${index}`}
@@ -512,7 +579,7 @@ function AddQuestionRequest() {
                                         </span>
                                         <div className="d-flex">
                                             <select
-                                                class="w-13 form-select"
+                                                className="w-13 form-select"
                                                 aria-label="Default select example"
                                                 id={`question${index}Level`}
                                                 value={
@@ -551,6 +618,11 @@ function AddQuestionRequest() {
                                             </Button>
                                         </div>
                                     </div>
+                                    <ImageUpload
+                                        questionIndex={index}
+                                        addImgToList={setImgQuestionList}
+                                        listImg={imgQuestionList}
+                                    />
                                     <div className="d-flex justify-content-center">
                                         <textarea
                                             value={question.questionContent}
@@ -636,4 +708,36 @@ function AddQuestionRequest() {
         </Wrapper>
     );
 }
+
+const ImageUpload = ({ questionIndex, listImg, addImgToList }) => {
+    const [selectedImg, setSelectedImg] = useState();
+
+    // create a preview as a side effect, whenever selected file is changed
+    useEffect(() => {
+        // free memory when ever this component is unmounted
+        return () => selectedImg && URL.revokeObjectURL(selectedImg.preview);
+    }, [selectedImg]);
+
+    const onSelectFile = (e) => {
+        if (e.target.files.length !== 0) {
+            const file = e.target.files[0];
+            file.preview = URL.createObjectURL(file);
+            setSelectedImg(file);
+            addImgToList([...listImg, { index: questionIndex, image: file }]);
+        }
+    };
+
+    return (
+        <div>
+            <input type="file" accept="image/*" onChange={onSelectFile} />
+            {selectedImg && (
+                <img
+                    src={selectedImg.preview}
+                    alt=""
+                    className={styles.imgQuestion}
+                />
+            )}
+        </div>
+    );
+};
 export default AddQuestionRequest;

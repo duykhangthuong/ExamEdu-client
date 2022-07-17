@@ -41,3 +41,7 @@
     color: var(--color-dark-blue);
     font-weight: bold;
 }
+.imgQuestion{
+    width: 80%;
+    height: auto;
+}

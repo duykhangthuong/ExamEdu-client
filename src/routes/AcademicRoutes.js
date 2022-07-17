@@ -35,11 +35,8 @@ const AcademicRoutes = () => {
                 <Route path="/AcademicDepartment/class/:classId" exact>
                     <ClassDetail />
                 </Route>
-                <Route
-                    path="/AcademicDepartment/class/:classId/module/:moduleId"
-                    exact
-                >
-                    <ClassModuleStudent />
+                <Route path="/AcademicDepartment/class/:classId/module/:moduleId" exact>
+                    <ClassModuleStudent/>
                 </Route>
                 <Route path="/AcademicDepartment/exam/:examId" exact>
                     <ExamDetail />
