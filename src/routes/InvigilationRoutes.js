@@ -13,7 +13,7 @@ const InvigilationRoutes = () => {
         <>
             <Switch>
                 {/* Chưa xong */}
-                <Route path="/invigilate" exact>
+                <Route path="/invigilate/:examId" exact>
                     <Invigilate />
                 </Route>
             </Switch>
