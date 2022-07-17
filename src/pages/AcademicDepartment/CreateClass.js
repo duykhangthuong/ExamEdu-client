@@ -145,18 +145,6 @@ const CreateClass = () => {
                 />
                 {/* vertical line */}
                 <div className={styles.vertical_line}></div>
-                {formStep === 1 && (
-                    <StudentFormContent
-                        formStep={formStep}
-                        setFormStep={setFormStep}
-                        fetchStudents={fetchStudents}
-                        fetchStudentsResult={fetchStudentsResult}
-                        selectedStudents={selectedStudents}
-                        setSelectedStudents={setSelectedStudents}
-                        searchName={searchName}
-                        setSearchName={setSearchName}
-                    />
-                )}
                 {/* Form content */}
                 <form
                     className={styles.form_content_container}
@@ -169,6 +157,18 @@ const CreateClass = () => {
                             values={values}
                             errors={errors}
                             onChange={onChange}
+                        />
+                    )}
+                    {formStep === 1 && (
+                        <StudentFormContent
+                            formStep={formStep}
+                            setFormStep={setFormStep}
+                            fetchStudents={fetchStudents}
+                            fetchStudentsResult={fetchStudentsResult}
+                            selectedStudents={selectedStudents}
+                            setSelectedStudents={setSelectedStudents}
+                            searchName={searchName}
+                            setSearchName={setSearchName}
                         />
                     )}
                     {formStep === 2 && (
@@ -266,9 +266,9 @@ const StudentFormContent = ({
     searchName,
     setSearchName
 }) => {
-    // if (fetchStudentsResult.loading) {
-    //     return <Loading />;
-    // }
+    if (fetchStudentsResult.loading) {
+        return <Loading />;
+    }
 
     return (
         <div>
@@ -284,11 +284,11 @@ const StudentFormContent = ({
                 className={`${styles.input_container_grid} ${styles.tab_content_container}`}
             >
                 <div>
-                    <SearchBar
+                    {/* <SearchBar
                         onSubmit={() => fetchStudents}
                         keyWord={searchName}
                         setKeyWord={setSearchName}
-                    />
+                    /> */}
                     {/* Select student container */}
                     <div
                         className={`px-3 py-1 ${styles.chosen_item_container}`}
