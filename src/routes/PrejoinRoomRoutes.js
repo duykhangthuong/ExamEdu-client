@@ -12,7 +12,7 @@ const PrejoinRoomRoutes = () => {
         <>
             <Switch>
                 {/* Chưa xong */}
-                <Route path="/prejoin" exact>
+                <Route path="/prejoin/:examId" exact>
                     <PrejoinRoom />
                 </Route>
             </Switch>

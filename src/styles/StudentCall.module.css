@@ -1,0 +1,43 @@
+.buttons_group {
+    width: 80%;
+}
+.media_button {
+    background-color: rgba(255, 255, 255, 0.902);
+    border-radius: 50%;
+    height: 5vh;
+    width: 5vh;
+    text-align: center;
+    line-height: 5vh;
+}
+
+.media_button_off {
+    background-color: #ea4335;
+    border-radius: 50%;
+    height: 5vh;
+    width: 5vh;
+    text-align: center;
+    line-height: 5vh;
+}
+.media_button:hover {
+    background-color: rgba(255, 255, 255, 0.394);
+}
+.media_icon {
+    font-size: 25px;
+}
+.local_video{
+    width: 25vw;
+}
+.remote_video{
+    width: 23vw;
+}
+@media screen and (min-width: 768px) {
+    .local_video{
+        width: 11vw;
+    }
+    .remote_video{
+        width: 9vw;
+    }
+    .buttons_group {
+        width: 50%;
+    }
+}

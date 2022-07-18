@@ -8,7 +8,7 @@ import { API, HUB } from "utilities/constants";
 import style from "styles/Invigilate.module.css";
 
 const Invigilate = () => {
-    const examId = 1;
+    const examId = 34;
     const local_stream = useRef();
     const remoteStreamList = useRef([]);
     const user = useSelector((state) => state.user);
