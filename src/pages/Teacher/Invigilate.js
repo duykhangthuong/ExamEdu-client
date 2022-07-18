@@ -9,12 +9,8 @@ import style from "styles/Invigilate.module.css";
 import { useParams } from "react-router-dom";
 
 const Invigilate = () => {
-<<<<<<< HEAD
-    const examId = 34;
-=======
     const param = useParams();
     const examId = param.examId;
->>>>>>> ea983751f5d06ae39fc47fe3dbd95c3772a04d54
     const local_stream = useRef();
     const remoteStreamList = useRef([]);
     const user = useSelector((state) => state.user);
