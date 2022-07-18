@@ -22,7 +22,7 @@ function ClassList() {
     );
 
     function onAddButtonClick() {
-        history.push("/");
+        history.push("/AcademicDepartment/class/create/info");
     }
     useEffect(() => {
         fetchData();
