@@ -79,7 +79,7 @@
     padding-left: 1rem;
     padding-right: 1rem;
     padding-bottom: 1.5rem;
-    height: 75vh;
+    height: 68vh;
     overflow: scroll;
 }
 .questionBlock{
@@ -136,5 +136,10 @@
     .exam_question{
         height: 65vh;
         font-size: 1.25rem;
+    }
+    .wrapper{
+       
+        height: 75vh;
+ 
     }
 }
