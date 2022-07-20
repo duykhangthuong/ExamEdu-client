@@ -4,19 +4,22 @@ import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { API } from "utilities/constants";
 import { useLazyFetch } from "utilities/useFetch";
-const StudentCall = () => {
+import style from "styles/StudentCall.module.css";
+const StudentCall = ({examId}) => {
     const roomID = "test";
     const user = useSelector((state) => state.user);
-    const examId = 1;
-
+    const [videoState, setVideoState] = useState(true);
+    const [audioState, setAudioState] = useState(true);
     const local_stream = useRef();
     const [forceRender, setForceRender] = useState(1);
     const [fetchSate, setFetchSate] = useState(false);
     const changeLocalVideoState = () => {
         local_stream.current.getVideoTracks()[0].enabled = !local_stream.current.getVideoTracks()[0].enabled;
+        setVideoState(local_stream.current.getVideoTracks()[0].enabled);
     }
     const changeLocalAudioState = () => {
         local_stream.current.getAudioTracks()[0].enabled = !local_stream.current.getAudioTracks()[0].enabled;
+        setAudioState(local_stream.current.getAudioTracks()[0].enabled);
     }
 
 	const [fetchRoomId, fetchRoomIdResult] = useLazyFetch(
@@ -74,7 +77,7 @@ const StudentCall = () => {
     
             })
             window.addEventListener("beforeunload", (ev) => {
-                //studentDisconnect();  //nho bo commet cai nay
+                studentDisconnect();  //nho bo commet cai nay
                 peer.destroy();
                 ev.preventDefault();
                 return ev.returnValue = 'Are you sure you want to close?';
@@ -84,10 +87,49 @@ const StudentCall = () => {
 
     return (
         <div>
-            <video id="local-video"></video>
-            <video id="remote-video" autoPlay></video>
-            <button onClick={() => changeLocalVideoState()}>local video state</button>
-            <button onClick={() => changeLocalAudioState()}>Local audio state</button>
+            <video id="local-video" className={`${style.local_video}`}></video>
+            <video id="remote-video" className={`${style.remote_video}`} autoPlay></video>
+            <div
+                    className={`${style.buttons_group} d-flex justify-content-center`}
+                >
+                    {/* Button Micro */}
+                    <div
+                        className={
+                            audioState
+                                ? `${style.media_button}`
+                                : `${style.media_button_off}`
+                        }
+                        onClick={() => {
+                            changeLocalAudioState();
+                        }}
+                    >
+                        <i
+                            className={
+                                audioState
+                                    ? `bi bi-mic-fill ${style.media_icon}`
+                                    : `bi bi-mic-mute-fill ${style.media_icon}`
+                            }
+                        ></i>
+                    </div>
+
+                    {/* Button Video */}
+                    <div
+                        className={
+                            videoState
+                                ? `${style.media_button}`
+                                : `${style.media_button_off}`
+                        }
+                        onClick={() => changeLocalVideoState()}
+                    >
+                        <i
+                            className={
+                                videoState
+                                    ? `bi bi-camera-video-fill ${style.media_icon}`
+                                    : `bi bi-camera-video-off-fill ${style.media_icon}`
+                            }
+                        ></i>
+                    </div>
+                </div>
         </div>
     );
 }

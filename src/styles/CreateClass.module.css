@@ -1,0 +1,129 @@
+.background {
+    background-color: var(--color-lavender-light);
+}
+
+.form_container {
+    border-top: 1px solid var(--color-gray);
+
+    display: flex;
+}
+
+.vertical_line {
+    width: 1px;
+    align-self: stretch;
+    background-color: var(--color-gray);
+}
+
+.form_content_container {
+    flex-grow: 1;
+    padding: 1rem 2rem;
+    display: flex;
+    flex-direction: column;
+    height: 25rem;
+}
+
+.horizontal_line {
+    height: 1px;
+    width: 100%;
+    background-color: var(--color-gray);
+}
+
+.btn {
+    align-self: flex-end;
+}
+
+.input_container_grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(12rem, 1fr));
+    row-gap: 2rem;
+    column-gap: 2rem;
+    margin: 2rem 0 3rem 0;
+}
+
+.input_container *{
+    margin: 0rem 0.5rem 0 0.5rem;
+}
+
+.input_container label{
+    margin: 2rem 0.5rem 0 0.5rem;
+}
+
+.input_container input{
+    margin: 0.5rem 0 0 0;
+}
+
+.tab_content_container {
+    margin: 0;
+    padding: 2rem 1rem 3rem 1rem;
+    background-color: var(--nav-bar);
+    border-radius: 6px;
+}
+
+.chosen_item_container {
+    height: 20rem;
+    max-width: 25rem;
+    background-color: var(--nav-bar);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    box-shadow: var(--shadow-medium);
+    row-gap: 0.75rem;
+    overflow-y: scroll;
+}
+
+.chosen_item {
+    background-color: var(--color-lavender-light);
+    color: var(--color-blue);
+    border-radius: 8px;
+    min-height: 3rem;
+    width: 21rem;
+    box-shadow: var(--shadow-medium);
+    hyphens: auto;
+}
+
+.select_student {
+    cursor: pointer;
+}
+
+.select_student:hover {
+    background-color: var(--color-blue);
+    color: var(--color-lavender-light);
+    transition: all 0.1s ease-in-out;
+}
+
+.remove_student {
+    cursor: pointer;
+}
+
+.remove_student:hover {
+    background-color: var(--color-orange);
+    transition: all 0.1s ease-in-out;
+}
+
+.play_icon {
+    min-width: 1rem;
+    min-height: 1rem;
+    border-radius: 3px;
+    background-color: var(--color-blue);
+    justify-self: flex-start;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.play_icon svg {
+    color: var(--nav-bar);
+    margin-left: 0.1rem;
+}
+
+.input_select {
+    border: none;
+    border-radius: 8px;
+    height: 2.25rem;
+
+    box-shadow: var(--shadow-medium);
+    outline: none;
+    width: 100%;
+    padding-left: 1rem;
+}

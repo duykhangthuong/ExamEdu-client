@@ -17,9 +17,10 @@ import { useSelector } from "react-redux";
 import Loading from "pages/Loading";
 import Swal from "sweetalert2";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import StudentCall from "./StudentCall";
 
 //Exam header include Exam name, module and time
-function ExamHeader({ result, submitAnswer }) {
+function ExamHeader({examId, result, submitAnswer }) {
     let time = result?.durationInMinute;
     const [minutes, setMinutes] = useState(time);
     const [seconds, setSeconds] = useState(0);
@@ -45,17 +46,22 @@ function ExamHeader({ result, submitAnswer }) {
     });
     return (
         <header
-            className={`d-md-flex justify-content-md-between ${styles.exam_header}`}
+            className={`d-md-flex justify-content-md-around ${styles.exam_header}`}
         >
-            <div>
-                {/* Exam Name */}
-                <div className={`fs-4`}>
-                    <b>
-                        {result?.isFinalExam ? "Final Exam" : "Progress Test"}
-                    </b>
+            <StudentCall examId={examId} />
+            <div className="d-md-flex align-items-center">
+                <div>
+                    {/* Exam Name */}
+                    <div className={`fs-4 `}>
+                        <b>
+                            {result?.isFinalExam
+                                ? "Final Exam"
+                                : "Progress Test"}
+                        </b>
+                    </div>
+                    {/* Exam module */}
+                    <div className={`fs-6`}>{result?.moduleCode}</div>
                 </div>
-                {/* Exam module */}
-                <div className={`fs-6`}>{result?.moduleCode}</div>
             </div>
 
             {/* Exam time left */}
@@ -137,7 +143,7 @@ function NumberQuestion({ number, onClick, color }) {
 function Exam() {
     const history = useHistory();
     const param = useParams();
-    let examId = param.examId;
+    const examId = param.examId;
 
     const user = useSelector((state) => state.user.accountId);
     const { data, loading, error } = useFetch(
@@ -167,30 +173,30 @@ function Exam() {
     }, [loading]);
 
     // make exam page full screen
-    useEffect(() => {
-        if (loading === false) {
-            let element = document.getElementById("ExamPage");
-            element.addEventListener("click", function (e) {
-                element
-                    .requestFullscreen()
-                    .then(function () {
-                        // element has entered fullscreen mode successfully
-                        // prevent user press f11
-                        document.addEventListener("keydown", function (e) {
-                            if (e.keyCode === 122 || e.keyCode === 27) {
-                                e.preventDefault();
-                            }
-                        });
-                    })
-                    .catch(function (error) {
-                        // element could not enter fullscreen mode
-                        // error message
-                        console.log(error.message);
-                    });
-            });
-            element.click();
-        }
-    }, [loading]);
+    // useEffect(() => {
+    //     if (loading === false) {
+    //         let element = document.getElementById("ExamPage");
+    //         element.addEventListener("click", function (e) {
+    //             element
+    //                 .requestFullscreen()
+    //                 .then(function () {
+    //                     // element has entered fullscreen mode successfully
+    //                     // prevent user press f11
+    //                     document.addEventListener("keydown", function (e) {
+    //                         if (e.keyCode === 122 || e.keyCode === 27) {
+    //                             e.preventDefault();
+    //                         }
+    //                     });
+    //                 })
+    //                 .catch(function (error) {
+    //                     // element could not enter fullscreen mode
+    //                     // error message
+    //                     console.log(error.message);
+    //                 });
+    //         });
+    //         element.click();
+    //     }
+    // }, [loading]);
 
     const addAnswerToList = (answer, examQuestion) => {
         answer = String(answer);
@@ -374,58 +380,21 @@ function Exam() {
     if (loading || postAnswerResult.loading) {
         return <Loading />;
     }
-    
-    return (
-        <div id="ExamPage">
-            <ExamHeader result={data} submitAnswer={submitAnswer} />
-            <NumberQuestionModal>
-                {data?.questionAnswer.map((number, index) => {
-                    //boolean check nếu examQuestionId nằm trong list answer
-                    let isDone = listAnswer.some(
-                        (r) => r.examQuestionId === number.examQuestionId
-                    );
-                    let toBeReView = reviewQuestion.some(
-                        (r) => r === number.examQuestionId
-                    );
-                    let currentQuestion = question + 1 === index + 1;
 
-                    return (
-                        <NumberQuestion
-                            key={index}
-                            number={index + 1}
-                            onClick={() => {
-                                addEssayAnswerToList(
-                                    essayAnswer,
-                                    data?.questionAnswer[question]
-                                        .examQuestionId
-                                );
-                                setQuestion(index);
-                            }}
-                            color={
-                                currentQuestion
-                                    ? "#000000"
-                                    : toBeReView
-                                    ? "var(--color-blue)"
-                                    : isDone
-                                    ? "#7AE765"
-                                    : "var(--color-gray)"
-                            }
-                        />
-                    );
-                })}
-            </NumberQuestionModal>
-            <div className={`d-md-flex ${styles.wrapper}`}>
-                <div className={`d-none d-md-block ${styles.questionBlock}`}>
+    return (
+        <>
+            <div id="ExamPage" className="overflow-auto ">
+                <ExamHeader examId={examId} result={data} submitAnswer={submitAnswer} />
+
+                <NumberQuestionModal>
                     {data?.questionAnswer.map((number, index) => {
                         //boolean check nếu examQuestionId nằm trong list answer
                         let isDone = listAnswer.some(
                             (r) => r.examQuestionId === number.examQuestionId
                         );
-                        //boolean check nếu examQuestionId nằm trong list review question
                         let toBeReView = reviewQuestion.some(
                             (r) => r === number.examQuestionId
                         );
-                        //boolean check nếu question hiện tại là question đang hiển thị
                         let currentQuestion = question + 1 === index + 1;
 
                         return (
@@ -452,60 +421,106 @@ function Exam() {
                             />
                         );
                     })}
-                    <div>
-                        <Icon
-                            icon="circle"
-                            className="me-2 ms-2"
-                            style={{ color: "#7AE765" }}
-                        ></Icon>
-                        Attempted
-                    </div>
-                    <div>
-                        <Icon
-                            icon="circle"
-                            className="me-2 ms-2"
-                            style={{ color: "var(--color-blue)" }}
-                        ></Icon>
-                        To be review
-                    </div>
-                </div>
-                <div className={styles.page_container}>
-                    <form
-                        onSubmit={(e) => {
-                            e.preventDefault();
-                            showModalConfirmSubmit();
-                        }}
+                </NumberQuestionModal>
+                <div className={`d-md-flex ${styles.wrapper}`}>
+                    <div
+                        className={`d-none d-md-block ${styles.questionBlock}`}
                     >
-                        <div className={`${styles.exam_question}`}>
-                            <div style={{ color: "var(--color-gray)" }}>
-                                <b>Question {question + 1}</b>
-                            </div>
-                            <p>
-                                {data?.questionAnswer[question].questionContent}
-                            </p>
-                            {/* Image of question */}
-                            {data?.questionAnswer[question]
-                                .questionImageURL && ( //Check if image url is null, don't render image
-                                <img
-                                    id={`${styles.imgQuestion}`}
-                                    src={
-                                        data?.questionAnswer[question]
-                                            .questionImageURL
+                        {data?.questionAnswer.map((number, index) => {
+                            //boolean check nếu examQuestionId nằm trong list answer
+                            let isDone = listAnswer.some(
+                                (r) =>
+                                    r.examQuestionId === number.examQuestionId
+                            );
+                            //boolean check nếu examQuestionId nằm trong list review question
+                            let toBeReView = reviewQuestion.some(
+                                (r) => r === number.examQuestionId
+                            );
+                            //boolean check nếu question hiện tại là question đang hiển thị
+                            let currentQuestion = question + 1 === index + 1;
+
+                            return (
+                                <NumberQuestion
+                                    key={index}
+                                    number={index + 1}
+                                    onClick={() => {
+                                        addEssayAnswerToList(
+                                            essayAnswer,
+                                            data?.questionAnswer[question]
+                                                .examQuestionId
+                                        );
+                                        setQuestion(index);
+                                    }}
+                                    color={
+                                        currentQuestion
+                                            ? "#000000"
+                                            : toBeReView
+                                            ? "var(--color-blue)"
+                                            : isDone
+                                            ? "#7AE765"
+                                            : "var(--color-gray)"
                                     }
-                                    alt="L0-5-1"
-                                    border="0"
                                 />
-                            )}
-                            {/* Horizontal line */}
-                            <div
-                                className={`${styles.horizontal_line} mb-2`}
-                            ></div>
-                            {/* Answer option */}
-                            <div>
-                                {data?.questionAnswer[question].answers.length >
-                                1 ? (
-                                    data?.questionAnswer[question].answers.map(
-                                        (answer) => (
+                            );
+                        })}
+                        <div>
+                            <Icon
+                                icon="circle"
+                                className="me-2 ms-2"
+                                style={{ color: "#7AE765" }}
+                            ></Icon>
+                            Attempted
+                        </div>
+                        <div>
+                            <Icon
+                                icon="circle"
+                                className="me-2 ms-2"
+                                style={{ color: "var(--color-blue)" }}
+                            ></Icon>
+                            To be review
+                        </div>
+                    </div>
+                    <div className={styles.page_container}>
+                        <form
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                showModalConfirmSubmit();
+                            }}
+                        >
+                            <div className={`${styles.exam_question}`}>
+                                <div style={{ color: "var(--color-gray)" }}>
+                                    <b>Question {question + 1}</b>
+                                </div>
+                                <p>
+                                    {
+                                        data?.questionAnswer[question]
+                                            .questionContent
+                                    }
+                                </p>
+                                {/* Image of question */}
+                                {data?.questionAnswer[question]
+                                    .questionImageURL && ( //Check if image url is null, don't render image
+                                    <img
+                                        id={`${styles.imgQuestion}`}
+                                        src={
+                                            data?.questionAnswer[question]
+                                                .questionImageURL
+                                        }
+                                        alt="L0-5-1"
+                                        border="0"
+                                    />
+                                )}
+                                {/* Horizontal line */}
+                                <div
+                                    className={`${styles.horizontal_line} mb-2`}
+                                ></div>
+                                {/* Answer option */}
+                                <div>
+                                    {data?.questionAnswer[question].answers
+                                        .length > 1 ? (
+                                        data?.questionAnswer[
+                                            question
+                                        ].answers.map((answer) => (
                                             <div
                                                 className={`${styles.answer_option}`}
                                                 key={answer.answerId}
@@ -546,123 +561,125 @@ function Exam() {
                                                     {answer.answerContent}
                                                 </label>
                                             </div>
-                                        )
-                                    )
-                                ) : (
-                                    <textarea
-                                        defaultValue={
-                                            listAnswer.filter(
-                                                (r) =>
-                                                    r.examQuestionId ===
-                                                    data?.questionAnswer[
-                                                        question
-                                                    ].examQuestionId
-                                            )[0]?.studentAnswerContent
-                                        }
-                                        name="answer"
-                                        cols={
-                                            window.innerWidth < 1180
-                                                ? "84"
-                                                : "135"
-                                        }
-                                        rows="16"
-                                        onChange={(e) =>
-                                            setEssayAnswer(e.target.value)
-                                        }
-                                    ></textarea>
-                                )}
-                            </div>
-                        </div>
-
-                        <footer
-                            className={`d-md-flex justify-content-md-between mt-3`}
-                        >
-                            <div className="d-flex justify-content-between">
-                                {/* Button for previous question */}
-                                <button
-                                    type="button"
-                                    disabled={question === 0} //If question is the first one
-                                    className={`btn shadow-light ${styles.btn_gray} ${styles.exam_btn}`}
-                                    onClick={() => {
-                                        addEssayAnswerToList(
-                                            essayAnswer,
-                                            data?.questionAnswer[question]
-                                                .examQuestionId
-                                        );
-                                        setQuestion(question - 1);
-                                    }}
-                                >
-                                    <Icon
-                                        icon="arrow-circle-left"
-                                        className="me-2"
-                                    ></Icon>
-                                    Previous
-                                </button>
-                                {/* Button for next question */}
-                                <button
-                                    type="button"
-                                    disabled={
-                                        question ===
-                                        data?.questionAnswer.length - 1
-                                    } //if question is the last one
-                                    className={`btn shadow-light ${styles.btn_gray} ${styles.exam_btn}`}
-                                    onClick={() => {
-                                        addEssayAnswerToList(
-                                            essayAnswer,
-                                            data?.questionAnswer[question]
-                                                .examQuestionId
-                                        );
-                                        setQuestion(question + 1);
-                                    }}
-                                >
-                                    Next
-                                    <Icon
-                                        icon="arrow-circle-right"
-                                        className="ms-2"
-                                    ></Icon>
-                                </button>
+                                        ))
+                                    ) : (
+                                        <textarea
+                                            defaultValue={
+                                                listAnswer.filter(
+                                                    (r) =>
+                                                        r.examQuestionId ===
+                                                        data?.questionAnswer[
+                                                            question
+                                                        ].examQuestionId
+                                                )[0]?.studentAnswerContent
+                                            }
+                                            name="answer"
+                                            cols={
+                                                window.innerWidth < 1180
+                                                    ? "84"
+                                                    : "135"
+                                            }
+                                            rows="16"
+                                            onChange={(e) =>
+                                                setEssayAnswer(e.target.value)
+                                            }
+                                        ></textarea>
+                                    )}
+                                </div>
                             </div>
 
-                            <div
-                                className={`d-md-flex justify-content-md-between text-center`}
+                            <footer
+                                className={`d-md-flex justify-content-md-between mt-3`}
                             >
-                                <div>
-                                    {/* Button for review later */}
+                                <div className="d-flex justify-content-between">
+                                    {/* Button for previous question */}
                                     <button
                                         type="button"
+                                        disabled={question === 0} //If question is the first one
                                         className={`btn shadow-light ${styles.btn_gray} ${styles.exam_btn}`}
-                                        onClick={() =>
-                                            addToReviewLaterList(
-                                                data?.questionAnswer[question]
-                                                    .examQuestionId
-                                            )
-                                        }
-                                    >
-                                        Review later
-                                    </button>
-                                </div>
-                                <div>
-                                    {/* Finish button */}
-                                    <button
-                                        type="submit"
-                                        className={`btn ${styles.btn_finish}`}
                                         onClick={() => {
                                             addEssayAnswerToList(
                                                 essayAnswer,
                                                 data?.questionAnswer[question]
                                                     .examQuestionId
                                             );
+                                            setQuestion(question - 1);
                                         }}
                                     >
-                                        Finish
+                                        <Icon
+                                            icon="arrow-circle-left"
+                                            className="me-2"
+                                        ></Icon>
+                                        Previous
+                                    </button>
+                                    {/* Button for next question */}
+                                    <button
+                                        type="button"
+                                        disabled={
+                                            question ===
+                                            data?.questionAnswer.length - 1
+                                        } //if question is the last one
+                                        className={`btn shadow-light ${styles.btn_gray} ${styles.exam_btn}`}
+                                        onClick={() => {
+                                            addEssayAnswerToList(
+                                                essayAnswer,
+                                                data?.questionAnswer[question]
+                                                    .examQuestionId
+                                            );
+                                            setQuestion(question + 1);
+                                        }}
+                                    >
+                                        Next
+                                        <Icon
+                                            icon="arrow-circle-right"
+                                            className="ms-2"
+                                        ></Icon>
                                     </button>
                                 </div>
-                            </div>
-                        </footer>
-                    </form>
+
+                                <div
+                                    className={`d-md-flex justify-content-md-between text-center`}
+                                >
+                                    <div>
+                                        {/* Button for review later */}
+                                        <button
+                                            type="button"
+                                            className={`btn shadow-light ${styles.btn_gray} ${styles.exam_btn}`}
+                                            onClick={() =>
+                                                addToReviewLaterList(
+                                                    data?.questionAnswer[
+                                                        question
+                                                    ].examQuestionId
+                                                )
+                                            }
+                                        >
+                                            Review later
+                                        </button>
+                                    </div>
+                                    <div>
+                                        {/* Finish button */}
+                                        <button
+                                            type="submit"
+                                            className={`btn ${styles.btn_finish}`}
+                                            onClick={() => {
+                                                addEssayAnswerToList(
+                                                    essayAnswer,
+                                                    data?.questionAnswer[
+                                                        question
+                                                    ].examQuestionId
+                                                );
+                                            }}
+                                        >
+                                            Finish
+                                        </button>
+                                    </div>
+                                </div>
+                            </footer>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }
 export default Exam;

@@ -6,9 +6,10 @@ import { useHistory } from "react-router-dom";
 import { API, HUB } from "utilities/constants";
 import { useLazyFetch } from "utilities/useFetch";
 import styles from "../../styles/PrejoinRoom.module.css";
-
+import { useParams } from "react-router-dom";
 const PrejoinRoom = () => {
-    const examId = 1;
+    const param = useParams();
+    const examId = param.examId;
     const local_stream = useRef();
     const history = useHistory();
     const [roomID, setRoomID] = useState("");
@@ -60,7 +61,7 @@ const PrejoinRoom = () => {
         }
     }, [connection]);
     const joinRoom = () => {
-        history.push("/student"); //nho doi link nay
+        history.push(`/exam/${examId}`); //nho doi link nay
     };
 
     return (
@@ -84,9 +85,11 @@ const PrejoinRoom = () => {
 export default PrejoinRoom;
 
 const Check = ({ roomID }) => {
+    const param = useParams();
+    const examId = param.examId;
     const history = useHistory();
     const joinRoom = () => {
-        history.push("/student"); //nho doi link nay
+        history.push(`/exam/${examId}`); //nho doi link nay
     };
     return (
         <div>

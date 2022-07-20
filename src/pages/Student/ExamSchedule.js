@@ -29,7 +29,6 @@ const ExamSchedule = () => {
                         You don't have any exam scheduled
                     </Heading>
                 </div>
-                <StudentCall/>
             </Wrapper>
         );
     }
@@ -94,7 +93,7 @@ const Schedule = ({
                 }
             });
         } else {
-            history.push(`/exam/${examId}`);
+            history.push(`/prejoin/${examId}`);
         }
     }
     function handleStartExam() {
