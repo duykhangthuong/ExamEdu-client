@@ -6,6 +6,7 @@
     text-align: center;
     color: var(--color-gray);
     padding-left: 1vw;
+    margin-bottom: 0.5rem;
 }
 .horizontal_line {
     content: "";
@@ -78,7 +79,8 @@
     padding-left: 1rem;
     padding-right: 1rem;
     padding-bottom: 1.5rem;
-    
+    height: 68vh;
+    overflow: scroll;
 }
 .questionBlock{
     width: 100%;
@@ -129,10 +131,15 @@
     }
     .questionBlock{
         width: 20%;
-        height: 83vh;
+        height: 65vh;
     }
     .exam_question{
-        height: 83vh;
+        height: 65vh;
         font-size: 1.25rem;
+    }
+    .wrapper{
+       
+        height: 75vh;
+ 
     }
 }
