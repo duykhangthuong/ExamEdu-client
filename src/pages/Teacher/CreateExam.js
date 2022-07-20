@@ -188,6 +188,40 @@ const CreateExam = ({ isFinalExam = false }) => {
 
     //----------------------------------------------- End Handles posting exam information ------------------------------------------------
 
+    const stepsForForm = [
+        {
+            stepIcon: ["fas", "info"],
+            stepName: "Basic information"
+        },
+        {
+            stepIcon: ["fas", "book-open"],
+            stepName: "Module"
+        },
+        {
+            stepIcon: ["fas", "user-graduate"],
+            stepName: "Assign Class & Students"
+        }
+    ];
+
+    const stepForFormFinal = [
+        {
+            stepIcon: ["fas", "info"],
+            stepName: "Basic information"
+        },
+        {
+            stepIcon: ["fas", "book-open"],
+            stepName: "Module"
+        },
+        {
+            stepIcon: ["fas", "user-graduate"],
+            stepName: "Assign Class & Students"
+        },
+        {
+            stepIcon: ["fas", "chalkboard-teacher"],
+            stepName: "Assign Administration"
+        }
+    ];
+
     if (postExamResult.loading) {
         return <Loading />;
     }
@@ -196,29 +230,11 @@ const CreateExam = ({ isFinalExam = false }) => {
         <Wrapper className={`${styles.background}`}>
             {/* Title */}
             <Heading>Create Exam</Heading>
-
             {/* Form container */}
             <div className={styles.form_container}>
                 {/* Multi step form progress bar */}
                 <MultiStepFormProgressBar
-                    steps={[
-                        {
-                            stepIcon: ["fas", "info"],
-                            stepName: "Basic information"
-                        },
-                        {
-                            stepIcon: ["fas", "book-open"],
-                            stepName: "Module"
-                        },
-                        {
-                            stepIcon: ["fas", "user-graduate"],
-                            stepName: "Assign Class & Students"
-                        },
-                        isFinalExam && {
-                            stepIcon: ["fas", "chalkboard-teacher"],
-                            stepName: "Assign Administration"
-                        }
-                    ]}
+                    steps={isFinalExam ? stepForFormFinal : stepsForForm}
                     currentStep={formStep}
                     className={`d-flex flex-column justify-content-center me-3 mt-5`}
                 />
@@ -480,6 +496,8 @@ const ClassAndTraineeFormContent = ({
     //true for Class, false for Student
     return (
         <div>
+            {console.log(selectedStudents)}
+            {console.log(fetchStudentsResult)}
             {/* Title */}
             <Heading size={2} style={{ color: "var(--color-blue)" }}>
                 Assign Class or Students
@@ -630,7 +648,7 @@ const ClassAndTraineeFormContent = ({
                                             }}
                                             key={index}
                                         >
-                                            {student.fullname}
+                                            {student.email}
                                         </div>
                                     );
                                 })}
@@ -692,7 +710,7 @@ const ClassAndTraineeFormContent = ({
                                         >
                                             <Icon icon="caret-right" />
                                         </span>
-                                        {student?.fullname}
+                                        {student?.email}
                                     </div>
                                 ))}
                             </>
