@@ -143,7 +143,7 @@ const ExamCard = ({
                     {/* Password */}
                     <div className="mb-3">
                         <Icon icon="key" className="me-2" aria-hidden="true" title="Password" />
-                        {password ? password : "No password"}
+                        {password ? password : <span style={{fontStyle:"italic"}}>No password</span>}
                     </div>
                     {/* Supervisor */}
                     <div className="mb-3">
@@ -153,7 +153,7 @@ const ExamCard = ({
                     {/* Description */}
                     <div className="mb-3">
                         <Icon icon="pen" className="me-2"  aria-hidden="true" title="Description"/>
-                        {description ? description : "No description"}
+                        {description ? description : <span style={{fontStyle:"italic"}}>No description</span>}
                     </div>
                 </div>
                 {/* Buttons */}
