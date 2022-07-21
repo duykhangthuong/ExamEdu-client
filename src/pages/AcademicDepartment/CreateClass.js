@@ -548,7 +548,11 @@ const TeacherFormContent = ({
                             onChange={(e) => {
                                 if (e.target.value != -1) {
                                     setSelectedTeacher([
-                                        ...selectedTeacher,
+                                        ...selectedTeacher.filter(
+                                            (t) =>
+                                                t.moduleId !==
+                                                selectedModule.moduleId
+                                        ),
                                         {
                                             moduleId: selectedModule.moduleId,
                                             teacherId:
@@ -558,7 +562,13 @@ const TeacherFormContent = ({
                                         }
                                     ]);
                                 } else {
-                                    setSelectedTeacher([]);
+                                    setSelectedTeacher([
+                                        ...selectedTeacher.filter(
+                                            (t) =>
+                                                t.moduleId !==
+                                                selectedModule.moduleId
+                                        )
+                                    ]);
                                 }
                             }}
                         >
