@@ -145,9 +145,9 @@ function Exam() {
     const param = useParams();
     const examId = param.examId;
 
-    const user = useSelector((state) => state.user.accountId);
+    const user = useSelector((state) => state.user);
     const { data, loading, error } = useFetch(
-        `${API}/ExamQuestions/${examId}?studentId=${user}`
+        `${API}/ExamQuestions/${examId}?studentId=${user.accountId}`
     );
 
     if (error?.status) {
@@ -172,6 +172,13 @@ function Exam() {
         forceUpdate();
     }, [loading]);
 
+    const [studentDisconnect, studentDisconnectResponse] = useLazyFetch(`${API}/invigilate/studentDisconnect`, {
+		method: "POST",
+		body: {
+			ExamId: examId,
+			RoomId: user.email
+		}
+	});
     // make exam page full screen
     // useEffect(() => {
     //     if (loading === false) {
@@ -211,7 +218,7 @@ function Exam() {
                 ...listAnswer,
                 {
                     studentAnswerContent: answer,
-                    studentId: user,
+                    studentId: user.accountId,
                     examQuestionId: examQuestion
                 }
             ]); //If list answer does not have the answer of this question, add answer to list
@@ -233,7 +240,7 @@ function Exam() {
             // replace previous answer with new answer
             listAnswer.splice(previousAnswerIndex, 1, {
                 studentAnswerContent: answer,
-                studentId: user,
+                studentId: user.accountId,
                 examQuestionId: examQuestion
             });
         }
@@ -246,7 +253,7 @@ function Exam() {
                 ...listAnswer,
                 {
                     studentAnswerContent: essayAnswerParam,
-                    studentId: user,
+                    studentId: user.accountId,
                     examQuestionId: examQuestion
                 }
             ]);
@@ -264,7 +271,7 @@ function Exam() {
             // replace previous answer with new answer
             listAnswer.splice(previousAnswerIndex, 1, {
                 studentAnswerContent: essayAnswerParam,
-                studentId: user,
+                studentId: user.accountId,
                 examQuestionId: examQuestion
             });
         }
@@ -328,10 +335,10 @@ function Exam() {
     const submitAnswer = () => {
         if (data?.isFinalExam) {
             //Gọi hàm postAnswer
-            postAnswer(`${API}/Answer/FE?examId=${examId}&studentId=${user}`);
+            postAnswer(`${API}/Answer/FE?examId=${examId}&studentId=${user.accountId}`);
         }
         //Gọi hàm postAnswer
-        else postAnswer(`${API}/Answer/PT?examId=${examId}&studentId=${user}`);
+        else postAnswer(`${API}/Answer/PT?examId=${examId}&studentId=${user.accountId}`);
     };
     //submit answer and show student multiple choice mark
     const [postAnswer, postAnswerResult] = useLazyFetch("", {
@@ -339,6 +346,7 @@ function Exam() {
         body: listAnswer,
         onCompletes: (dataComplete) => {
             history.push(`/student/mark/report/${data.moduleId}`);
+            studentDisconnect();
             Swal.fire({
                 title: "Submit exam successfully",
                 html: dataComplete.message,
