@@ -7,7 +7,7 @@ const Loading = ({ className, style = {} }) => {
             className={`d-flex justtify-content-center align-items-center ${className}`}
             style={style}
         >
-            <div className="loader"></div>;
+            <div className="loader"></div>
         </Wrapper>
     );
 };

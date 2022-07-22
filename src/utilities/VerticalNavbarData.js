@@ -147,6 +147,21 @@ export const DataTeacher = [
         )
     },
     {
+        link: (
+            <NavLink
+                className="d-flex flex-sm-row flex-md-column"
+                to="/teacher/exam_proctor"
+                activeClassName={style.active_link}
+                exact={true}
+            >
+                <div className={style.icon}>
+                    <Icon icon="user-circle" className="" size="2x"></Icon>
+                </div>
+                <div className={style.title}>Exam Proctor</div>
+            </NavLink>
+        )
+    },
+    {
         //dành cho teacher để duyệt câu hỏi
         link: (
             <NavLink
