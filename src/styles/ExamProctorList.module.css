@@ -6,7 +6,7 @@
 
 .exam_card_container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(17.5rem, 1fr));
 
     row-gap: 1rem;
     column-gap: 0.5rem;
@@ -44,6 +44,11 @@
 .times_icon {
     font-size: 2rem;
     color: var(--color-orange);
+}
+
+.clock_icon {
+    font-size: 2rem;
+    color: var(--color-yellow);
 }
 
 .btn_container{
