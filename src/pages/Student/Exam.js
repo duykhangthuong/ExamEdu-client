@@ -20,7 +20,7 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import StudentCall from "./StudentCall";
 
 //Exam header include Exam name, module and time
-function ExamHeader({examId, result, submitAnswer }) {
+function ExamHeader({ examId, result, submitAnswer }) {
     let time = result?.durationInMinute;
     const [minutes, setMinutes] = useState(time);
     const [seconds, setSeconds] = useState(0);
@@ -44,6 +44,7 @@ function ExamHeader({examId, result, submitAnswer }) {
             clearInterval(myInterval);
         };
     });
+
     return (
         <header
             className={`d-md-flex justify-content-md-around ${styles.exam_header}`}
@@ -172,13 +173,29 @@ function Exam() {
         forceUpdate();
     }, [loading]);
 
-    const [studentDisconnect, studentDisconnectResponse] = useLazyFetch(`${API}/invigilate/studentDisconnect`, {
-		method: "POST",
-		body: {
-			ExamId: examId,
-			RoomId: user.email
-		}
-	});
+    //Load lần đầu lấy data câu trả lời cũ lên từ local Storage
+    useEffect(() => {
+        if (localStorage.getItem("ExamEduKey") !== null) {
+            const oldAnswerKey = localStorage.getItem("ExamEduKey");
+            setListAnswer(JSON.parse(oldAnswerKey));
+        }
+    }, []);
+
+    //Cập nhật lại local Storage mỗi khi chọn xong 1 câu
+    useEffect(() => {
+        localStorage.setItem("ExamEduKey", JSON.stringify(listAnswer));
+    }, [listAnswer]);
+
+    const [studentDisconnect, studentDisconnectResponse] = useLazyFetch(
+        `${API}/invigilate/studentDisconnect`,
+        {
+            method: "POST",
+            body: {
+                ExamId: examId,
+                RoomId: user.email
+            }
+        }
+    );
     // make exam page full screen
     // useEffect(() => {
     //     if (loading === false) {
@@ -207,9 +224,12 @@ function Exam() {
 
     const addAnswerToList = (answer, examQuestion) => {
         answer = String(answer);
+
+        //get all answer Id in each question
         let arrId = data?.questionAnswer[question].answers.map((a) =>
             String(a.answerId)
-        ); //get all answer Id in each question
+        );
+
         if (
             arrId.includes(answer) &&
             !listAnswer.some((r) => arrId.indexOf(r.studentAnswerContent) >= 0) //List answer does not have this answer
@@ -335,10 +355,15 @@ function Exam() {
     const submitAnswer = () => {
         if (data?.isFinalExam) {
             //Gọi hàm postAnswer
-            postAnswer(`${API}/Answer/FE?examId=${examId}&studentId=${user.accountId}`);
+            postAnswer(
+                `${API}/Answer/FE?examId=${examId}&studentId=${user.accountId}`
+            );
         }
         //Gọi hàm postAnswer
-        else postAnswer(`${API}/Answer/PT?examId=${examId}&studentId=${user.accountId}`);
+        else
+            postAnswer(
+                `${API}/Answer/PT?examId=${examId}&studentId=${user.accountId}`
+            );
     };
     //submit answer and show student multiple choice mark
     const [postAnswer, postAnswerResult] = useLazyFetch("", {
@@ -358,6 +383,8 @@ function Exam() {
                     popup: "roundCorner"
                 }
             });
+            //Xóa file các câu trả lời của bài thi khi submit bài xong
+            localStorage.removeItem("ExamEduKey");
         },
         onError: (error) => {
             Swal.fire("Error", error.message, "error");
@@ -392,7 +419,11 @@ function Exam() {
     return (
         <>
             <div id="ExamPage" className="overflow-auto ">
-                <ExamHeader examId={examId} result={data} submitAnswer={submitAnswer} />
+                <ExamHeader
+                    examId={examId}
+                    result={data}
+                    submitAnswer={submitAnswer}
+                />
 
                 <NumberQuestionModal>
                     {data?.questionAnswer.map((number, index) => {
