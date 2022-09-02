@@ -90,7 +90,6 @@ const Invigilate = () => {
                     // Define User
                     connection.send("CreateName", `teacher${examId}`);
                     connection.on("StudentDisconnect", (email) => {
-                        console.log(email);
                         remoteStreamList.current =
                             remoteStreamList.current.filter((item) => {
                                 return item.userEmail !== email;
