@@ -54,9 +54,9 @@ const MarkReport = () => {
                         <div
                             className={`${style.nameAndDate} align-self-center`}
                         >
-                            <h3 className={style.moduleName}>
+                            <h6 className={style.moduleName}>
                                 {mark?.moduleName}
-                            </h3>
+                            </h6>
                             <div>
                                 <Icon icon="calendar-day" className="me-2" />
                                 {moment(mark?.examDate).format(
