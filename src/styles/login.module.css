@@ -47,6 +47,10 @@
     margin-top: 1rem;
     margin-bottom: 0.5rem;
 }
+.buttonLogin:hover {
+    border: 1px solid #2345ef;
+    background-color: #2345ef;
+}
 @media screen and (max-width: 768px) {
     .mainDiv {
         width: 60%;
