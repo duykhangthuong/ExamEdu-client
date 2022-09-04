@@ -1,15 +1,17 @@
-.butn{
+.butn {
     background: inherit;
     border: none;
     color: var(--color-blue);
     margin-top: 1vw;
-    font-size: 20px;
+    font-size: 1rem;
     margin-left: 1.5vw;
+    padding: 0.6rem 1.5rem;
 }
-.blue_color_text{
+.blue_color_text {
     color: var(--color-blue);
+    font-weight: bold;
 }
-.title{
+.title {
     color: var(--color-blue);
     width: fit-content;
     margin: 0 auto;
@@ -18,13 +20,14 @@
     font-weight: bold;
 }
 
-.btn_picked{
+.btn_picked {
     background: white;
     font-weight: bold;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
+    border-radius: 10px 10px 0 0;
+    /* padding-left: 0.5rem;
+    padding-right: 0.5rem; */
 }
-.tab{
+.tab {
     display: block;
     height: 100%;
     background-color: white;
@@ -33,140 +36,151 @@
     padding-bottom: 5%;
     width: 50vw;
 }
-.column_left{
+.column_left {
     float: left;
     margin-right: 6%;
 }
-.column_right{
+.column_right {
     margin-top: 1.3rem;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.16);
 }
-.question_number_box{
+.question_number_box {
     width: 20vw;
     border: none;
     border-radius: 6px;
-    height: 3.5rem;
+    height: 3rem;
     margin-left: 1.5vw;
     margin-right: 1.5vw;
     margin-bottom: 7%;
-    padding-left: 1rem;
+    /* padding-left: 1rem; */
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.16);
     outline: none;
     background-color: var(--color-blue);
     color: white;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
 }
-.question_number_box_div{
-    display: inline-block;
-    margin-top: 0.39em;
-    margin-left: 1em;
-    font-size: 1.5em;
+.question_number_box_div {
+    /* display: inline-block; */
+    /* margin-top: 0.39em; */
+    /* margin-left: 1em; */
+    font-size: 1.2em;
 }
-.input_box{
+.input_box {
     width: 20vw;
-    border: none;
+    border: 0.5px solid var(--color-lavender-light);
     border-radius: 6px;
     height: 3rem;
     margin-left: 1.5vw;
     margin-top: 0.2vw;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.16);
     outline: none;
+    padding-left: 1rem;
 }
-.input_box_essay{
+.input_box_essay {
     width: 7vw;
-    border: none;
+    border: 0.5px solid var(--color-lavender-light);
     border-radius: 6px;
     height: 3rem;
     margin-left: 1.5vw;
     margin-top: 0.2vw;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.16);
     outline: none;
+    padding-left: 1rem;
 }
-.input_label{
+.input_label {
     margin-left: 1.5vw;
     margin-top: 1.5vw;
-    font-size: 20px;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
     color: var(--color-blue);
 }
-.dropdown_title{
-    width: 65vw;
+.dropdown_title {
+    width: 80%;
     border: none;
     border-radius: 6px;
-    height: 5rem;
+    height: 4rem;
     margin-top: 2rem;
-    line-height: 5rem;
+    line-height: 3rem;
     display: block;
-    padding-left: 1rem;
+    padding: 1rem 2rem;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.16);
     outline: none;
     background-color: var(--color-blue);
     color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
-.dropdown_title_div{
+.dropdown_title_div {
     display: inline-block;
     width: fit-content;
-    font-size: 2rem;
+    font-size: 1.5rem;
 }
-.dropdown_title_div_down_Arrow{
+.dropdown_title_div_down_Arrow {
     display: inline-block;
     width: fit-content;
     float: right;
     font-size: 4rem;
     margin-right: 4rem;
 }
-.questionbank_tab{
+.questionbank_tab {
     display: block;
     height: 100%;
     background-color: white;
     display: flex;
     align-items: stretch;
     padding-bottom: 5%;
-    width: 70vw;
+    width: 100%;
 }
-.question_content_div{
-    width: 65vw;
+.question_content_div {
+    width: 100%;
     word-wrap: break-word;
     overflow: scroll;
     margin-left: 1vw;
     margin-bottom: 1rem;
     font-weight: bold;
+    font-size: 1.2rem;
 }
-.anwer_content_div{
-    width: 65vw;
+.anwer_content_div {
+    width: 100%;
     word-wrap: break-word;
     overflow: scroll;
     margin-left: 1vw;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
 }
-.hide{
+.hide {
     display: none;
 }
-.wrapper{
-    background: #E4E2F5;
+.wrapper {
+    background: #e4e2f5;
 }
 
-.checkbox_column{
+.checkbox_column {
     display: inline-block;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
 }
 
-.question_column{
+.question_column {
     display: inline-block;
     margin: 1vw;
 }
 
-.question_img{
+.question_img {
     margin-left: 1vw;
     width: 30vw;
 }
 
-.question_answer_div{
+.question_answer_div {
     position: relative;
     border-bottom: solid;
-    
+    width: 80%;
 }
-.btn_submit{
+.btn_submit {
     background: var(--color-blue);
     border: none;
     color: white;
@@ -192,7 +206,7 @@ input[type="checkbox"] {
     background-color: var(--form-background);
     /* Not removed via appearance */
     margin: 0;
-  
+
     font: inherit;
     color: currentColor;
     width: 1.15em;
@@ -200,12 +214,12 @@ input[type="checkbox"] {
     border: 0.15em solid currentColor;
     border-radius: 0.15em;
     transform: translateY(-0.075em);
-  
+
     display: grid;
     place-content: center;
-  }
-  
-  input[type="checkbox"]::before {
+}
+
+input[type="checkbox"]::before {
     content: "";
     width: 0.65em;
     height: 0.65em;
@@ -216,13 +230,13 @@ input[type="checkbox"] {
     box-shadow: inset 1em 1em var(--form-control-color);
     /* Windows High Contrast Mode */
     background-color: CanvasText;
-  }
-  
-  input[type="checkbox"]:checked::before {
+}
+
+input[type="checkbox"]:checked::before {
     transform: scale(1);
-  }
-  
-  input[type="checkbox"]:focus {
+}
+
+input[type="checkbox"]:focus {
     outline: max(2px, 0.15em) solid currentColor;
     outline-offset: max(2px, 0.15em);
-  }
+}
