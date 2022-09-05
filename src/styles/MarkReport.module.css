@@ -1,10 +1,11 @@
 .frame {
-    background-color: #e4e2f5;
+    /* background-color: #e4e2f5; */
     border-radius: 13px;
     padding: 1rem;
+    border: 0.1px solid var(--color-lavender-light);
     border-left: 10px solid var(--color-dark-blue);
     color: var(--color-dark-blue);
-    box-shadow: var(--shadow-medium);
+    box-shadow: var(--shadow-heavy);
     width: 85%;
 }
 .progressbar {
