@@ -162,7 +162,7 @@ const CreateExam = ({ isFinalExam = false }) => {
             },
             onCompletes: (data) => {
                 Swal.fire({
-                    title: "Success",
+                    title: "Exam Created",
                     text: "Please begin selecting questions for this exam",
                     icon: "success",
                     confirmButtonText: "Yes"
