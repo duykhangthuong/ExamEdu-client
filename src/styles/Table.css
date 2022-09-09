@@ -111,7 +111,7 @@ td:last-child {
 /* hover style */
 .datatable tbody tr:hover td {
     /* border-left: 2px solid #00ff3c; */
-    background-color: var(--table-selected) !important;
+    /* background-color: var(--table-selected) !important; */
 }
 
 /* custom table mobile ver render */
