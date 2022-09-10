@@ -82,6 +82,29 @@
     border-top-right-radius: 13px;
     box-shadow: 0 -10px 0 white;
 }
+
+.sidebar ul li a:active:before {
+    position: absolute;
+    content: "";
+    height: 30px;
+    width: 30px;
+    background-color: var(--color-blue);
+    right: 0;
+    bottom: 100%;
+    border-bottom-right-radius: 13px;
+    box-shadow: 10px 0 white;
+}
+.sidebar ul li a:active:after {
+    position: absolute;
+    content: "";
+    height: 30px;
+    width: 30px;
+    background-color: var(--color-blue);
+    right: 0;
+    top: 100%;
+    border-top-right-radius: 13px;
+    box-shadow: 0 -10px 0 white;
+}
 .sidebar ul li a:focus:before {
     position: absolute;
     content: "";

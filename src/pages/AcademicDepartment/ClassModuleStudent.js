@@ -12,14 +12,19 @@ import useOutsideClick from "utilities/useOutsideClick";
 import styles from "../../styles/ClassModuleStudent.module.css";
 import Loading from "pages/Loading";
 import { useEffect, useState, useRef } from "react";
+import { useParams } from "react-router-dom";
 
 function ClassModuleStudent() {
-    const { data, loading } = useFetch(`${API}/ClassModule/student/3/1`);
+    const param = useParams();
+    const { data, loading } = useFetch(
+        `${API}/ClassModule/student/${param.classId}/${param.moduleId}`
+    );
     const [studentList, setStudentList] = useState([]);
     const [teacher, setTeacher] = useState();
+
     const [initialStudentList, setInitialStudentList] = useState([]);
     const [initialTeacher, setInitialTeacher] = useState();
-    const column = ["Student ID", "Student Name", "Email", ""];
+    const column = ["Student ID", "Student Name", "Email", "Action"];
 
     const teacherList = useFetch(`${API}/Teacher/idName`);
     const [putData, putDataResult] = useLazyFetch(
@@ -138,19 +143,20 @@ function ClassModuleStudent() {
                     </select>
                 </div>
                 <div className="d-flex justify-content-start">
-                    <Button
-                        className="mt-4"
+                    <button
+                        className={`mt-4 text-start ${styles.buttonAddStudent}`}
                         onClick={() => {
                             setIsClicked(true);
                         }}
                     >
                         <Icon
                             color="fff"
-                            icon="pencil-ruler"
-                            className="me-3"
-                        ></Icon>{" "}
-                        Add student to class list
-                    </Button>
+                            icon="user-plus"
+                            className="me-2"
+                        ></Icon>
+                        Add student
+                        <br /> from another class
+                    </button>
                 </div>
                 {/* Class Student table*/}
                 <div className={styles.studentListDiv}>
@@ -176,7 +182,7 @@ function ClassModuleStudent() {
                                         >
                                             <Icon
                                                 color="fff"
-                                                icon="trash"
+                                                icon="trash-alt"
                                             ></Icon>
                                         </Button>
                                     </div>
@@ -186,8 +192,8 @@ function ClassModuleStudent() {
                     </div>
                 </div>
                 <footer className="d-flex justify-content-end">
-                    <Button
-                        className="mt-4"
+                    <button
+                        className={`mt-4 ${styles.buttonAddStudent}`}
                         onClick={() => showModalConfirmSubmit()}
                         disabled={
                             teacher === initialTeacher &&
@@ -201,7 +207,7 @@ function ClassModuleStudent() {
                             className="me-3"
                         ></Icon>{" "}
                         Update Class Member
-                    </Button>
+                    </button>
                 </footer>
             </Wrapper>
         </>
@@ -217,26 +223,37 @@ function AddStudentModal({
 }) {
     const [freeStudent, setFreeStudent] = useState([]);
     const [selectedStudent, setSelectedStudent] = useState([]);
-    const [queryStudent, setQueryStudent] = useState("");
+    // const [queryStudent, setQueryStudent] = useState("");
+    const [classIdToFetch, setClassId] = useState();
 
-    const [fetchFreeStudent, fetchFreeStudentResult] = useLazyFetch(
-        `${API}/Student/class/3/module/1/free?searchName=${queryStudent}`
+    // const [fetchFreeStudent, fetchFreeStudentResult] = useLazyFetch(
+    //     `${API}/Student/class/3/module/1/free?searchName=${queryStudent}`
+    // );
+    //fetch class list
+    const [fetchClassList, classListResult] = useLazyFetch(`${API}/Class`);
+
+    //fetch all student in class
+    const [fetchStudentInClass, studentInClassResult] = useLazyFetch(
+        `${API}/Class/students/${classIdToFetch}`
     );
 
     // use Effect to fetch freeStudent when isClicked == true
     useEffect(() => {
         if (isClicked) {
-            fetchFreeStudent();
+            // fetchFreeStudent();
+            fetchClassList();
         }
     }, [isClicked]);
+
+    useEffect(() => {
+        fetchStudentInClass();
+    }, [classIdToFetch]);
 
     // useEffect to set freeStudentList after fetch API
     useEffect(() => {
         // fetchFreeStudent();
-        if (!fetchFreeStudentResult.loading) {
-
-            
-            const fitlerStudent1 = fetchFreeStudentResult.data?.payload.filter(
+        if (!studentInClassResult.loading) {
+            const fitlerStudent1 = studentInClassResult.data?.payload.filter(
                 (item) => {
                     return !selectedStudent.some((s) => {
                         return s.studentId === item.studentId;
@@ -249,22 +266,22 @@ function AddStudentModal({
                     return s.studentId === item.studentId;
                 });
             }); //filter student đã có trong Class List (listStudentBeforeAdd) (trường hợp đã thêm student vào class lần đầu)
-
             setFreeStudent(fitlerStudent2);
         }
-    }, [fetchFreeStudentResult.loading]);
+    }, [studentInClassResult.loading]);
 
     // move student to selected list
     const moveStudentToSelectedList = (student) => {
         setSelectedStudent([...selectedStudent, student]);
-        setFreeStudent(
-            freeStudent.filter((item) => item.studentId !== student.studentId)
+        const frees = freeStudent.filter(
+            (item) => item.studentId !== student.studentId
         );
+        setFreeStudent(frees);
     };
 
-    function handleSearch() {
-        fetchFreeStudent();
-    }
+    // function handleSearch() {
+    //     fetchFreeStudent();
+    // }
     // remove student from selected list and move back to free list
     const removeStudentFromSelectedList = (student) => {
         setFreeStudent([...freeStudent, student]);
@@ -276,20 +293,20 @@ function AddStudentModal({
         );
     };
 
-    if (fetchFreeStudentResult.loading)
-        return (
-            <OurModal
-                modalRef={modalRef}
-                isClicked={isClicked}
-                setIsClicked={setIsClicked}
-                modalClassName={styles.modal}
-            >
-                <Heading>Add new student</Heading>
-                <div className="d-flex justify-content-center">
-                    <Loading></Loading>
-                </div>
-            </OurModal>
-        );
+    // if (fetchFreeStudentResult.loading)
+    //     return (
+    //         <OurModal
+    //             modalRef={modalRef}
+    //             isClicked={isClicked}
+    //             setIsClicked={setIsClicked}
+    //             modalClassName={styles.modal}
+    //         >
+    //             <Heading>Add new student</Heading>
+    //             <div className="d-flex justify-content-center">
+    //                 <Loading></Loading>
+    //             </div>
+    //         </OurModal>
+    //     );
     return (
         <OurModal
             modalRef={modalRef}
@@ -297,11 +314,78 @@ function AddStudentModal({
             setIsClicked={setIsClicked}
             modalClassName={styles.modal}
         >
-            <Heading>Add new student</Heading>
-            <div className="d-flex justify-content-around">
+            <Heading size={2}>Add new student</Heading>
+            <div className="d-flex justify-content-evenly">
                 <div className={styles.studentList}>
-                    <Heading size={3}>List student</Heading>
-                    <SearchBar
+                    <h4 className="fw-bold">List student</h4>
+                    {/* Select box chọn class */}
+                    <select
+                        name="class"
+                        className="form-select form-select-sm"
+                        style={{ width: "50%" }}
+                        onChange={(e) => {
+                            setClassId(parseInt(e.target.value));
+                        }}
+                    >
+                        <option value={undefined} key={"undefined"}>
+                            Please choose a class
+                        </option>
+                        {classListResult.data?.payload.map((cls, index) => {
+                            return (
+                                <option value={cls.classId} key={index}>
+                                    {cls.className}
+                                </option>
+                            );
+                        })}
+                    </select>
+                    {/* Bảng List học sinh */}
+                    <table className={styles.table}>
+                        <tbody>
+                            {studentInClassResult.loading ? (
+                                <div
+                                    className="spinner-border mt-5"
+                                    role="status"
+                                >
+                                    <span className="visually-hidden">
+                                        Loading...
+                                    </span>
+                                </div>
+                            ) : freeStudent?.length > 0 ? (
+                                freeStudent
+                                    ?.sort((a, b) => a.studentId - b.studentId)
+                                    .map((item, index) => (
+                                        <tr
+                                            key={index}
+                                            onClick={() =>
+                                                moveStudentToSelectedList(item)
+                                            }
+                                        >
+                                            <td>{item.studentId}</td>
+                                            <td>{item.fullname} </td>
+                                            <td>{item.email}</td>
+                                        </tr>
+                                    ))
+                            ) : (
+                                <div className="mt-5">
+                                    <Icon
+                                        icon="portrait"
+                                        size="5x"
+                                        className="mb-3"
+                                    />
+                                    <h3 className=" fs-4 fw-bold">
+                                        No student
+                                    </h3>
+                                    <p className=" fs-6">
+                                        This class doesn't have any student
+                                        <br />
+                                        Please choose another class
+                                    </p>
+                                </div>
+                            )}
+                        </tbody>
+                    </table>
+
+                    {/* <SearchBar
                         keyWord={queryStudent}
                         setKeyWord={setQueryStudent}
                         onSubmit={handleSearch}
@@ -323,11 +407,14 @@ function AddStudentModal({
                                     </tr>
                                 ))}
                         </tbody>
-                    </table>
+                    </table> */}
+                </div>
+                <div className="align-self-center">
+                    <Icon icon="angle-double-right" size="3x" color="#949494" />
                 </div>
                 <div className={styles.chosen_item_container}>
-                    <Heading size={3}>Selected student</Heading>
-                    <div>
+                    <h4 className="fw-bold">Selected student</h4>
+                    <div className="w-100">
                         {selectedStudent?.map((item, index) => (
                             <div
                                 className={styles.chosen_item}
@@ -346,7 +433,7 @@ function AddStudentModal({
             </div>
             <div className="d-flex justify-content-end">
                 <Button
-                    className="mt-4"
+                    className="mt-4 py-2"
                     onClick={() => {
                         addStudentToList([
                             ...listStudentBeforeAdd,
@@ -356,12 +443,8 @@ function AddStudentModal({
                         setSelectedStudent([]);
                     }}
                 >
-                    <Icon
-                        color="fff"
-                        icon="pencil-ruler"
-                        className="me-3"
-                    ></Icon>
-                    Add
+                    <Icon icon="user-plus" className="me-2"></Icon>
+                    Add student to the list
                 </Button>
             </div>
         </OurModal>
