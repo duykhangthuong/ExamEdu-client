@@ -28,7 +28,7 @@ const PrejoinRoom = () => {
             .getUserMedia({ video: true, audio: true })
             .then((stream) => {
                 local_stream.current = stream;
-                console.log(stream);
+                // console.log(stream);
                 let video = document.getElementById("local-video");
                 try {
                     video.srcObject = local_stream.current;
