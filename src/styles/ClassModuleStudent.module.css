@@ -29,30 +29,42 @@
     font-weight: bold;
 }
 .modal {
-    background-color: var(--color-lavender-light);
+    background-color: var(--bg);
     padding: 1.25rem 1rem 1rem 1rem;
-    width: 70rem;
+    width: 65rem;
     height: 40rem;
     display: flex;
     justify-content: stretch;
     align-items: stretch;
     flex-direction: column;
+    font-size: 0.9rem;
+    border: none;
+    box-shadow: var(--shadow-medium);
 }
-.studentList{
+.studentList {
     width: 50%;
     background-color: #fff;
     text-align: center;
-    border-radius: 8px;
+    border-radius: 10px;
     max-height: 30rem;
     overflow: scroll;
+    padding: 2rem 1.5rem;
+    box-shadow: var(--shadow-medium);
 }
 .table {
     width: 100%;
-    margin: 1rem;
+    margin-top: 1rem;
+    color: var(--color-gray);
 }
-.table tr:hover{
+.table tr:hover {
     background-color: var(--color-lavender-light);
     cursor: pointer;
+}
+.table tr {
+    padding: 0 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-self: center;
 }
 .chosen_item_container {
     height: 30rem;
@@ -65,22 +77,43 @@
     box-shadow: var(--shadow-medium);
     row-gap: 0.75rem;
     overflow-y: scroll;
+    padding: 2rem 1rem;
 }
 .chosen_item {
     background-color: var(--color-lavender-light);
     color: var(--color-blue);
     border-radius: 8px;
     min-height: 3.5rem;
-    width: 24rem;
-    box-shadow: var(--shadow-medium);
+    width: 100%;
     display: flex;
-    justify-content: space-around;
-    margin: 1rem;
+    justify-content: space-between;
     align-items: center;
+    margin-bottom: 0.3rem;
+    padding: 0 0.5rem;
+    text-align: left;
 }
 .chosen_item:hover {
-    background-color: red;
+    background-color: var(--color-orange);
     color: var(--color-lavender-light);
-    transition: all 0.1s ease-in-out;
+    transition: all 0.2s ease-in-out;
     cursor: pointer;
+    font-weight: bold;
+}
+.buttonAddStudent {
+    border: none;
+    border-radius: 6px;
+    background-color: var(--color-blue);
+    color: var(--nav-bar);
+    opacity: 1;
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    text-align: left;
+    transition: all 0.1s ease-in-out;
+}
+.buttonAddStudent:hover {
+    background-color: #273fb9;
+}
+.buttonAddStudent:hover:disabled {
+    background-color: var(--color-blue);
 }
