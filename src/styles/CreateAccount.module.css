@@ -33,9 +33,16 @@
     width: 100%;
 }
 
+.button_block{
+    width: 12%;
+    padding-left: 2rem;
+}
+.btn_file{
+    width: 8rem;
+}
 @media screen and (min-width: 768px) {
     .page_container {
-        width: 82%;
+        width: 90%;
         min-width: 670px;
     }
 

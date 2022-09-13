@@ -85,14 +85,19 @@ const Login = () => {
                             <ValidateMessage message={errors.password} />
                         )}
                     </div>
-                    <Button
+                    <button
                         className={`${style.buttonLogin} mb-5`}
                         disable={loading}
+                        style={{
+                            opacity: loading ? "0.75" : "1",
+                            filter: loading ? "brightness(0.9375)" : "",
+                            cursor: loading ? "default" : "pointer"
+                        }}
                         type="submit"
                     >
                         {loading && (
                             <div
-                                className="spinner-border text-light me-3"
+                                className="spinner-border text-light"
                                 role="status"
                             >
                                 <span className="visually-hidden">
@@ -100,9 +105,9 @@ const Login = () => {
                                 </span>
                             </div>
                         )}
-                        {loading && <span>Logging in...</span>}
+                        {/* {loading && <span className="mt-0"></span>} */}
                         {!loading && <span>Login</span>}
-                    </Button>
+                    </button>
                     {/* <a href="#" className="mb-3">
                         Forgot Password?
                     </a> */}

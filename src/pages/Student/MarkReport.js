@@ -9,11 +9,13 @@ import { API } from "utilities/constants";
 import moment from "moment";
 import Heading from "components/Heading";
 import Loading from "pages/Loading";
+import Table from "./../../components/Table";
 
 const MarkReport = () => {
     const user = useSelector((state) => state.user.accountId);
     const param = useParams();
-    console.log(param);
+
+    const columns = ["Module Code", "Exam name", "Date", "Mark"];
 
     const { data, loading, error } = useFetch(
         `${API}/Student/markReport/${user}/${param.moduleID}`
@@ -45,7 +47,28 @@ const MarkReport = () => {
     return (
         <Wrapper>
             <Heading>Mark Report</Heading>
-            {data?.map((mark, index) => (
+            <Table
+                columns={columns}
+                data={data?.map((record) => ({
+                    moduleCode: record.moduleCode,
+                    examName: record.examName,
+                    examDate: moment(record.examDate).format(
+                        "DD/MM/YYYY , h:mm A"
+                    ),
+                    role: (
+                        <span
+                            className={`${style.mark} ${
+                                record.mark >= 5
+                                    ? style["markPillPassed"]
+                                    : style["markPillNotPassed"]
+                            }`}
+                        >
+                            {record.mark}
+                        </span>
+                    )
+                }))}
+            />
+            {/* {data?.map((mark, index) => (
                 <div
                     className={`${style.frame} d-flex flex-column flex-md-row justify-content-md-between mb-4`}
                     key={index}
@@ -54,9 +77,9 @@ const MarkReport = () => {
                         <div
                             className={`${style.nameAndDate} align-self-center`}
                         >
-                            <h3 className={style.moduleName}>
+                            <h6 className={style.moduleName}>
                                 {mark?.moduleName}
-                            </h3>
+                            </h6>
                             <div>
                                 <Icon icon="calendar-day" className="me-2" />
                                 {moment(mark?.examDate).format(
@@ -90,7 +113,7 @@ const MarkReport = () => {
                         </div>
                     </div>
                 </div>
-            ))}
+            ))} */}
         </Wrapper>
     );
 };
