@@ -3,6 +3,7 @@ import Heading from "components/Heading";
 import Icon from "components/Icon";
 import Pagination from "components/Pagination";
 import SearchBar from "components/SearchBar";
+import Table from "components/Table";
 import Wrapper from "components/Wrapper";
 import moment from "moment";
 import Loading from "pages/Loading";
@@ -11,9 +12,23 @@ import { useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 import { API } from "utilities/constants";
 import { useLazyFetch } from "utilities/useFetch";
+import { useWindowSize } from "utilities/useWindowSize";
 import styles from "../../styles/ExamProctorList.module.css";
 
 const ExamProctorList = () => {
+    const columns = [
+        "Status",
+        "Exam Name",
+        "Module Code",
+        "Exam Date",
+        "Duration",
+        "Room",
+        "Password",
+        "Supervisor",
+        "Description",
+        ""
+    ];
+    const [searchName, setSearchName] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 8;
     //Get parameters from history
@@ -23,18 +38,32 @@ const ExamProctorList = () => {
     const teacherId = useSelector((state) => state.user.accountId);
     //Fetching exams
     const [fetchData, fetchResult] = useLazyFetch(
-        `${API}/Exam/examProctor/${teacherId}?pageNumber=${currentPage}&pageSize=${pageSize}`
+        `${API}/Exam/examProctor/${teacherId}?pageNumber=${currentPage}&pageSize=${pageSize}&searchName=${searchName}`
     );
 
     useEffect(() => {
         fetchData();
     }, [currentPage]);
 
+    function handleSubmit() {
+        fetchData();
+    }
+
+    function onClickInvigilate(examId) {
+        history.push(`/invigilate/${examId}`);
+    }
+
     if (fetchResult.loading) return <Loading />;
 
     return (
         <Wrapper>
-            <SearchBar pageName={"Exam Proctor List"} />
+            <SearchBar 
+                pageName={"Exam Proctor List"}
+                onSubmit={handleSubmit}
+                keyWord={searchName}
+                setKeyWord={setSearchName}
+                placeholder={"Search exam name or module code..."}
+            />
 
             {/* Horizontal line */}
             <div className={`${styles.horizontal_line} mb-2 mb-md-3`}></div>
@@ -46,26 +75,82 @@ const ExamProctorList = () => {
             ) : (
                 <>
                     {/* Progress tests container */}
-                    <section className={styles.exam_card_container}>
-                        {/* Progress test card */}
-                        {fetchResult.data?.payload.map((exam) => {
-                            return (
-                                <ExamCard
-                                    examId={exam.examId}
-                                    examName={exam.examName}
-                                    moduleCode={exam.moduleCode}
-                                    description={exam.description}
-                                    room={exam.room}
-                                    password={exam.password}
-                                    date={exam.examDay}
-                                    duration={exam.durationInMinute}
-                                    isFinalExam={exam.isFinalExam}
-                                    isCancelled={exam.isCancelled}
-                                    supervisorEmail={exam.supervisorEmail}
+                    {/* <section className={styles.exam_card_container}> */}
+                    {/* <ExamCard
+                        examId={exam.examId}
+                        examName={exam.examName}
+                        moduleCode={exam.moduleCode}
+                        description={exam.description}
+                        room={exam.room}
+                        password={exam.password}
+                        date={exam.examDay}
+                        duration={exam.durationInMinute}
+                        isFinalExam={exam.isFinalExam}
+                        isCancelled={exam.isCancelled}
+                        supervisorEmail={exam.supervisorEmail}
+                    /> */}
+                    <Table
+                        columns={columns}
+                        data={fetchResult.data?.payload.map((exam) => ({
+                            status: exam.isCancelled ? (
+                                <Icon
+                                    icon="times-circle"
+                                    className={styles.times_icon}
+                                    styles={{
+                                        color: "var(--color-orange)"
+                                    }}
                                 />
-                            );
-                        })}
-                    </section>
+                            ) : moment(exam.examDay).isSameOrAfter(
+                                  moment().toDate()
+                              ) ? (
+                                <Icon
+                                    icon="clock"
+                                    className={styles.clock_icon}
+                                />
+                            ) : (
+                                <Icon
+                                    icon="check-circle"
+                                    className={styles.check_icon}
+                                />
+                            ),
+                            examName: <b>{exam.examName}</b>,
+                            moduleCode: exam.moduleCode,
+                            examDate: moment(exam.examDay).format("DD/MM/YYYY , hh:mm A"),
+                            duration: exam.durationInMinute,
+                            room: exam.room,
+                            password: exam.password,
+                            supervisor: exam.supervisorEmail,
+                            description: exam.description,
+                            action: (
+                                <div className={styles.btn_container}>
+                                    <Button
+                                        onClick={() => {
+                                            onClickInvigilate(exam.examId);
+                                        }}
+                                        className="mr-2"
+                                        style={{
+                                            backgroundColor: "#8b0000"
+                                        }}
+                                        {...(exam.isCancelled && {
+                                            disabled: true
+                                        })}
+                                        {...(moment(exam.examDay).isBefore(
+                                            moment().toDate()
+                                        ) && {
+                                            disabled: true
+                                        })}
+                                    >
+                                        Start
+                                        <Icon
+                                            icon="arrow-right"
+                                            className="ms-2"
+                                        />
+                                    </Button>
+                                </div>
+                            )
+                        }))}
+                    />
+                    {/* </section> */}
                     <Pagination
                         totalRecords={fetchResult.data?.totalRecords}
                         currentPage={currentPage}
@@ -122,38 +207,85 @@ const ExamCard = ({
                     </Heading>
                     {/* Module code */}
                     <div className="mb-3">
-                        <Icon icon="cube" className="me-2"  aria-hidden="true" title="Exam module"/>
+                        <Icon
+                            icon="cube"
+                            className="me-2"
+                            aria-hidden="true"
+                            title="Exam module"
+                        />
                         {moduleCode}
                     </div>
                     {/* Date time */}
                     <div className="mb-3">
-                        <Icon icon="calendar-alt" className="me-2" aria-hidden="true" title="Exam date" />
+                        <Icon
+                            icon="calendar-alt"
+                            className="me-2"
+                            aria-hidden="true"
+                            title="Exam date"
+                        />
                         {moment(date).format("DD/MM/yyyy")}
                     </div>
                     {/* Duration */}
                     <div className="mb-3">
-                        <Icon icon="forward" className="me-2" aria-hidden="true" title="Duration" />
+                        <Icon
+                            icon="forward"
+                            className="me-2"
+                            aria-hidden="true"
+                            title="Duration"
+                        />
                         {`${duration} minutes`}
                     </div>
                     {/* Room */}
                     <div className="mb-3">
-                        <Icon icon="users" className="me-2" aria-hidden="true" title="Room"/>
+                        <Icon
+                            icon="users"
+                            className="me-2"
+                            aria-hidden="true"
+                            title="Room"
+                        />
                         {room}
                     </div>
                     {/* Password */}
                     <div className="mb-3">
-                        <Icon icon="key" className="me-2" aria-hidden="true" title="Password" />
-                        {password ? password : <span style={{fontStyle:"italic"}}>No password</span>}
+                        <Icon
+                            icon="key"
+                            className="me-2"
+                            aria-hidden="true"
+                            title="Password"
+                        />
+                        {password ? (
+                            password
+                        ) : (
+                            <span style={{ fontStyle: "italic" }}>
+                                No password
+                            </span>
+                        )}
                     </div>
                     {/* Supervisor */}
                     <div className="mb-3">
-                        <Icon icon="address-card" className="me-2" aria-hidden="true" title="Supervisor contact" />
+                        <Icon
+                            icon="address-card"
+                            className="me-2"
+                            aria-hidden="true"
+                            title="Supervisor contact"
+                        />
                         {supervisorEmail}
                     </div>
                     {/* Description */}
                     <div className="mb-3">
-                        <Icon icon="pen" className="me-2"  aria-hidden="true" title="Description"/>
-                        {description ? description : <span style={{fontStyle:"italic"}}>No description</span>}
+                        <Icon
+                            icon="pen"
+                            className="me-2"
+                            aria-hidden="true"
+                            title="Description"
+                        />
+                        {description ? (
+                            description
+                        ) : (
+                            <span style={{ fontStyle: "italic" }}>
+                                No description
+                            </span>
+                        )}
                     </div>
                 </div>
                 {/* Buttons */}
