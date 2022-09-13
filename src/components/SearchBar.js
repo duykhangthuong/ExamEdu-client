@@ -24,7 +24,8 @@ const SearchBar = ({
     filterValue,
     setFilterValue,
     filterOptions,
-    onAddButtonClick,
+    placeholder = "Search Account",
+    onAddButtonClick
 }) => {
     return (
         <div className="mb-2">
@@ -44,7 +45,7 @@ const SearchBar = ({
             </div>
             {/* Search bar and filter container */}
             <form
-                className="d-flex justify-content-between align-items-center"
+                className="d-flex justify-content-between align-items-center position-relative"
                 onSubmit={(e) => {
                     e.preventDefault();
                     onSubmit();
@@ -59,21 +60,21 @@ const SearchBar = ({
                             value={keyWord}
                             onChange={(event) => setKeyWord(event.target.value)}
                             className={`flex-grow-1 shadow-light me-2 me-md-3 ${styles.input}`}
-                            placeholder={`Search account`}
+                            placeholder={placeholder}
                         ></input>
                         {/* The search Icon */}
                         <Icon
                             icon="search"
                             style={{
                                 color: "var(--color-gray)",
-                                cursor: "pointer",
+                                cursor: "pointer"
                             }}
                             className={styles.search_icon}
                             onClick={(e) => {
                                 e.preventDefault();
                                 onSubmit();
                             }}
-                        />{" "}
+                        />
                     </>
                 )}
                 {/* Filter */}
@@ -84,7 +85,7 @@ const SearchBar = ({
                         onChange={(e) => setFilterValue(e.target.value)}
                         defaultValue={{
                             label: filterOptions[0].label,
-                            value: filterOptions[0].value,
+                            value: filterOptions[0].value
                         }}
                     >
                         {filterOptions.map((filterOption) => {
