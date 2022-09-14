@@ -1,8 +1,10 @@
 .wrapper {
-    background-color: var(--color-lavender-light);
+    background-color: var(--color-silver-medal);
     border-radius: 10px;
     padding-top: 1rem;
     padding-bottom: 2rem;
+    border: 0.3px solid var(--color-lavender-light);
+    box-shadow: var(--shadow-medium);
 }
 .horizontal_line {
     content: "";
@@ -41,7 +43,7 @@
     color: var(--color-dark-blue);
     font-weight: bold;
 }
-.imgQuestion{
+.imgQuestion {
     width: 80%;
     height: auto;
 }
