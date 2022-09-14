@@ -33,13 +33,23 @@
     width: 100%;
 }
 
-.button_block{
+.button_block {
     width: 12%;
     padding-left: 2rem;
 }
-.btn_file{
+
+.btn_file {
     width: 8rem;
 }
+
+/* .modal_content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 80%;
+    justify-content: space-around;
+} */
+
 @media screen and (min-width: 768px) {
     .page_container {
         width: 90%;
