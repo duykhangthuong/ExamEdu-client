@@ -685,7 +685,7 @@ function AddQuestionRequest() {
                         Add new question
                     </button>
                 </div>
-                <div className="d-flex justify-content-between mt-4">
+                {/* <div className="d-flex justify-content-between mt-4">
                     <button
                         className="btn btn-warning"
                         onClick={() => fetchDataCheck()}
@@ -703,7 +703,7 @@ function AddQuestionRequest() {
                         Send request
                         <Icon icon="angle-double-right" className="ms-3" />
                     </button>
-                </div>
+                </div> */}
             </div>
         </Wrapper>
     );

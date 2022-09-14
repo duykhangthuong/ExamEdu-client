@@ -205,6 +205,7 @@ const ModuleList = () => {
                     setKeyWord={setKeyword}
                     onAddButtonClick={handleToggleModal}
                     onSubmit={handleSearch}
+                    placeholder={"Search by module code or module name"}
                 ></SearchBar>
                 <Table
                     columns={columns}
