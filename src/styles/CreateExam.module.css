@@ -71,8 +71,9 @@
     color: var(--color-blue);
     border-radius: 8px;
     min-height: 2.5rem;
-    max-width: 20rem;
+    max-width: 19rem;
     box-shadow: var(--shadow-medium);
+    overflow-x: hidden;
 }
 
 .input_select_container {
