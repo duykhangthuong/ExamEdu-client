@@ -61,7 +61,8 @@ const CreateAccount = () => {
                     html: listError.join('<br/>'),
                     icon: 'error',
                     confirmButtonText: 'OK',
-                    width: "36rem"
+                    width: "36rem",
+                    allowOutsideClick: false
                 });
             }
         })
@@ -273,7 +274,7 @@ const CreateAccount = () => {
                                 className={`btn btn-info mb-3 ${styles.btn_file}`}
                                 onClick={downloadTemplate}
                             >
-                                <Icon icon="download" className="me-2" />
+                                <Icon icon="file-download" className="me-2" />
                                 Download template
                             </button>
                             <button
@@ -293,15 +294,16 @@ const CreateAccount = () => {
                 isClicked={isClicked}
                 setIsClicked={setIsClicked}
                 modalClassName="d-none d-xl-block w-25"
+                style={{ height: "33%" }}
             >
-                <div className={`h-75 d-flex flex-column align-items-center justify-content-around`}>
+                <div className={`h-100 d-flex flex-column align-items-center justify-content-around`}>
                     <div className="text-center h-25">
-
+                        <Heading size={2}>Upload File</Heading>
                         <label
                             className={`btn btn-success btn-file ${styles.btn_file}`}
                         >
-                            <Icon icon="upload" className="me-2" />
-                            Upload excel
+
+                            Choose file
                             <input
                                 type="file"
                                 style={{ display: "none" }}
@@ -313,7 +315,15 @@ const CreateAccount = () => {
                             />
                         </label>
                         {/* If file is null, don't show anything (prevent null reference exception) */}
-                        <p className="">{selectedFile && selectedFile.name}</p>
+                        <p>{selectedFile && selectedFile.name} <span>{selectedFile && <Icon
+                            icon="times"
+                            className="fs-6"
+                            onClick={() => setSelectedFile()}
+                            style={{ cursor: "pointer" }}
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="right"
+                            title="Remove file"
+                        ></Icon>}</span></p>
 
 
                     </div>
@@ -323,6 +333,7 @@ const CreateAccount = () => {
                             className={`btn btn-primary ${styles.btn_file}`}
                             onClick={handleSubmitFile}
                         >
+                            <Icon icon="upload" className="me-2" />
                             Submit
                         </button>
                     </footer>
