@@ -27,8 +27,11 @@ const TeacherRoutes = () => {
 
             <Switch>
                 {/* Update exam info */}
-                <Route path="/teacher/exam/update/info/:examId" exact>
-                    <UpdateExam isFinalExam={false} />
+                <Route
+                    path="/teacher/exam/update/info/:examId/:accountId"
+                    exact
+                >
+                    <UpdateExam />
                 </Route>
 
                 {/* Create Exam info */}
@@ -88,7 +91,7 @@ const TeacherRoutes = () => {
                 </Route>
 
                 {/* Exam Detail chung với trường hợp của Academic Department */}
-                <Route path="/teacher/exam/detail/:examId" exact>
+                <Route path="/teacher/exam/:examId" exact>
                     <ExamDetail />
                 </Route>
 

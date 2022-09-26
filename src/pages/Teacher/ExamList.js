@@ -151,7 +151,7 @@ const ExamCard = ({
 }) => {
     const history = useHistory();
     function onClickViewDetail(examId, classModuleId) {
-        history.push(`/teacher/exam/list/result/${examId}/${classModuleId}`);
+        history.push(`/teacher/exam/${examId}`);
     }
 
     function onClickViewResult(examId, classModuleId) {
