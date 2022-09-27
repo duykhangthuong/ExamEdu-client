@@ -1,25 +1,28 @@
 import Heading from "components/Heading";
 import Icon from "components/Icon";
 import React from "react";
+import * as XLSX from "xlsx";
 import Wrapper from "../../components/Wrapper";
 import Button from "../../components/Button";
 import styles from "../../styles/CreateAccount.module.css";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { API, EMAIL, REGEX, REQUIRED } from "utilities/constants";
 import { useForm } from "utilities/useForm";
 import { useLazyFetch } from "utilities/useFetch";
+import useOutsideClick from "utilities/useOutsideClick";
 import InputBox from "components/InputBox";
 import Swal from "sweetalert2";
 import Loading from "pages/Loading";
+import OurModal from "components/OurModal";
 
 const CreateAccount = () => {
-    const [selectedRole, setSelectedRole] = useState(ADMINISTRATOR);
+    const [selectedRole, setSelectedRole] = useState(STUDENT);
     const { values, errors, onChange, onSubmit, clearForm } = useForm(
         fields,
         handleSubmit
     );
     //values.tenTruong VD: values.fullname
-
+    const [selectedFile, setSelectedFile] = useState();
     const [fetchdata, fetchResult] = useLazyFetch(`${API}/Account`, {
         method: "POST",
         body: {
@@ -35,12 +38,60 @@ const CreateAccount = () => {
         }
     });
 
+    const modalRef = useRef(null);
+    let { isClicked, setIsClicked } = useOutsideClick(modalRef);
+
+    const [fetchExcel, fetchExcelResult] = useLazyFetch(`${API}/Account/excel`)
+    const submitExcel = () => {
+        const formData = new FormData();
+
+        formData.append('excelFile', selectedFile);
+        formData.append('roleId', selectedRole);
+        fetchExcel("", {
+            method: "POST",
+            body: formData,
+            onCompletes: () => {
+                Swal.fire("Success", "Account created successfully", "success");
+            },
+            onError: (error) => {
+                const listError = error.map((err) => { return `${err.errorDetail} in row ${err.rowIndex} and column ${err.columnIndex}` });
+                console.log(listError);
+                Swal.fire({
+                    title: 'Error',
+                    html: listError.join('<br/>'),
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                    width: "36rem",
+                    allowOutsideClick: false
+                });
+            }
+        })
+    }
+
+    function downloadTemplate() {
+        const aoaData = [
+            ["Email", "Fullname"]
+        ];
+        const workSheet = XLSX.utils.aoa_to_sheet(aoaData);
+        const workBook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workBook, workSheet, "Sheet 1");
+        XLSX.writeFile(workBook, "Template.xlsx");
+    };
     function handleSubmit() {
         fetchdata();
     }
+    function handleSubmitFile() {
+        if (selectedFile == null) {
+            Swal.fire("Error", "Please select a file", "error");
+        } else if (selectedFile.type != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" &&
+            selectedFile.type != "application/vnd.ms-excel") {
+            Swal.fire("Error", "File type is not supported", "error");
+        } else {
+            submitExcel();
+        }
+    }
 
-    const [selectedFile, setSelectedFile] = useState();
-    if (fetchResult.loading) {
+    if (fetchResult.loading || fetchExcelResult.loading) {
         return <Loading />;
     }
 
@@ -69,24 +120,22 @@ const CreateAccount = () => {
                             </label>
                             <div className={styles.grid_container}>
                                 <div className="d-flex justify-content-center mb-4">
-                                    <div
-                                        className={`${styles.selector} ${
-                                            selectedRole === ADMINISTRATOR &&
+                                    {/* <div
+                                        className={`${styles.selector} ${selectedRole === ADMINISTRATOR &&
                                             styles.selected
-                                        }`}
+                                            }`}
                                         onClick={() =>
                                             setSelectedRole(ADMINISTRATOR)
                                         }
                                     >
                                         <Icon icon="cog" className="me-1" />
                                         Administrator
-                                    </div>
+                                    </div> */}
 
                                     <div
-                                        className={`${styles.selector} ${
-                                            selectedRole === STUDENT &&
+                                        className={`${styles.selector} ${selectedRole === STUDENT &&
                                             styles.selected
-                                        }`}
+                                            }`}
                                         onClick={() => setSelectedRole(STUDENT)}
                                     >
                                         <Icon
@@ -97,11 +146,10 @@ const CreateAccount = () => {
                                     </div>
 
                                     <div
-                                        className={`${styles.selector} ${
-                                            selectedRole ===
-                                                ACADEMIC_DEPARTMENT &&
+                                        className={`${styles.selector} ${selectedRole ===
+                                            ACADEMIC_DEPARTMENT &&
                                             styles.selected
-                                        } me-0`}
+                                            } me-0`}
                                         onClick={() =>
                                             setSelectedRole(ACADEMIC_DEPARTMENT)
                                         }
@@ -113,10 +161,9 @@ const CreateAccount = () => {
 
                                 <div className="d-flex justify-content-center">
                                     <div
-                                        className={`${styles.selector} ${
-                                            selectedRole === TEACHER &&
+                                        className={`${styles.selector} ${selectedRole === TEACHER &&
                                             styles.selected
-                                        }`}
+                                            }`}
                                         onClick={() => setSelectedRole(TEACHER)}
                                     >
                                         <Icon
@@ -127,11 +174,10 @@ const CreateAccount = () => {
                                     </div>
 
                                     <div
-                                        className={`${styles.selector} ${
-                                            selectedRole ===
-                                                HEAD_OF_DEPARTMENT &&
+                                        className={`${styles.selector} ${selectedRole ===
+                                            HEAD_OF_DEPARTMENT &&
                                             styles.selected
-                                        }`}
+                                            }`}
                                         onClick={() =>
                                             setSelectedRole(HEAD_OF_DEPARTMENT)
                                         }
@@ -226,30 +272,73 @@ const CreateAccount = () => {
                         >
                             <button
                                 className={`btn btn-info mb-3 ${styles.btn_file}`}
+                                onClick={downloadTemplate}
                             >
-                                <Icon icon="download" className="me-2" />
+                                <Icon icon="file-download" className="me-2" />
                                 Download template
                             </button>
-                            <label
-                                className={`btn btn-success btn-file ${styles.btn_file}`}
+                            <button
+                                className={`btn btn-success mb-3 ${styles.btn_file}`}
+                                onClick={() => { setIsClicked(true) }}
                             >
                                 <Icon icon="file-excel" className="me-2" />
-                                Upload excel
-                                <input
-                                    type="file"
-                                    style={{ display: "none" }}
-                                    onChange={(e) => {
-                                        setSelectedFile(e.target.files[0]);
-                                    }}
-                                    required
-                                />
-                            </label>
+                                Create by excel
+                            </button>
                         </div>
-                        {/* If file is null, don't show anything (prevent null reference exception) */}
-                        <p className="">{selectedFile && selectedFile.name}</p>
+
                     </div>
                 </div>
             </div>
+            <OurModal
+                modalRef={modalRef}
+                isClicked={isClicked}
+                setIsClicked={setIsClicked}
+                modalClassName="d-none d-xl-block w-25"
+                style={{ height: "33%" }}
+            >
+                <div className={`h-100 d-flex flex-column align-items-center justify-content-around`}>
+                    <div className="text-center h-25">
+                        <Heading size={2}>Upload File</Heading>
+                        <label
+                            className={`btn btn-success btn-file ${styles.btn_file}`}
+                        >
+
+                            Choose file
+                            <input
+                                type="file"
+                                style={{ display: "none" }}
+                                onChange={(e) => {
+                                    setSelectedFile(e.target.files[0]);
+                                }}
+                                required
+                                accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                            />
+                        </label>
+                        {/* If file is null, don't show anything (prevent null reference exception) */}
+                        <p>{selectedFile && selectedFile.name} <span>{selectedFile && <Icon
+                            icon="times"
+                            className="fs-6"
+                            onClick={() => setSelectedFile()}
+                            style={{ cursor: "pointer" }}
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="right"
+                            title="Remove file"
+                        ></Icon>}</span></p>
+
+
+                    </div>
+                    <footer>
+                        <button
+                            type="submit"
+                            className={`btn btn-primary ${styles.btn_file}`}
+                            onClick={handleSubmitFile}
+                        >
+                            <Icon icon="upload" className="me-2" />
+                            Submit
+                        </button>
+                    </footer>
+                </div>
+            </OurModal>
         </Wrapper>
     );
 };

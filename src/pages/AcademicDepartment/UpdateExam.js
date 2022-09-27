@@ -11,6 +11,7 @@ import Swal from "sweetalert2";
 import styles from "../../styles/UpdateExam.module.css";
 import moment from "moment";
 import { useParams } from "react-router-dom";
+import Heading from "components/Heading";
 
 const UpdateExam = ({ isFinalExam }) => {
     //Get id from url
@@ -85,7 +86,8 @@ const UpdateExam = ({ isFinalExam }) => {
         loading ||
         teacherFetchResult.loading ||
         moduleFetchResult.loading ||
-        updateExamResult.loading || academicFetchResult.loading
+        updateExamResult.loading ||
+        academicFetchResult.loading
     ) {
         return <Loading></Loading>;
     }
@@ -95,7 +97,9 @@ const UpdateExam = ({ isFinalExam }) => {
     return (
         <Wrapper>
             {/* Title */}
-            <h1 className="mb-2">Update Exam</h1>
+            <Heading size={2} className="mb-3">
+                Update Exam Basic Information
+            </Heading>
 
             {/* Form */}
             <form onSubmit={formik.handleSubmit}>
@@ -210,20 +214,16 @@ const UpdateExam = ({ isFinalExam }) => {
                                         onChange={formik.handleChange}
                                         className={`${styles.input_select} `}
                                     >
-                                        {academicFetchResult.data.map(
-                                            (aca) => {
-                                                return (
-                                                    <option
-                                                        key={aca.id}
-                                                        value={
-                                                            aca.id
-                                                        }
-                                                    >
-                                                        {aca.email}
-                                                    </option>
-                                                );
-                                            }
-                                        )}
+                                        {academicFetchResult.data.map((aca) => {
+                                            return (
+                                                <option
+                                                    key={aca.id}
+                                                    value={aca.id}
+                                                >
+                                                    {aca.email}
+                                                </option>
+                                            );
+                                        })}
                                     </select>
                                 </div>
                             </>

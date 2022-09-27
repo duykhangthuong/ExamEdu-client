@@ -40,6 +40,7 @@ const ExamList = () => {
                 onAddButtonClick={() => {
                     history.push("/teacher/exam/create/info");
                 }}
+                placeholder="Search by exam name or module code"
             />
             <Table
                 columns={columns}

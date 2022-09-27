@@ -24,7 +24,7 @@ const SearchBar = ({
     filterValue,
     setFilterValue,
     filterOptions,
-    placeholder = "Search Account",
+    placeholder = "Search...",
     onAddButtonClick
 }) => {
     return (
