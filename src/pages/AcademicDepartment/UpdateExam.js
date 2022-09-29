@@ -159,6 +159,7 @@ const UpdateExam = ({ isFinalExam }) => {
                                 className={`${styles.input_select} `}
                                 value={formik.values.moduleId}
                                 onChange={formik.handleChange}
+                                disabled
                             >
                                 {moduleFetchResult.data.payload.map(
                                     (module) => {
