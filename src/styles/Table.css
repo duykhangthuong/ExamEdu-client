@@ -86,10 +86,10 @@ th:last-child {
 /* table freezing */
 .sticky-col th:first-child,
 td:first-child {
-    left: -1px;
+    /* left: -1px;
     position: sticky;
     z-index: 2;
-    background-color: var(--nav-bg) !important;
+    background-color: var(--nav-bg) !important; */
 }
 
 .sticky-col th:last-child,
