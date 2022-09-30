@@ -38,7 +38,7 @@ const ExamList = () => {
                 keyWord={searchName}
                 setKeyWord={setSearchName}
                 onAddButtonClick={() => {
-                    history.push("/teacher/exam/create/info");
+                    history.push("/AcademicDepartment/exam/create/info");
                 }}
                 placeholder="Search by exam name or module code"
             />

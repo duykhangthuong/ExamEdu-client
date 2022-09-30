@@ -82,7 +82,22 @@ const ClassDetail = () => {
             <Heading>Class Detail</Heading>
             <div className="d-flex ">
                 <div className={styles.basicDiv}>
-                    <h5 className="ms-3">BASIC INFORMATION</h5>
+                    <div className="d-flex justify-content-between align-items-center mb-2">
+                        <h5 className="ms-3">BASIC INFORMATION</h5>
+                        <Button
+                            onClick={() => {
+                                setIsClicked(true);
+                            }}
+                            circle={true}
+                            titleTooltip="Update Basic Information"
+                        >
+                            <Icon icon="pen" />
+                            {/* <p className="mb-0 text-start">
+                                Update <br />
+                                Information
+                            </p> */}
+                        </Button>
+                    </div>
                     <hr />
                     <div className={styles.content}>
                         <div className={styles.column1}>
@@ -112,18 +127,6 @@ const ClassDetail = () => {
                     </div>
                 </div>
 
-                <Button
-                    className="ms-3 align-self-end"
-                    onClick={() => {
-                        setIsClicked(true);
-                    }}
-                >
-                    <Icon icon="pen" className="me-2" />
-                    <p className="mb-0 text-start">
-                        Update <br />
-                        Information
-                    </p>
-                </Button>
                 <OurModal
                     modalRef={modalRef}
                     isClicked={isClicked}

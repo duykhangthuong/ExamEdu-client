@@ -1,5 +1,5 @@
 .horizontal_line {
-    background-color: black;
+    background-color: var(--color-silver-medal);
     height: 1px;
     width: 100%;
 }
@@ -51,7 +51,7 @@
     color: var(--color-yellow);
 }
 
-.btn_container{
+.btn_container {
     display: flex;
     column-gap: 1rem;
 }

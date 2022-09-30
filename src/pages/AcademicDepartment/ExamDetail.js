@@ -4,18 +4,25 @@ import Table from "components/Table";
 import Wrapper from "components/Wrapper";
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { useLazyFetch, useFetch } from "utilities/useFetch";
 import styles from "../../styles/ExamDetail.module.css";
 import { API } from "utilities/constants";
 import Swal from "sweetalert2";
 import Loading from "pages/Loading";
 import moment from "moment";
+import { useSelector } from "react-redux";
 const ExamDetail = () => {
     const column = ["Student ID", "Student Name", "Email", "Mark"];
 
     const param = useParams();
     const history = useHistory();
+
+    const currentUrl = useLocation();
+    const urlSections = currentUrl.pathname.split("/");
+    const userRole = urlSections[urlSections.length - 3];
+    const user = useSelector((state) => state.user);
+
     //Fetch data exam question
     const fetchDataExamInforResult = useFetch(
         `${API}/Exam/examDetail/${param.examId}`,
@@ -194,10 +201,16 @@ const ExamDetail = () => {
                         </div>
                     </div>
                     <Button
+                        disabled={
+                            userRole === "AcademicDepartment" &&
+                            !fetchDataExamInforResult.data?.isFinalExam
+                                ? true
+                                : false
+                        }
                         className="me-3"
                         onClick={() => {
                             history.push(
-                                `/AcademicDepartment/exam/update/info/${param.examId}`
+                                `/${userRole}/exam/update/info/${param.examId}/${user.accountId}`
                             );
                         }}
                     >
