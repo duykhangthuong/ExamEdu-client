@@ -57,7 +57,7 @@ const ExamProctorList = () => {
 
     return (
         <Wrapper>
-            <SearchBar 
+            <SearchBar
                 pageName={"Exam Proctor List"}
                 onSubmit={handleSubmit}
                 keyWord={searchName}
@@ -115,7 +115,9 @@ const ExamProctorList = () => {
                             ),
                             examName: <b>{exam.examName}</b>,
                             moduleCode: exam.moduleCode,
-                            examDate: moment(exam.examDay).format("DD/MM/YYYY , hh:mm A"),
+                            examDate: moment(exam.examDay).format(
+                                "DD/MM/YYYY , hh:mm A"
+                            ),
                             duration: exam.durationInMinute,
                             room: exam.room,
                             password: exam.password,
@@ -123,7 +125,44 @@ const ExamProctorList = () => {
                             description: exam.description,
                             action: (
                                 <div className={styles.btn_container}>
-                                    <Button
+                                    {(moment(exam.examDay)
+                                        .add(exam.durationInMinute, "minutes")
+                                        .isBefore(moment().toDate())
+                                        || exam.isCancelled)? (
+                                        <Button
+                                            onClick={() => {
+                                                onClickInvigilate(exam.examId);
+                                            }}
+                                            className="mr-2"
+                                            style={{
+                                                backgroundColor: "var(--color-orange)"
+                                            }}
+                                            disabled
+                                        >
+                                            Start
+                                            <Icon
+                                                icon="arrow-right"
+                                                className="ms-2"
+                                            />
+                                        </Button>
+                                    ) : (
+                                        <Button
+                                            onClick={() => {
+                                                onClickInvigilate(exam.examId);
+                                            }}
+                                            className="mr-2"
+                                            style={{
+                                                backgroundColor: "var(--color-green)"
+                                            }}
+                                        >
+                                            Start
+                                            <Icon
+                                                icon="arrow-right"
+                                                className="ms-2"
+                                            />
+                                        </Button>
+                                    )}
+                                    {/* <Button
                                         onClick={() => {
                                             onClickInvigilate(exam.examId);
                                         }}
@@ -134,9 +173,12 @@ const ExamProctorList = () => {
                                         {...(exam.isCancelled && {
                                             disabled: true
                                         })}
-                                        {...(moment(exam.examDay).isBefore(
-                                            moment().toDate()
-                                        ) && {
+                                        {...(moment(exam.examDay)
+                                            .add(
+                                                exam.durationInMinute,
+                                                "minutes"
+                                            )
+                                            .isBefore(moment().toDate()) && {
                                             disabled: true
                                         })}
                                     >
@@ -145,7 +187,7 @@ const ExamProctorList = () => {
                                             icon="arrow-right"
                                             className="ms-2"
                                         />
-                                    </Button>
+                                    </Button> */}
                                 </div>
                             )
                         }))}

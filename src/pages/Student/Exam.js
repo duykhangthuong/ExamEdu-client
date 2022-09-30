@@ -50,7 +50,7 @@ function ExamHeader({ examId, result, submitAnswer }) {
         <header
             className={`d-md-flex justify-content-md-around ${styles.exam_header}`}
         >
-            {/* <StudentCall examId={examId} /> */}
+            <StudentCall examId={examId} />
             <div className="d-md-flex align-items-center">
                 <div>
                     {/* Exam Name */}
