@@ -8,7 +8,7 @@ import { useLazyFetch } from "utilities/useFetch";
 import { useForm } from "utilities/useForm";
 import ValidateMessage from "./ValidateMessage";
 
-const CallWindow = ({ stream, userEmail, index, examId, cheatingTypeList }) => {
+const CallWindow = ({ stream, userEmail, index, examId, cheatingTypeList, warningDisplay=false }) => {
     const [isSpeaking, setIsSpeaking] = useState(false);
     const [audioState, setAudioState] = useState(true);
     const [isOpenReportForm, setIsOpenReportForm] = useState(false); //Modal boostrap state
@@ -81,6 +81,12 @@ const CallWindow = ({ stream, userEmail, index, examId, cheatingTypeList }) => {
                 <div className={`${style.infor_wrapper} d-flex`}>
                     <div className={`${style.content_name} me-auto`}>
                         {userEmail}
+                    </div>
+
+                    <div
+                        style={{color:"red", display: {warningDisplay} ? "inline-block" : "none"}}
+                    >
+                        CHEATING WARNING
                     </div>
 
                     <div
