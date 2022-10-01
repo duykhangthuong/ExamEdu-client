@@ -72,8 +72,13 @@
 
     .grid_container {
         display: grid;
+        justify-items: center;
 
         grid-template-rows: 1fr 1fr;
+        grid-template-columns: 1fr 1fr;
+        row-gap: 1rem;
+
+        margin-bottom: 1.5rem;
     }
 
     .selector {
@@ -87,7 +92,7 @@
         padding: 0 0.5rem;
         border-radius: 8px;
 
-        margin-right: 1.5rem;
+        /* margin-right: 1.5rem; */
         cursor: pointer;
     }
 
