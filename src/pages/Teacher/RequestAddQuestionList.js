@@ -39,10 +39,10 @@ const RequestAddQuestionList = () => {
         `${API}/Question/requestList/${user}?pageNumber=${currentPage}&pageSize=${pageSize}&searchName=${searchName}`,
         {
             onCompletes: (data) => {
-                console.log(data);
+                // console.log(data);
             },
             onError: (error) => {
-                console.log(error.message);
+                // console.log(error.message);
             }
         }
     );
