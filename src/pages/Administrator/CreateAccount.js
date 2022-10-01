@@ -41,12 +41,12 @@ const CreateAccount = () => {
     const modalRef = useRef(null);
     let { isClicked, setIsClicked } = useOutsideClick(modalRef);
 
-    const [fetchExcel, fetchExcelResult] = useLazyFetch(`${API}/Account/excel`)
+    const [fetchExcel, fetchExcelResult] = useLazyFetch(`${API}/Account/excel`);
     const submitExcel = () => {
         const formData = new FormData();
 
-        formData.append('excelFile', selectedFile);
-        formData.append('roleId', selectedRole);
+        formData.append("excelFile", selectedFile);
+        formData.append("roleId", selectedRole);
         fetchExcel("", {
             method: "POST",
             body: formData,
@@ -54,37 +54,40 @@ const CreateAccount = () => {
                 Swal.fire("Success", "Account created successfully", "success");
             },
             onError: (error) => {
-                const listError = error.map((err) => { return `${err.errorDetail} in row ${err.rowIndex} and column ${err.columnIndex}` });
+                const listError = error.map((err) => {
+                    return `${err.errorDetail} in row ${err.rowIndex} and column ${err.columnIndex}`;
+                });
                 console.log(listError);
                 Swal.fire({
-                    title: 'Error',
-                    html: listError.join('<br/>'),
-                    icon: 'error',
-                    confirmButtonText: 'OK',
+                    title: "Error",
+                    html: listError.join("<br/>"),
+                    icon: "error",
+                    confirmButtonText: "OK",
                     width: "36rem",
                     allowOutsideClick: false
                 });
             }
-        })
-    }
+        });
+    };
 
     function downloadTemplate() {
-        const aoaData = [
-            ["Email", "Fullname"]
-        ];
+        const aoaData = [["Email", "Fullname"]];
         const workSheet = XLSX.utils.aoa_to_sheet(aoaData);
         const workBook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workBook, workSheet, "Sheet 1");
         XLSX.writeFile(workBook, "Template.xlsx");
-    };
+    }
     function handleSubmit() {
         fetchdata();
     }
     function handleSubmitFile() {
         if (selectedFile == null) {
             Swal.fire("Error", "Please select a file", "error");
-        } else if (selectedFile.type != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" &&
-            selectedFile.type != "application/vnd.ms-excel") {
+        } else if (
+            selectedFile.type !=
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" &&
+            selectedFile.type != "application/vnd.ms-excel"
+        ) {
             Swal.fire("Error", "File type is not supported", "error");
         } else {
             submitExcel();
@@ -119,8 +122,8 @@ const CreateAccount = () => {
                                 <b>Role</b>
                             </label>
                             <div className={styles.grid_container}>
-                                <div className="d-flex justify-content-center mb-4">
-                                    {/* <div
+                                {/* <div className="d-flex justify-content-evenly"> */}
+                                {/* <div
                                         className={`${styles.selector} ${selectedRole === ADMINISTRATOR &&
                                             styles.selected
                                             }`}
@@ -132,60 +135,59 @@ const CreateAccount = () => {
                                         Administrator
                                     </div> */}
 
-                                    <div
-                                        className={`${styles.selector} ${selectedRole === STUDENT &&
-                                            styles.selected
-                                            }`}
-                                        onClick={() => setSelectedRole(STUDENT)}
-                                    >
-                                        <Icon
-                                            icon="user-graduate"
-                                            className="me-1"
-                                        />
-                                        Student
-                                    </div>
-
-                                    <div
-                                        className={`${styles.selector} ${selectedRole ===
-                                            ACADEMIC_DEPARTMENT &&
-                                            styles.selected
-                                            } me-0`}
-                                        onClick={() =>
-                                            setSelectedRole(ACADEMIC_DEPARTMENT)
-                                        }
-                                    >
-                                        <Icon icon="school" className="me-1" />
-                                        Academic Department
-                                    </div>
+                                <div
+                                    className={`${styles.selector} ${
+                                        selectedRole === STUDENT &&
+                                        styles.selected
+                                    }`}
+                                    onClick={() => setSelectedRole(STUDENT)}
+                                >
+                                    <Icon
+                                        icon="user-graduate"
+                                        className="me-1"
+                                    />
+                                    Student
                                 </div>
 
-                                <div className="d-flex justify-content-center">
-                                    <div
-                                        className={`${styles.selector} ${selectedRole === TEACHER &&
-                                            styles.selected
-                                            }`}
-                                        onClick={() => setSelectedRole(TEACHER)}
-                                    >
-                                        <Icon
-                                            icon="briefcase"
-                                            className="me-1"
-                                        />
-                                        Teacher
-                                    </div>
-
-                                    <div
-                                        className={`${styles.selector} ${selectedRole ===
-                                            HEAD_OF_DEPARTMENT &&
-                                            styles.selected
-                                            }`}
-                                        onClick={() =>
-                                            setSelectedRole(HEAD_OF_DEPARTMENT)
-                                        }
-                                    >
-                                        <Icon icon="gem" className="me-1" />
-                                        Head of Department
-                                    </div>
+                                <div
+                                    className={`${styles.selector} ${
+                                        selectedRole === ACADEMIC_DEPARTMENT &&
+                                        styles.selected
+                                    } me-0`}
+                                    onClick={() =>
+                                        setSelectedRole(ACADEMIC_DEPARTMENT)
+                                    }
+                                >
+                                    <Icon icon="school" className="me-1" />
+                                    Academic Department
                                 </div>
+                                {/* </div> */}
+
+                                {/* <div className="d-flex justify-content-evenly"> */}
+                                <div
+                                    className={`${styles.selector} ${
+                                        selectedRole === TEACHER &&
+                                        styles.selected
+                                    }`}
+                                    onClick={() => setSelectedRole(TEACHER)}
+                                >
+                                    <Icon icon="briefcase" className="me-1" />
+                                    Teacher
+                                </div>
+
+                                <div
+                                    className={`${styles.selector} ${
+                                        selectedRole === HEAD_OF_DEPARTMENT &&
+                                        styles.selected
+                                    }`}
+                                    onClick={() =>
+                                        setSelectedRole(HEAD_OF_DEPARTMENT)
+                                    }
+                                >
+                                    <Icon icon="gem" className="me-1" />
+                                    Head of Department
+                                </div>
+                                {/* </div> */}
                             </div>
                         </div>
 
@@ -279,13 +281,14 @@ const CreateAccount = () => {
                             </button>
                             <button
                                 className={`btn btn-success mb-3 ${styles.btn_file}`}
-                                onClick={() => { setIsClicked(true) }}
+                                onClick={() => {
+                                    setIsClicked(true);
+                                }}
                             >
                                 <Icon icon="file-excel" className="me-2" />
                                 Create by excel
                             </button>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -296,13 +299,14 @@ const CreateAccount = () => {
                 modalClassName="d-none d-xl-block w-25"
                 style={{ height: "33%" }}
             >
-                <div className={`h-100 d-flex flex-column align-items-center justify-content-around`}>
+                <div
+                    className={`h-100 d-flex flex-column align-items-center justify-content-around`}
+                >
                     <div className="text-center h-25">
                         <Heading size={2}>Upload File</Heading>
                         <label
                             className={`btn btn-success btn-file ${styles.btn_file}`}
                         >
-
                             Choose file
                             <input
                                 type="file"
@@ -315,17 +319,22 @@ const CreateAccount = () => {
                             />
                         </label>
                         {/* If file is null, don't show anything (prevent null reference exception) */}
-                        <p>{selectedFile && selectedFile.name} <span>{selectedFile && <Icon
-                            icon="times"
-                            className="fs-6"
-                            onClick={() => setSelectedFile()}
-                            style={{ cursor: "pointer" }}
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="right"
-                            title="Remove file"
-                        ></Icon>}</span></p>
-
-
+                        <p>
+                            {selectedFile && selectedFile.name}{" "}
+                            <span>
+                                {selectedFile && (
+                                    <Icon
+                                        icon="times"
+                                        className="fs-6"
+                                        onClick={() => setSelectedFile()}
+                                        style={{ cursor: "pointer" }}
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="right"
+                                        title="Remove file"
+                                    ></Icon>
+                                )}
+                            </span>
+                        </p>
                     </div>
                     <footer>
                         <button
