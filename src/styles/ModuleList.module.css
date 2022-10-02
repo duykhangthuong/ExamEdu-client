@@ -3,7 +3,7 @@
 }
 
 .modal {
-    background-color: var(--color-lavender-light);
+    background-color: var(--nav-bar);
     padding: 1.25rem 1rem 1rem 1rem;
     width: 19rem;
 
@@ -11,15 +11,15 @@
     justify-content: stretch;
     align-items: stretch;
     flex-direction: column;
+    border-radius: 20px;
 }
-
+.content {
+    width: 100%;
+}
 .modal_content_container {
     background-color: var(--nav-bar);
-    border-radius: 8px;
     flex-grow: 1;
-
     padding: 0.5rem 1rem;
-
     display: flex;
     flex-direction: column;
 }
