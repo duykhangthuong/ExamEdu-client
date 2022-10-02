@@ -142,9 +142,18 @@ const ModuleList = () => {
                             errorMessage={createForm.errors.moduleName}
                             className={`mb-3 mb-md-4 ${styles.input_box}`}
                         />
-                        <div className="d-flex justify-content-center align-items-center">
-                            <Button type="submit">
-                                <Icon icon="save" className="me-1" />
+                        <div className="w-100">
+                            <Button
+                                type="submit"
+                                style={{
+                                    width: "100%",
+                                    height: "2.5rem",
+                                    borderRadius: "20px",
+                                    fontSize: "1.2rem",
+                                    fontWeight: "bold"
+                                }}
+                            >
+                                <Icon icon="save" className="me-2" />
                                 Confirm
                             </Button>
                         </div>
@@ -159,7 +168,7 @@ const ModuleList = () => {
                 modalClassName={styles.modal}
             >
                 {/* 3 dots */}
-                <Icon icon="ellipsis-h" size="2x"></Icon>
+                <Icon icon="ellipsis-h"></Icon>
                 {/* Modal content */}
                 <div className={styles.modal_content_container}>
                     <form
@@ -189,9 +198,18 @@ const ModuleList = () => {
                             errorMessage={updateForm.errors.moduleName}
                             className={`mb-3 mb-md-4 ${styles.input_box}`}
                         />
-                        <div className="d-flex justify-content-center align-items-center">
-                            <Button type="submit">
-                                <Icon icon="save" className="me-1" />
+                        <div className="w-100">
+                            <Button
+                                type="submit"
+                                style={{
+                                    width: "100%",
+                                    height: "2.5rem",
+                                    borderRadius: "20px",
+                                    fontSize: "1.2rem",
+                                    fontWeight: "bold"
+                                }}
+                            >
+                                <Icon icon="save" className="me-2" />
                                 Confirm
                             </Button>
                         </div>
@@ -215,7 +233,11 @@ const ModuleList = () => {
                         moduleName: module.moduleName,
                         createdAt: module.createdAt,
                         action: (
-                            <div className="d-flex justify-content-end justify-content-lg-center align-items-center">
+                            <div
+                                className={
+                                    "d-flex justify-content-end justify-content-lg-center align-items-center"
+                                }
+                            >
                                 {/* Edit Button */}
                                 <Button
                                     circle={true}
