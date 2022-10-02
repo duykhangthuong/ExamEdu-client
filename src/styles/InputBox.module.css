@@ -8,7 +8,7 @@
 }
 
 .input_container input {
-    border: none !important;
+    /* border: none !important; */
     border-radius: 6px;
     height: 2.25rem;
 
