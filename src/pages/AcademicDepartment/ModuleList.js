@@ -52,22 +52,44 @@ const ModuleList = () => {
 
     //Handle creating new modules
     function handleCreate() {
-        postData();
+        //Confirm before Creating
+        Swal.fire({
+            title: "Are you sure?",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: "Yes"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                postData();
+            }
+        });
     }
+
     //Handle Updating modules
     function handleUpdate() {
-        postData(`${API}/module`, {
-            method: "PUT",
-            body: {
-                moduleCode: updateForm.values.moduleCode,
-                moduleName: updateForm.values.moduleName
-            },
-            onCompletes: () => {
-                Swal.fire("Success", "Module Updated", "success");
-                fetchData();
-            },
-            onError: (error) => {
-                Swal.fire("Error", error.message, "error");
+        //Confirm before updating
+        Swal.fire({
+            title: "Are you sure?",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: "Yes"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                //Submit the update
+                postData(`${API}/module`, {
+                    method: "PUT",
+                    body: {
+                        moduleCode: updateForm.values.moduleCode,
+                        moduleName: updateForm.values.moduleName
+                    },
+                    onCompletes: () => {
+                        Swal.fire("Success", "Module Updated", "success");
+                        fetchData();
+                    },
+                    onError: (error) => {
+                        Swal.fire("Error", error.message, "error");
+                    }
+                });
             }
         });
     }
