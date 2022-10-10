@@ -8,9 +8,11 @@ import { API } from "utilities/constants";
 import { useLazyFetch } from "utilities/useFetch";
 import moment from "moment";
 import Pagination from "components/Pagination";
+import styles from "../../styles/ClassModuleStudent.module.css";
+import Icon from "components/Icon";
 
 const ExamList = () => {
-    const columns = ["Exam name", "Exam date", "Module"];
+    const columns = ["Exam name", "Exam date", "Module", "Action"];
     //Lưu các giá trị tìm kiếm
     const [searchName, setSearchName] = useState("");
     //Lưu giá trị page hiện tại
@@ -48,15 +50,32 @@ const ExamList = () => {
                     examName: exam.examName,
                     examDate: moment(exam.examDay).format("HH:MM DD/MM/YYYY"),
                     module:
-                        exam.module.moduleCode + " - " + exam.module.moduleName
+                        exam.module.moduleCode + " - " + exam.module.moduleName,
+                    action: (
+                        <span className="d-flex justify-content-center">
+                            <button
+                                className={styles.buttonConfirmAddStudent}
+                                onClick={() => {
+                                    history.push(
+                                        `/AcademicDepartment/exam/${exam.examId}`
+                                    );
+                                }}
+                                style={{
+                                    paddingBottom: "0.2rem",
+                                    paddingTop: "0.2rem"
+                                }}
+                            >
+                                Detail
+                                <Icon
+                                    icon="angle-double-right"
+                                    className="ms-1"
+                                />
+                            </button>
+                        </span>
+                    )
                 }))}
-                isSelectable={true}
-                onClick={(index) => {
-                    history.push(
-                        `/AcademicDepartment/exam/${fetchResult.data?.payload[index].examId}`
-                    );
-                }}
             />
+
             <Pagination
                 totalRecords={fetchResult.data?.totalRecords}
                 currentPage={currentPage}
