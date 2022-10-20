@@ -71,7 +71,7 @@
     color: var(--color-blue);
     border-radius: 8px;
     min-height: 2.5rem;
-    max-width: 19rem;
+    width: 16rem !important;
     box-shadow: var(--shadow-medium);
     overflow-x: hidden;
 }
