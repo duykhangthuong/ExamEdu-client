@@ -70,7 +70,7 @@ body {
 
 a {
     text-decoration: none !important;
-    color: var(--text) !important;
+    /* color: var(--text) !important; */
 }
 
 code {

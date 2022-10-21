@@ -7,8 +7,16 @@ import { API, REQUIRED } from "utilities/constants";
 import { useLazyFetch } from "utilities/useFetch";
 import { useForm } from "utilities/useForm";
 import ValidateMessage from "./ValidateMessage";
+import Pill from "components/Pill";
 
-const CallWindow = ({ stream, userEmail, index, examId, cheatingTypeList, warningDisplay=false }) => {
+const CallWindow = ({
+    stream,
+    userEmail,
+    index,
+    examId,
+    cheatingTypeList,
+    warningDisplay = false
+}) => {
     const [isSpeaking, setIsSpeaking] = useState(false);
     const [audioState, setAudioState] = useState(true);
     const [isOpenReportForm, setIsOpenReportForm] = useState(false); //Modal boostrap state
@@ -82,12 +90,24 @@ const CallWindow = ({ stream, userEmail, index, examId, cheatingTypeList, warnin
                     <div className={`${style.content_name} me-auto`}>
                         {userEmail}
                     </div>
-
-                    <div
-                        style={{color:"red", display: {warningDisplay} ? "inline-block" : "none"}}
+                    <Pill 
+                        content="CHEATING WARNING"
+                        className={
+                            warningDisplay == true
+                                ? `${style.cheating_warning} mx-3 p-2`
+                                : `${style.hide_cheating_warning}`
+                        }
+                        defaultColor="red"
+                    />
+                    {/* <div
+                        className={
+                            warningDisplay == true
+                                ? `${style.cheating_warning}`
+                                : `${style.hide_cheating_warning}`
+                        }
                     >
                         CHEATING WARNING
-                    </div>
+                    </div> */}
 
                     <div
                         className={`${style.media_button} me-2`}
