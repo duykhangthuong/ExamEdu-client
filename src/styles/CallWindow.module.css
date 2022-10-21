@@ -27,6 +27,18 @@
     font-size: 1rem;
     font-weight: bold;
 }
+
+.cheating_warning{
+    display: inline-block;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.hide_cheating_warning{
+    display: none;
+}
+
 .media_button {
     background-color: #535353;
     color: white;
