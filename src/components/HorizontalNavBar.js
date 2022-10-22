@@ -279,13 +279,13 @@ const HorizontalNavBar = () => {
             )}
 
             {/* Avatar */}
-            <div className={`shadow-light me-md-3 ${styles.avatar_container}`}>
+            {/* <div className={`shadow-light me-md-3 ${styles.avatar_container}`}>
                 <img
                     src="https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-social-media-user-portrait-176256935.jpg"
                     className={styles.avatar}
                     alt="Avatar"
                 />
-            </div>
+            </div> */}
 
             {/* Log out button */}
             <div
