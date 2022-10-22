@@ -32,7 +32,7 @@ const ExamProctorList = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 8;
     //Get parameters from history
-    const param = useParams();
+    // const param = useParams();
     const history = useHistory();
 
     const teacherId = useSelector((state) => state.user.accountId);
@@ -57,7 +57,7 @@ const ExamProctorList = () => {
 
     return (
         <Wrapper>
-            <SearchBar 
+            <SearchBar
                 pageName={"Exam Proctor List"}
                 onSubmit={handleSubmit}
                 keyWord={searchName}
@@ -90,6 +90,7 @@ const ExamProctorList = () => {
                         supervisorEmail={exam.supervisorEmail}
                     /> */}
                     <Table
+                        isVeryLong={true}
                         columns={columns}
                         data={fetchResult.data?.payload.map((exam) => ({
                             status: exam.isCancelled ? (
@@ -115,7 +116,9 @@ const ExamProctorList = () => {
                             ),
                             examName: <b>{exam.examName}</b>,
                             moduleCode: exam.moduleCode,
-                            examDate: moment(exam.examDay).format("DD/MM/YYYY , hh:mm A"),
+                            examDate: moment(exam.examDay).format(
+                                "DD/MM/YYYY , hh:mm A"
+                            ),
                             duration: exam.durationInMinute,
                             room: exam.room,
                             password: exam.password,
@@ -123,20 +126,60 @@ const ExamProctorList = () => {
                             description: exam.description,
                             action: (
                                 <div className={styles.btn_container}>
-                                    <Button
+                                    {(moment(exam.examDay)
+                                        .add(exam.durationInMinute, "minutes")
+                                        .isBefore(moment().toDate())
+                                        || exam.isCancelled)? (
+                                        <Button
+                                            onClick={() => {
+                                                onClickInvigilate(exam.examId);
+                                            }}
+                                            className="mr-2"
+                                            style={{
+                                                backgroundColor: "var(--color-orange)"
+                                            }}
+                                            disabled
+                                        >
+                                            Start
+                                            <Icon
+                                                icon="arrow-right"
+                                                className="ms-2"
+                                            />
+                                        </Button>
+                                    ) : (
+                                        <Button
+                                            onClick={() => {
+                                                onClickInvigilate(exam.examId);
+                                            }}
+                                            className="mr-2"
+                                            style={{
+                                                backgroundColor: "var(--color-green)"
+                                            }}
+                                        >
+                                            Start
+                                            <Icon
+                                                icon="arrow-right"
+                                                className="ms-2"
+                                            />
+                                        </Button>
+                                    )}
+                                    {/* <Button
                                         onClick={() => {
                                             onClickInvigilate(exam.examId);
                                         }}
                                         className="mr-2"
                                         style={{
-                                            backgroundColor: "#8b0000"
+                                            backgroundColor: "#ff2d2d"
                                         }}
                                         {...(exam.isCancelled && {
                                             disabled: true
                                         })}
-                                        {...(moment(exam.examDay).isBefore(
-                                            moment().toDate()
-                                        ) && {
+                                        {...(moment(exam.examDay)
+                                            .add(
+                                                exam.durationInMinute,
+                                                "minutes"
+                                            )
+                                            .isBefore(moment().toDate()) && {
                                             disabled: true
                                         })}
                                     >
@@ -145,7 +188,7 @@ const ExamProctorList = () => {
                                             icon="arrow-right"
                                             className="ms-2"
                                         />
-                                    </Button>
+                                    </Button> */}
                                 </div>
                             )
                         }))}
@@ -165,146 +208,146 @@ const ExamProctorList = () => {
 
 export default ExamProctorList;
 
-const ExamCard = ({
-    examId,
-    examName,
-    moduleCode,
-    description,
-    room,
-    password,
-    date,
-    duration,
-    isFinalExam,
-    isCancelled,
-    supervisorEmail
-}) => {
-    const history = useHistory();
+// const ExamCard = ({
+//     examId,
+//     examName,
+//     moduleCode,
+//     description,
+//     room,
+//     password,
+//     date,
+//     duration,
+//     isFinalExam,
+//     isCancelled,
+//     supervisorEmail
+// }) => {
+//     const history = useHistory();
 
-    function onClickInvigilate(examId) {
-        history.push(`/invigilate/${examId}`);
-    }
+//     function onClickInvigilate(examId) {
+//         history.push(`/invigilate/${examId}`);
+//     }
 
-    return (
-        <div className={styles.exam_card_wrapper}>
-            <article className={styles.exam_card}>
-                {/* Check icon */}
-                {isCancelled ? (
-                    <Icon
-                        icon="times-circle"
-                        className={styles.times_icon}
-                        styles={{ color: "var(--color-orange)" }}
-                    />
-                ) : moment(date).isAfter(moment().toDate()) ? (
-                    <Icon icon="clock" className={styles.clock_icon} />
-                ) : (
-                    <Icon icon="check-circle" className={styles.check_icon} />
-                )}
+//     return (
+//         <div className={styles.exam_card_wrapper}>
+//             <article className={styles.exam_card}>
+//                 {/* Check icon */}
+//                 {isCancelled ? (
+//                     <Icon
+//                         icon="times-circle"
+//                         className={styles.times_icon}
+//                         styles={{ color: "var(--color-orange)" }}
+//                     />
+//                 ) : moment(date).isAfter(moment().toDate()) ? (
+//                     <Icon icon="clock" className={styles.clock_icon} />
+//                 ) : (
+//                     <Icon icon="check-circle" className={styles.check_icon} />
+//                 )}
 
-                {/* Progress test */}
-                <div className="d-flex flex-column justify-content-center align-items-center text-center">
-                    <Heading size="3" className="mb-3">
-                        {examName}
-                    </Heading>
-                    {/* Module code */}
-                    <div className="mb-3">
-                        <Icon
-                            icon="cube"
-                            className="me-2"
-                            aria-hidden="true"
-                            title="Exam module"
-                        />
-                        {moduleCode}
-                    </div>
-                    {/* Date time */}
-                    <div className="mb-3">
-                        <Icon
-                            icon="calendar-alt"
-                            className="me-2"
-                            aria-hidden="true"
-                            title="Exam date"
-                        />
-                        {moment(date).format("DD/MM/yyyy")}
-                    </div>
-                    {/* Duration */}
-                    <div className="mb-3">
-                        <Icon
-                            icon="forward"
-                            className="me-2"
-                            aria-hidden="true"
-                            title="Duration"
-                        />
-                        {`${duration} minutes`}
-                    </div>
-                    {/* Room */}
-                    <div className="mb-3">
-                        <Icon
-                            icon="users"
-                            className="me-2"
-                            aria-hidden="true"
-                            title="Room"
-                        />
-                        {room}
-                    </div>
-                    {/* Password */}
-                    <div className="mb-3">
-                        <Icon
-                            icon="key"
-                            className="me-2"
-                            aria-hidden="true"
-                            title="Password"
-                        />
-                        {password ? (
-                            password
-                        ) : (
-                            <span style={{ fontStyle: "italic" }}>
-                                No password
-                            </span>
-                        )}
-                    </div>
-                    {/* Supervisor */}
-                    <div className="mb-3">
-                        <Icon
-                            icon="address-card"
-                            className="me-2"
-                            aria-hidden="true"
-                            title="Supervisor contact"
-                        />
-                        {supervisorEmail}
-                    </div>
-                    {/* Description */}
-                    <div className="mb-3">
-                        <Icon
-                            icon="pen"
-                            className="me-2"
-                            aria-hidden="true"
-                            title="Description"
-                        />
-                        {description ? (
-                            description
-                        ) : (
-                            <span style={{ fontStyle: "italic" }}>
-                                No description
-                            </span>
-                        )}
-                    </div>
-                </div>
-                {/* Buttons */}
-                <div className={styles.btn_container}>
-                    <Button
-                        onClick={() => {
-                            onClickInvigilate(examId);
-                        }}
-                        className="mr-2"
-                        style={{ backgroundColor: "#8b0000" }}
-                        {...(isCancelled && { disabled: true })}
-                        {...(moment(date).isAfter(moment().toDate()) && {
-                            disabled: true
-                        })}
-                    >
-                        Start <Icon icon="arrow-right" className="ms-2" />
-                    </Button>
-                </div>
-            </article>
-        </div>
-    );
-};
+//                 {/* Progress test */}
+//                 <div className="d-flex flex-column justify-content-center align-items-center text-center">
+//                     <Heading size="3" className="mb-3">
+//                         {examName}
+//                     </Heading>
+//                     {/* Module code */}
+//                     <div className="mb-3">
+//                         <Icon
+//                             icon="cube"
+//                             className="me-2"
+//                             aria-hidden="true"
+//                             title="Exam module"
+//                         />
+//                         {moduleCode}
+//                     </div>
+//                     {/* Date time */}
+//                     <div className="mb-3">
+//                         <Icon
+//                             icon="calendar-alt"
+//                             className="me-2"
+//                             aria-hidden="true"
+//                             title="Exam date"
+//                         />
+//                         {moment(date).format("DD/MM/yyyy")}
+//                     </div>
+//                     {/* Duration */}
+//                     <div className="mb-3">
+//                         <Icon
+//                             icon="forward"
+//                             className="me-2"
+//                             aria-hidden="true"
+//                             title="Duration"
+//                         />
+//                         {`${duration} minutes`}
+//                     </div>
+//                     {/* Room */}
+//                     <div className="mb-3">
+//                         <Icon
+//                             icon="users"
+//                             className="me-2"
+//                             aria-hidden="true"
+//                             title="Room"
+//                         />
+//                         {room}
+//                     </div>
+//                     {/* Password */}
+//                     <div className="mb-3">
+//                         <Icon
+//                             icon="key"
+//                             className="me-2"
+//                             aria-hidden="true"
+//                             title="Password"
+//                         />
+//                         {password ? (
+//                             password
+//                         ) : (
+//                             <span style={{ fontStyle: "italic" }}>
+//                                 No password
+//                             </span>
+//                         )}
+//                     </div>
+//                     {/* Supervisor */}
+//                     <div className="mb-3">
+//                         <Icon
+//                             icon="address-card"
+//                             className="me-2"
+//                             aria-hidden="true"
+//                             title="Supervisor contact"
+//                         />
+//                         {supervisorEmail}
+//                     </div>
+//                     {/* Description */}
+//                     <div className="mb-3">
+//                         <Icon
+//                             icon="pen"
+//                             className="me-2"
+//                             aria-hidden="true"
+//                             title="Description"
+//                         />
+//                         {description ? (
+//                             description
+//                         ) : (
+//                             <span style={{ fontStyle: "italic" }}>
+//                                 No description
+//                             </span>
+//                         )}
+//                     </div>
+//                 </div>
+//                 {/* Buttons */}
+//                 <div className={styles.btn_container}>
+//                     <Button
+//                         onClick={() => {
+//                             onClickInvigilate(examId);
+//                         }}
+//                         className="mr-2"
+//                         style={{ backgroundColor: "#8b0000" }}
+//                         {...(isCancelled && { disabled: true })}
+//                         {...(moment(date).isAfter(moment().toDate()) && {
+//                             disabled: true
+//                         })}
+//                     >
+//                         Start <Icon icon="arrow-right" className="ms-2" />
+//                     </Button>
+//                 </div>
+//             </article>
+//         </div>
+//     );
+// };

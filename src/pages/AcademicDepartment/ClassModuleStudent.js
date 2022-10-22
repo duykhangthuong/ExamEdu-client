@@ -142,25 +142,26 @@ function ClassModuleStudent() {
                         })}
                     </select>
                 </div>
-                <div className="d-flex justify-content-start">
-                    <button
-                        className={`mt-4 text-start ${styles.buttonAddStudent}`}
-                        onClick={() => {
-                            setIsClicked(true);
-                        }}
-                    >
-                        <Icon
-                            color="fff"
-                            icon="user-plus"
-                            className="me-2"
-                        ></Icon>
-                        Add student
-                        <br /> from another class
-                    </button>
-                </div>
+
                 {/* Class Student table*/}
                 <div className={styles.studentListDiv}>
-                    <h5>STUDENT LIST</h5>
+                    <div className="d-flex justify-content-between align-items-center">
+                        <h5>STUDENT LIST</h5>
+                        {/*Button add student circle*/}
+                        <div className="d-flex justify-content-end">
+                            <button
+                                className={`text-start shadow-light ${styles.buttonAddStudent}`}
+                                onClick={() => {
+                                    setIsClicked(true);
+                                }}
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="top"
+                                title="Add student to list"
+                            >
+                                <Icon color="fff" icon="user-plus"></Icon>
+                            </button>
+                        </div>
+                    </div>
                     <hr />
                     <div className={styles.tableDiv}>
                         <Table
@@ -170,7 +171,7 @@ function ClassModuleStudent() {
                                 name: item.fullname,
                                 email: item.email,
                                 option: (
-                                    <div className="d-flex justify-content-center">
+                                    <div className="d-flex justify-content-center ">
                                         <Button
                                             circle={true}
                                             style={{
@@ -193,7 +194,7 @@ function ClassModuleStudent() {
                 </div>
                 <footer className="d-flex justify-content-end">
                     <button
-                        className={`mt-4 ${styles.buttonAddStudent}`}
+                        className={`mt-4 ${styles.buttonConfirmAddStudent}`}
                         onClick={() => showModalConfirmSubmit()}
                         disabled={
                             teacher === initialTeacher &&
@@ -203,10 +204,10 @@ function ClassModuleStudent() {
                     >
                         <Icon
                             color="fff"
-                            icon="pencil-ruler"
-                            className="me-3"
+                            icon="check-circle"
+                            className="me-2"
                         ></Icon>{" "}
-                        Update Class Member
+                        Confirm Update
                     </button>
                 </footer>
             </Wrapper>

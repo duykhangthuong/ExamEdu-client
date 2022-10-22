@@ -5,6 +5,7 @@ import { API, HUB } from "utilities/constants";
 import { useLazyFetch } from "utilities/useFetch";
 import style from "styles/StudentCall.module.css";
 import { HubConnectionBuilder } from "@microsoft/signalr";
+import Button from "components/Button";
 const StudentCall = ({ examId }) => {
     const user = useSelector((state) => state.user);
     const [videoState, setVideoState] = useState(true);
@@ -12,72 +13,120 @@ const StudentCall = ({ examId }) => {
     const [connection, setConnection] = useState(null);
     const local_stream = useRef();
     const [fetchSate, setFetchSate] = useState(false);
+    const [AISuccessState,setAISuccessState] = useState(false);
     const changeLocalVideoState = () => {
-        local_stream.current.getVideoTracks()[0].enabled = !local_stream.current.getVideoTracks()[0].enabled;
+        local_stream.current.getVideoTracks()[0].enabled =
+            !local_stream.current.getVideoTracks()[0].enabled;
         setVideoState(local_stream.current.getVideoTracks()[0].enabled);
-    }
+    };
     const changeLocalAudioState = () => {
-        local_stream.current.getAudioTracks()[0].enabled = !local_stream.current.getAudioTracks()[0].enabled;
+        local_stream.current.getAudioTracks()[0].enabled =
+            !local_stream.current.getAudioTracks()[0].enabled;
         setAudioState(local_stream.current.getAudioTracks()[0].enabled);
-    }
+    };
 
     const [fetchRoomId, fetchRoomIdResult] = useLazyFetch(
-        `${API}/invigilate/roomId/${examId}`, {
-        method: "GET",
-        onCompletes: (data) => {
-            setFetchSate(true);
+        `${API}/invigilate/roomId/${examId}`,
+        {
+            method: "GET",
+            onCompletes: (data) => {
+                setFetchSate(true);
+            }
         }
-    });
+    );
 
-    const [studentDisconnect, studentDisconnectResponse] = useLazyFetch(`${API}/invigilate/studentDisconnect`, {
-        method: "POST",
-        body: {
-            ExamId: examId,
-            RoomId: user.email
+    const [studentDisconnect, studentDisconnectResponse] = useLazyFetch(
+        `${API}/invigilate/studentDisconnect`,
+        {
+            method: "POST",
+            body: {
+                ExamId: examId,
+                RoomId: user.email
+            }
         }
-    });
+    );
+
+    const [studentCheatingNotify, studentCheatingNotifyResponse]=useLazyFetch(
+        `${API}/invigilate/studentCheatingNotify`,
+        {
+            method: "POST",
+            body: {
+                ExamId: examId,
+                RoomId: user.email
+            }
+        }
+    );
 
     const connectVideo = (roomId) => {
         var peer = new Peer();
-        peer.on('open', (id) => {
-            console.log("Connected with Id: " + id)
-            navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
-                let video = document.getElementById("local-video");
-                local_stream.current = stream;
-                video.srcObject = stream;
-                video.muted = true;
-                video.play();
-                let call = peer.call(roomId, stream, {
-                    metadata: {
-                        userEmail: user.email,
-                        userFullname: user.fullname,
-                        userRole: user.role
-                    }
+        peer.on("open", (id) => {
+            console.log("Connected with Id: " + id);
+            navigator.mediaDevices
+                .getUserMedia({ video: true, audio: true })
+                .then((stream) => {
+                    let video = document.getElementById("local-video");
+                    local_stream.current = stream;
+                    video.srcObject = stream;
+                    video.muted = true;
+                    video.play();
+                    let call = peer.call(roomId, stream, {
+                        metadata: {
+                            userEmail: user.email,
+                            userFullname: user.fullname,
+                            userRole: user.role
+                        }
+                    });
+                    let count = 0;
+                    call.on("stream", (stream) => {
+                        count++;
+                        if (count === 2) return;
+                        try {
+                            let video = document.getElementById("remote-video"); //Khong xai dom thi cai video no bi chop chop (flickering)
+                            video.srcObject = stream;
+                            video.play();
+                        } catch (error) {}
+                    });
                 });
-                let count = 0;
-                call.on('stream', (stream) => {
-                    count++;
-                    if (count === 2)
-                        return;
-                    try {
-                        let video = document.getElementById("remote-video"); //Khong xai dom thi cai video no bi chop chop (flickering)
-                        video.srcObject = stream;
-                        video.play();
-                    } catch (error) {
-
-                    }
-                })
-            })
-
-        })
+        });
         window.addEventListener("beforeunload", (ev) => {
-            studentDisconnect();  //nho bo commet cai nay
+            studentDisconnect(); //nho bo commet cai nay
             peer.destroy();
             ev.preventDefault();
-            return ev.returnValue = 'Are you sure you want to close?';
+            return (ev.returnValue = "Are you sure you want to close?");
         });
+    };
 
-    }
+    const[fetchAI,fetchAIResult]=useLazyFetch(`http://ff89-34-125-173-217.ngrok.io/predict`)
+    const captureVideo = () => {
+        let canvas = document.querySelector("#canvas")
+        let video=document.querySelector("#local-video")
+        canvas
+            .getContext("2d")
+            .drawImage(video, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob(function(blob){
+            const formData=new FormData();
+            formData.append('file',blob);
+
+            fetchAI("",{
+                method:"POST",
+                body:formData,
+                onCompletes: ()=>{
+                    // console.log(fetchAIResult.data);
+                    setAISuccessState(!AISuccessState);
+                }
+            })
+        })
+        
+        // let image_data_url = canvas.toDataURL("image/jpeg");
+        // // data url of the image
+        // console.log(image_data_url);
+    };
+
+    useEffect(() => {
+        if(fetchAIResult.data!=undefined){
+            studentCheatingNotify();
+        }
+    }, [AISuccessState]);
 
     useEffect(() => {
         fetchRoomId();
@@ -113,7 +162,21 @@ const StudentCall = ({ examId }) => {
     return (
         <div>
             <video id="local-video" className={`${style.local_video}`}></video>
-            <video id="remote-video" className={`${style.remote_video}`} autoPlay></video>
+            <video
+                id="remote-video"
+                className={`${style.remote_video}`}
+                autoPlay
+            ></video>
+
+            {/* <Button
+                onClick={() => {
+                    captureVideo();
+                }}
+            >
+                Capture Video
+            </Button> */}
+            {/* <canvas id="canvas" width="384" height="288"></canvas> */}
+
             <div
                 className={`${style.buttons_group} d-flex justify-content-center`}
             >
@@ -157,6 +220,6 @@ const StudentCall = ({ examId }) => {
             </div>
         </div>
     );
-}
+};
 
 export default StudentCall;
