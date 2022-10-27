@@ -1,50 +1,48 @@
-import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
-import { API } from "utilities/constants";
-import { EMAIL, REGEX, REQUIRED } from "utilities/constants";
-import { useForm } from "utilities/useForm";
-import Swal from "sweetalert2";
 import ValidateMessage from "components/ValidateMessage";
-import { useLazyFetch } from "utilities/useFetch";
-import { login } from "store/action";
+import React from "react";
+import { useHistory } from "react-router-dom";
 import background from "static/background-login-page.jpg";
-import style from "styles/login.module.css";
 import logo from "static/logo-ExamEdu.png";
-import Button from "components/Button";
+import style from "styles/ForgotPassword.module.css";
+import Swal from "sweetalert2";
+import { API, EMAIL, REGEX } from "utilities/constants";
+import { useLazyFetch } from "utilities/useFetch";
+import { useForm } from "utilities/useForm";
 
-const Login = () => {
-    const dispatch = useDispatch();
+const ForgotPassword = () => {
     const history = useHistory();
     const { values, onChange, onSubmit, errors } = useForm(form, handleSubmit);
 
     const [fetchData, { loading }] = useLazyFetch(
-        `${API}/Authentication/login`,
+        `${API}/Authentication/forgot-password`,
         {
-            method: "post",
-            body: {
-                email: values.email,
-                password: values.password
-            },
+            headers: {'Content-Type': 'application/json'},
+            method: "PUT",
+            body: JSON.stringify(values.email),
             // Dispatch user to redux store
-            onCompletes: (result) => {
-                dispatch(login(result));
+            onCompletes: (complete) => {
+                Swal.fire(
+                    "Reset password success!",
+                    complete.message,
+                    "success"
+                );
             },
             onError: (error) => {
-                Swal.fire("Login failed!", error.message, "error");
+                Swal.fire("Reset password failed!", error.message, "error");
             },
-            // Redirect to home page
+            // Redirect to login page
             finally: (result) => {
-                history.push(`/${result.role.toLowerCase()}`);
+                history.push(`/`);
             }
         }
     );
+
     function handleSubmit() {
         fetchData();
     }
 
-    function goToForgotPassword(){
-        history.push(`/forgot_password`);
+    function goToLogin() {
+        history.push(`/`);
     }
 
     return (
@@ -61,8 +59,14 @@ const Login = () => {
             </div>
             <form onSubmit={onSubmit}>
                 <div className={style.mainDiv}>
-                    <h1 className={style.loginText}>Login</h1>
+                    <h1 className={style.loginText}>Forgot Password</h1>
                     <div className={style.inputSection}>
+                        <div className="text-center">
+                            <b>
+                                Please enter your email address. You will
+                                receive an email message with new password.
+                            </b>
+                        </div>
                         <label className={style.labelLogin}>Email</label>
                         <input
                             className={style.inputLogin}
@@ -76,19 +80,6 @@ const Login = () => {
                         )}
                     </div>
 
-                    <div className={style.inputSection}>
-                        <label className={style.labelLogin}>Password</label>
-                        <input
-                            className={style.inputLogin}
-                            type={"password"}
-                            value={values.password}
-                            onChange={onChange}
-                            id="password"
-                        />
-                        {errors.password && (
-                            <ValidateMessage message={errors.password} />
-                        )}
-                    </div>
                     <button
                         className={`${style.buttonLogin} mb-5`}
                         disable={loading}
@@ -110,26 +101,31 @@ const Login = () => {
                             </div>
                         )}
                         {/* {loading && <span className="mt-0"></span>} */}
-                        {!loading && <span>Login</span>}
+                        {!loading && <span>Get New Password</span>}
                     </button>
-                    <a href="" onClick={()=>{goToForgotPassword()}} className="mb-3">
-                        Forgot Password?
-                    </a>
+                    <p>
+                        Already have an account?{" "}
+                        <a
+                            href=""
+                            onClick={() => {
+                                goToLogin();
+                            }}
+                            className="mb-3"
+                        >
+                            Login
+                        </a>
+                    </p>
                 </div>
             </form>
         </div>
     );
 };
 
-export default Login;
+export default ForgotPassword;
 const form = {
     email: {
         validate: REGEX,
         regex: EMAIL,
         message: "Please input proper email format!"
-    },
-    password: {
-        validate: REQUIRED,
-        message: "Password is required!"
     }
 };

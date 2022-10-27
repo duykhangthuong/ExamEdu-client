@@ -13,7 +13,9 @@ const StudentCall = ({ examId }) => {
     const [connection, setConnection] = useState(null);
     const local_stream = useRef();
     const [fetchSate, setFetchSate] = useState(false);
-    const [AISuccessState,setAISuccessState] = useState(false);
+    const [AISuccessState, setAISuccessState] = useState(false);
+    const width=384;
+    const height=288;
     const changeLocalVideoState = () => {
         local_stream.current.getVideoTracks()[0].enabled =
             !local_stream.current.getVideoTracks()[0].enabled;
@@ -46,7 +48,7 @@ const StudentCall = ({ examId }) => {
         }
     );
 
-    const [studentCheatingNotify, studentCheatingNotifyResponse]=useLazyFetch(
+    const [studentCheatingNotify, studentCheatingNotifyResponse] = useLazyFetch(
         `${API}/invigilate/studentCheatingNotify`,
         {
             method: "POST",
@@ -96,35 +98,50 @@ const StudentCall = ({ examId }) => {
         });
     };
 
-    const[fetchAI,fetchAIResult]=useLazyFetch(`http://ff89-34-125-173-217.ngrok.io/predict`)
+    const [fetchAI, fetchAIResult] = useLazyFetch(
+        `https://ml-api-cheatingdetector.herokuapp.com/predict`
+    );
     const captureVideo = () => {
-        let canvas = document.querySelector("#canvas")
-        let video=document.querySelector("#local-video")
+        let canvas = document.querySelector("#canvas");
+        let video = document.querySelector("#local-video");
+        canvas.width=width;
+        canvas.height=height;
         canvas
             .getContext("2d")
-            .drawImage(video, 0, 0, canvas.width, canvas.height);
-        canvas.toBlob(function(blob){
-            const formData=new FormData();
-            formData.append('file',blob);
+            .drawImage(video, 0, 0, width, height);
+        canvas.toBlob(function (blob) {
+            const formData = new FormData();
+            formData.append("file", blob);
 
-            fetchAI("",{
-                method:"POST",
-                body:formData,
-                onCompletes: ()=>{
-                    // console.log(fetchAIResult.data);
+            fetchAI("", {
+                method: "POST",
+                body: formData,
+                onCompletes: () => {
+                    console.log(fetchAIResult.data);
                     setAISuccessState(!AISuccessState);
                 }
-            })
-        })
-        
+            });
+        });
+
         // let image_data_url = canvas.toDataURL("image/jpeg");
         // // data url of the image
         // console.log(image_data_url);
     };
 
+    //Capture video of student every 3 seconds
+    // useEffect(() => {
+    //     const timerId = setInterval(() => {
+    //         captureVideo();
+    //     }, 3000);
+
+    //     return () => clearInterval(timerId);
+    // }, []);
+
     useEffect(() => {
-        if(fetchAIResult.data!=undefined){
-            studentCheatingNotify();
+        if (fetchAIResult.data != undefined) {
+            if (fetchAIResult.data.isNotCheating == 0) {
+                studentCheatingNotify();
+            }
         }
     }, [AISuccessState]);
 
@@ -175,7 +192,7 @@ const StudentCall = ({ examId }) => {
             >
                 Capture Video
             </Button>
-            <canvas id="canvas" width="384" height="288"></canvas>
+            <canvas id="canvas" width="384" height="288" style={{display: "none"}}></canvas>
 
             <div
                 className={`${style.buttons_group} d-flex justify-content-center`}
