@@ -172,7 +172,7 @@ const CreateExam = ({ isFinalExam = false }) => {
                     ? history.push(
                           `/AcademicDepartment/exam/create/question/${
                               data.examId
-                          }/${selectedModule.moduleId}/${false}`
+                          }/${selectedModule.moduleId}/${true}`
                       )
                     : history.push(
                           `/teacher/exam/create/question/${data.examId}/${
@@ -496,8 +496,8 @@ const ClassAndTraineeFormContent = ({
     //true for Class, false for Student
     return (
         <div>
-            {console.log(selectedStudents)}
-            {console.log(fetchStudentsResult)}
+            {/* {console.log(selectedStudents)} */}
+            {/* {console.log(fetchStudentsResult)} */}
             {/* Title */}
             <Heading size={2} style={{ color: "var(--color-blue)" }}>
                 Assign Class or Students

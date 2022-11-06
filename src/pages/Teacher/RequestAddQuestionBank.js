@@ -66,7 +66,7 @@ const RequestAddQuestionBank = () => {
         }
     });
 
-    ///api/Teacher/idName
+    ///api/Teacher/idName - Get name of all teacher
     const { data, loading, error } = useFetch(`${API}/Teacher/idName`);
 
     const columns = [
@@ -108,6 +108,19 @@ const RequestAddQuestionBank = () => {
             }
         });
     }
+    //Check if teacher is a head of department
+    if (fetchResult.error !== undefined && fetchResult.error.status == 404)
+        return (
+            <Wrapper className="text-center">
+                <h3 className="fw-bold">
+                    This account is not a Head of Department
+                </h3>
+                <h5>
+                    Please use a Head of Department account to access this
+                    feature
+                </h5>
+            </Wrapper>
+        );
     return (
         <Wrapper>
             <SearchBar
