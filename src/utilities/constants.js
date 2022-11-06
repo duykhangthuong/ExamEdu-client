@@ -8,9 +8,10 @@ export const REQUIRED = "REQUIRED";
 export const CONFIRM = "CONFIRM";
 export const REGEX = "REGEX";
 export const CALLBACK = "CALLBACK";
+export const DATETIME_EXAM = "DATETIME_EXAM";
 export const FULLNAME =
     /^[a-zA-Z ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂ ưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]{6,100}$/;
-export const FLOATNUMBER= /^[+-]?\d+(\.\d+)?$/;
+export const FLOATNUMBER = /^[+-]?\d+(\.\d+)?$/;
 // API
 export const API = process.env.REACT_APP_EXAM_EDU_API;
 export const HUB = process.env.REACT_APP_EXAM_EDU_HUB;
