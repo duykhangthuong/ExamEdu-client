@@ -35,6 +35,7 @@ function ClassList() {
             <SearchBar
                 pageName={"Class List"}
                 onAddButtonClick={onAddButtonClick}
+                toolTipTitle="Add new class"
             />
             <div className={styles.class_card_container}>
                 {fetchResult.data?.payload.map((classes, index) => {
@@ -68,7 +69,6 @@ function ClassCard({ className, classId }) {
                 <div
                     className={`m-3 ${styles.go_to_class}`}
                     onClick={() => history.push(`class/${classId}`)}
-                    
                 >
                     Go to class detail
                     <Icon icon="arrow-right" className="ms-2" />
