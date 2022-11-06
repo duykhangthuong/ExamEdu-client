@@ -2,7 +2,7 @@ import Button from "components/Button";
 import Icon from "components/Icon";
 import Table from "components/Table";
 import Wrapper from "components/Wrapper";
-import React from "react";
+import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useParams, useLocation } from "react-router-dom";
 import { useLazyFetch, useFetch } from "utilities/useFetch";
@@ -12,6 +12,7 @@ import Swal from "sweetalert2";
 import Loading from "pages/Loading";
 import moment from "moment";
 import { useSelector } from "react-redux";
+import AcademicRoutes from "./../../routes/AcademicRoutes";
 const ExamDetail = () => {
     const column = ["Student ID", "Student Name", "Email", "Mark"];
 
@@ -23,8 +24,8 @@ const ExamDetail = () => {
     const userRole = urlSections[urlSections.length - 3];
     const user = useSelector((state) => state.user);
 
-    //Fetch data exam question
-    const fetchDataExamInforResult = useFetch(
+    //Fetch data exam infor
+    const [fetchDataExamDetail, dataExamDetail] = useLazyFetch(
         `${API}/Exam/examDetail/${param.examId}`,
         {
             onError: (err) => {
@@ -38,7 +39,7 @@ const ExamDetail = () => {
         }
     );
 
-    //Fetch data exam question
+    //Fetch data exam result
     const fetchDataExamStudentResult = useFetch(
         `${API}/Exam/result/${param.examId}`,
         {
@@ -82,7 +83,7 @@ const ExamDetail = () => {
                         confirmButtonText: "OK"
                     });
                     //fetch lại hàm exam detail
-                    //fetchDataExaMDetail();
+                    fetchDataExamDetail();
                 }
             },
             onError: (err) => {
@@ -95,7 +96,10 @@ const ExamDetail = () => {
             }
         }
     );
-    if (loading) return <Loading />;
+    useEffect(() => {
+        fetchDataExamDetail();
+    }, []);
+    if (loading || dataExamDetail.loading) return <Loading />;
     return (
         <Wrapper>
             <div className="d-flex justify-content-between flex-wrap">
@@ -110,16 +114,14 @@ const ExamDetail = () => {
                             <p>Password</p>
                         </div>
                         <div className={styles.column2}>
-                            <p>{fetchDataExamInforResult.data?.examName}</p>
-                            <p>{fetchDataExamInforResult.data?.moduleName}</p>
+                            <p>{dataExamDetail.data?.examName}</p>
+                            <p>{dataExamDetail.data?.moduleName}</p>
                             <p>
-                                {fetchDataExamInforResult.data?.description ===
-                                ""
+                                {dataExamDetail.data?.description === ""
                                     ? "No description"
-                                    : fetchDataExamInforResult.data
-                                          ?.description}
+                                    : dataExamDetail.data?.description}
                             </p>
-                            <p>{fetchDataExamInforResult.data?.password}</p>
+                            <p>{dataExamDetail.data?.password}</p>
                         </div>
                     </div>
                 </div>
@@ -136,33 +138,29 @@ const ExamDetail = () => {
                         </div>
                         <div className={styles.column2}>
                             <p>
-                                {moment(
-                                    fetchDataExamInforResult.data?.examDay
-                                ).format("HH:MM DD-MM-YYYY")}
+                                {moment(dataExamDetail.data?.examDay).format(
+                                    "HH:MM DD-MM-YYYY"
+                                )}
                             </p>
                             <p>
-                                {
-                                    fetchDataExamInforResult.data
-                                        ?.durationInMinute
-                                }{" "}
-                                minutes
+                                {dataExamDetail.data?.durationInMinute} minutes
                             </p>
                             <p>
-                                {fetchDataExamInforResult.data?.room === ""
+                                {dataExamDetail.data?.room === ""
                                     ? "No Room"
-                                    : fetchDataExamInforResult.data?.room}
+                                    : dataExamDetail.data?.room}
                             </p>
                             <Status>
-                                {moment(
-                                    fetchDataExamInforResult.data?.examDay
-                                ).isBefore(moment())
+                                {moment(dataExamDetail.data?.examDay).isBefore(
+                                    moment()
+                                )
                                     ? "DONE"
-                                    : fetchDataExamInforResult.data?.isCancelled
+                                    : dataExamDetail.data?.isCancelled
                                     ? "CANCELLED"
                                     : "NOT YET"}
                             </Status>
                             <p>
-                                {fetchDataExamInforResult.data?.isFinalExam
+                                {dataExamDetail.data?.isFinalExam
                                     ? "Final Exam"
                                     : "Progress Test"}
                             </p>
@@ -176,38 +174,30 @@ const ExamDetail = () => {
                         <div className={styles.content}>
                             <div className={styles.column1}>
                                 <p className="mb-0">
-                                    {
-                                        fetchDataExamInforResult.data
-                                            ?.proctorFullName
-                                    }
+                                    {dataExamDetail.data?.proctorFullName}
                                 </p>
                                 <p className="mb-0">
-                                    {
-                                        fetchDataExamInforResult.data
-                                            ?.proctorEmail
-                                    }
+                                    {dataExamDetail.data?.proctorEmail}
                                 </p>
                             </div>
                             <div className={styles.verticalLine}></div>
                             <div className={styles.column2}>
                                 <p className="mb-0">Super Visor</p>
                                 <p className="mb-0">
-                                    {
-                                        fetchDataExamInforResult.data
-                                            ?.supervisorEmail
-                                    }
+                                    {dataExamDetail.data?.supervisorEmail}
                                 </p>
                             </div>
                         </div>
                     </div>
+                    {/* Block Update If user is Academic Department */}
                     <Button
                         disabled={
                             userRole === "AcademicDepartment" &&
-                            !fetchDataExamInforResult.data?.isFinalExam
+                            !dataExamDetail.data?.isFinalExam
                                 ? true
                                 : false
                         }
-                        className="me-3"
+                        className="me-4"
                         onClick={() => {
                             history.push(
                                 `/${userRole}/exam/update/info/${param.examId}/${user.accountId}`
@@ -239,10 +229,9 @@ const ExamDetail = () => {
                             });
                         }}
                         disabled={
-                            moment(
-                                fetchDataExamInforResult.data?.examDay
-                            ).isBefore(moment()) ||
-                            fetchDataExamInforResult.data?.isCancelled
+                            moment(dataExamDetail.data?.examDay).isBefore(
+                                moment()
+                            ) || dataExamDetail.data?.isCancelled
                         }
                     >
                         Cancel
