@@ -14,6 +14,7 @@ import ModuleList from "pages/Student/ModuleList";
 import AcademicRoutes from "./AcademicRoutes";
 import InvigilationRoutes from "./InvigilationRoutes";
 import PrejoinRoomRoutes from "./PrejoinRoomRoutes";
+import ForgotPassword from "pages/Authentication/ForgotPassword";
 
 const Routes = () => {
     return (
@@ -31,6 +32,10 @@ const Routes = () => {
 
             <Route path="/logout">
                 <Logout />
+            </Route>
+
+            <Route path="/forgot_password">
+                <ForgotPassword />
             </Route>
             <Route path="/exam">
                 <ExamRoutes />

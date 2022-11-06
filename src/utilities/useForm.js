@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { CALLBACK, CONFIRM, REGEX, REQUIRED } from "./constants";
+import { CALLBACK, CONFIRM, REGEX, REQUIRED, DATETIME_EXAM } from "./constants";
+import moment from "moment";
 
 /**
  * Handle Form State and Validation
@@ -74,6 +75,39 @@ export const useForm = (fields, handleSubmit, onError) => {
                     } else {
                         newErrors[key] = "";
                     }
+                    break;
+                }
+
+                // Modified by David Doan, specifically used for CreateExam page
+                case DATETIME_EXAM: {
+                    // Validate that the field is required
+                    if (
+                        typeof values[key] === "string" &&
+                        values[key].trim() === ""
+                    ) {
+                        newErrors[key] = fields[key].message;
+                        isValid = false;
+                    } else if (!values[key]) {
+                        newErrors[key] = fields[key].message;
+                        isValid = false;
+                    } else {
+                        newErrors[key] = "";
+                    }
+
+                    // Validate that the field must have value greater than the current time minus 10 minutes
+
+                    if (
+                        moment(values[key]).isBefore(
+                            moment().subtract(30, "minutes")
+                        )
+                    ) {
+                        newErrors[key] =
+                            "Date must be from 10 minutes from now";
+                        isValid = false;
+                    } else {
+                        newErrors[key] = "";
+                    }
+
                     break;
                 }
 

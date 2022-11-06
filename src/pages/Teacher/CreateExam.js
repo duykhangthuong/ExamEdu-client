@@ -6,7 +6,7 @@ import Heading from "components/Heading";
 import InputBox from "components/InputBox";
 import Button from "components/Button";
 import Icon from "components/Icon";
-import { API, REQUIRED } from "../../utilities/constants";
+import { API, DATETIME_EXAM, REQUIRED } from "../../utilities/constants";
 import { useState } from "react";
 import { useForm } from "utilities/useForm";
 import moment from "moment";
@@ -185,6 +185,9 @@ const CreateExam = ({ isFinalExam = false }) => {
             }
         });
     }
+    console.log(
+        moment(values.examDate).isBefore(moment().subtract(10, "minutes"))
+    );
 
     //----------------------------------------------- End Handles posting exam information ------------------------------------------------
 
@@ -349,7 +352,7 @@ const ExamInformationFormContent = ({
                 />
                 {/* minvalue format: YYYY-MM-DDTHH:MM */}
                 <InputBox
-                    label="Date *"
+                    label="Date * (No later than now)"
                     orientation_vertical={true}
                     name="examDate"
                     type="datetime-local"
@@ -379,7 +382,10 @@ const ExamInformationFormContent = ({
                     onClick={() => setFormStep(formStep + 1)}
                     {...((values.examName &&
                         values.duration &&
-                        values.examDate) || { disabled: true })}
+                        values.examDate &&
+                        moment(values.examDate).isAfter(
+                            moment().subtract(10, "minutes")
+                        )) || { disabled: true })}
                 >
                     <Icon icon="angle-double-right" className="me-2" />
                     Next
@@ -867,7 +873,7 @@ const fields = {
         errorMessage: "Duration is required"
     },
     examDate: {
-        validate: REQUIRED,
+        validate: DATETIME_EXAM,
         errorMessage: "Exam date is required"
     },
     room: {},
