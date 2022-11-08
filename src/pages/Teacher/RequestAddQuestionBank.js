@@ -112,9 +112,9 @@ const RequestAddQuestionBank = () => {
     if (fetchResult.error !== undefined && fetchResult.error.status == 404)
         return (
             <Wrapper className="text-center">
-                <h3 className="fw-bold">
-                    This account is not a Head of Department
-                </h3>
+                <h4 className="fw-bold">
+                    You need permission to use this feature
+                </h4>
                 <h5>
                     Please use a Head of Department account to access this
                     feature

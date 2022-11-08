@@ -59,6 +59,7 @@ const SearchBar = ({
                 {setKeyWord && (
                     <>
                         <input
+                            autoFocus
                             type="text"
                             id="search"
                             value={keyWord}
