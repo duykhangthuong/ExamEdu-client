@@ -2,7 +2,6 @@ import { useParams, useHistory } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useFetch, useLazyFetch } from "utilities/useFetch";
 import { API } from "utilities/constants";
-import Heading from "components/Heading";
 import Wrapper from "components/Wrapper";
 import SearchBar from "components/SearchBar";
 import styles from "../../styles/ClassList.module.css";

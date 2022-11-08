@@ -227,7 +227,7 @@ const ModuleList = () => {
                                 style={{
                                     width: "100%",
                                     height: "2.5rem",
-                                    borderRadius: "20px",
+                                    borderRadius: "10px",
                                     fontSize: "1.2rem",
                                     fontWeight: "bold"
                                 }}
