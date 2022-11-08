@@ -30,13 +30,13 @@ function VerticalNavBar({ VerticalNavbarData }) {
 
             <div className={style.sidebar}>
                 <div className={style.wrapperLogo}>
-                    <Link to={VerticalNavbarData[0].link}>
-                        <img
-                            alt="logo_ExamEdu"
-                            src="https://cdn.discordapp.com/attachments/856440942856372275/933529227490381864/logo-ExamEdu.png"
-                            className={style.imgLogo}
-                        />
-                    </Link>
+                    {/* <Link to={VerticalNavbarData[0].link}> */}
+                    <img
+                        alt="logo_ExamEdu"
+                        src="https://cdn.discordapp.com/attachments/856440942856372275/933529227490381864/logo-ExamEdu.png"
+                        className={style.imgLogo}
+                    />
+                    {/* </Link> */}
                 </div>
 
                 <ul>

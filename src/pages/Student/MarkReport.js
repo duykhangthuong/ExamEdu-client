@@ -10,12 +10,11 @@ import moment from "moment";
 import Heading from "components/Heading";
 import Loading from "pages/Loading";
 import Table from "./../../components/Table";
-
 const MarkReport = () => {
     const user = useSelector((state) => state.user.accountId);
     const param = useParams();
 
-    const columns = ["Module Code", "Exam name", "Date", "Mark"];
+    const columns = ["Exam name", "Date", "Mark"];
 
     const { data, loading, error } = useFetch(
         `${API}/Student/markReport/${user}/${param.moduleID}`
@@ -47,10 +46,23 @@ const MarkReport = () => {
     return (
         <Wrapper>
             <Heading>Mark Report</Heading>
+            <div className="d-flex justify-content-between">
+                <div>
+                    {/* Module code and name */}
+                    <div
+                        className="mb-2"
+                        style={{ color: "var(--color-dark-blue)" }}
+                    >
+                        <Icon icon="cube" className="me-2" />
+                        {`${data[0]?.moduleCode} - ${data[0]?.moduleName}`}
+                    </div>
+                </div>
+            </div>
+            {/* Horizontal line */}
+            <div className={`${style.horizontal_line} mb-2 mb-md-3`}></div>
             <Table
                 columns={columns}
                 data={data?.map((record) => ({
-                    moduleCode: record.moduleCode,
                     examName: record.examName,
                     examDate: moment(record.examDate).format(
                         "DD/MM/YYYY , h:mm A"
