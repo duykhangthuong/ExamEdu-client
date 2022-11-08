@@ -48,10 +48,14 @@ const RequestAddQuestionBank = () => {
                 customClass: {
                     popup: "roundCorner"
                 }
+            }).then((result) => {
+                //nếu người dùng nhấn OK
+                if (result.isConfirmed) {
+                    setSelectedTeacherId();
+                    fetchData();
+                    setIsClicked(false);
+                }
             });
-            setSelectedTeacherId();
-            setIsClicked(false);
-            fetchData();
         },
         //Khi fetch ko được
         onError: (error) => {
@@ -72,7 +76,7 @@ const RequestAddQuestionBank = () => {
     const columns = [
         "Requested by",
         "Module",
-        "No. of questions",
+        "No. questions",
         "Requested time",
         "Status",
         size.width > 768 ? "Assign" : ""
@@ -181,6 +185,7 @@ const RequestAddQuestionBank = () => {
                         icon="times"
                         className="me-2 fs-3"
                         onClick={() => setIsClicked(false)}
+                        style={{ cursor: "pointer" }}
                     ></Icon>
                 </header>
                 <div className={style.bodyModal}>
@@ -215,7 +220,9 @@ const RequestAddQuestionBank = () => {
                                 }
                             }}
                         >
-                            <option value={"-1"}>Select Teacher</option>
+                            <option value={"-1"} style={{ cursor: "pointer" }}>
+                                Select Teacher
+                            </option>
                             {data?.map((teacher, index) => {
                                 return (
                                     <option
