@@ -3,7 +3,9 @@ import Heading from "components/Heading";
 import Icon from "components/Icon";
 import InputBox from "components/InputBox";
 import MultiStepFormProgressBar from "components/MultiStepFormProgressBar";
+import Pagination from "components/Pagination";
 import SearchBar from "components/SearchBar";
+import Table from "components/Table";
 import Wrapper from "components/Wrapper";
 import moment from "moment";
 import Loading from "pages/Loading";
@@ -25,13 +27,15 @@ const CreateClass = () => {
     //----------------------------------------------- Handles selecting students ------------------------------------------------
     const [selectedStudents, setSelectedStudents] = useState([]);
     const [searchName, setSearchName] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const pageSize = 8;
     //Lazy fetch for students of a teacher in a module
     const [fetchStudents, fetchStudentsResult] = useLazyFetch();
 
     //Fetch students in the background
     useEffect(() => {
         fetchStudents(
-            `${API}/Student?pageNumber=1&pageSize=99999&searchName=${searchName}`
+            `${API}/Student?pageNumber=${currentPage}&pageSize=${pageSize}&searchName=${searchName}`
         );
         // setSelectedStudents([...selectedStudents]);
     }, [searchName]);
@@ -46,7 +50,7 @@ const CreateClass = () => {
     //Fetch students in the background
     useEffect(() => {
         fetchModules(
-            `${API}/Module?pageNumber=1&pageSize=99999&searchName=${searchModule}`
+            `${API}/Module?pageNumber=1&pageSize=9999&searchName=${searchModule}`
         );
     }, [searchModule]);
     //----------------------------------------------- END Handles selecting modules ------------------------------------------------
@@ -169,6 +173,9 @@ const CreateClass = () => {
                             setSelectedStudents={setSelectedStudents}
                             searchName={searchName}
                             setSearchName={setSearchName}
+                            currentPage={currentPage}
+                            setCurrentPage={setCurrentPage}
+                            pageSize={pageSize}
                         />
                     )}
                     {formStep === 2 && (
@@ -216,29 +223,32 @@ const ClassInforFormContent = ({
 
             <div className={styles.input_container}>
                 <InputBox
-                    label="Enter class name"
+                    label="Enter class name *"
                     orientation_vertical={true}
                     name="className"
                     value={values.className}
                     onChange={onChange}
+                    errorMessage={errors.className}
                 />
                 <InputBox
-                    label="Start date"
+                    label="Start date *"
                     orientation_vertical={true}
                     name="startDate"
                     type="datetime-local"
                     minValue={moment().format("YYYY-MM-DDTHH:MM")}
                     value={values.startDate}
                     onChange={onChange}
+                    errorMessage={errors.startDate}
                 />
                 <InputBox
-                    label="End date"
+                    label="End date *"
                     orientation_vertical={true}
                     name="endDate"
                     type="datetime-local"
                     minValue={moment().format("YYYY-MM-DDTHH:MM")}
                     value={values.endDate}
                     onChange={onChange}
+                    errorMessage={errors.endDate}
                 />
             </div>
 
@@ -246,7 +256,9 @@ const ClassInforFormContent = ({
                 <Button
                     className={styles.btn}
                     onClick={() => setFormStep(formStep + 1)}
-                    {...(values.className || { disabled: true })}
+                    {...((values.className &&
+                        values.startDate &&
+                        values.endDate) || { disabled: true })}
                 >
                     <Icon icon="angle-double-right" className="me-2" />
                     Next
@@ -264,11 +276,16 @@ const StudentFormContent = ({
     selectedStudents = [],
     setSelectedStudents,
     searchName,
-    setSearchName
+    setSearchName,
+    currentPage,
+    setCurrentPage,
+    pageSize
 }) => {
     if (fetchStudentsResult.loading) {
         return <Loading />;
     }
+
+    const columns = ["Full name", "Email"];
 
     return (
         <div>
@@ -280,17 +297,46 @@ const StudentFormContent = ({
             <div className={styles.horizontal_line}></div>
 
             {/* Tab content container */}
-            <div
-                className={`${styles.input_container_grid} ${styles.tab_content_container}`}
-            >
+            <div className={` ${styles.tab_content_container}`}>
                 <div>
-                    {/* <SearchBar
+                    <SearchBar
                         onSubmit={() => fetchStudents}
                         keyWord={searchName}
                         setKeyWord={setSearchName}
-                    /> */}
+                        placeholder="Search student by name"
+                    />
                     {/* Select student container */}
-                    <div
+                    <Table
+                        isSelectable={true}
+                        columns={columns}
+                        data={fetchStudentsResult.data?.payload
+                            .filter(
+                                (student) => !selectedStudents.includes(student)
+                            )
+                            .map((student, index) => ({
+                                Fullname: student.fullname,
+                                Email: student.email
+                            }))}
+                        // onClick={() => {
+                        //     setSelectedStudents([
+                        //         ...selectedStudents,
+                        //         fetchStudentsResult.data?.payload.find((s) => {
+                        //             return (
+                        //                 String(s.studentId) ===
+                        //                 String(student.studentId)
+                        //             );
+                        //         })
+                        //     ]);
+                        //     styles = { backgroundColor: "red" };
+                        // }}
+                    />
+                    <Pagination
+                        totalRecords={fetchStudentsResult.data?.totalRecords}
+                        currentPage={currentPage}
+                        onPageChange={setCurrentPage}
+                        pageSize={pageSize}
+                    />
+                    {/* <div
                         className={`px-3 py-1 ${styles.chosen_item_container}`}
                     >
                         {fetchStudentsResult.data?.payload
@@ -324,51 +370,10 @@ const StudentFormContent = ({
                                     </div>
                                 );
                             })}
-                    </div>
+                    </div> */}
                 </div>
 
                 {/* Chosen item container */}
-                <div className={`px-3 pt-2 ${styles.chosen_item_container}`}>
-                    {selectedStudents.length > 0 &&
-                    selectedStudents !== undefined ? (
-                        <>
-                            <p
-                                className="mb-0"
-                                style={{ color: "var(--color-blue)" }}
-                            >
-                                Selected Students
-                            </p>
-                            {selectedStudents.map((student, index) => (
-                                <div
-                                    className={`d-flex align-items-center px-2 ${styles.chosen_item} ${styles.remove_student}`}
-                                    onClick={() => {
-                                        // On click remove student from selected students
-                                        setSelectedStudents(
-                                            selectedStudents.filter(
-                                                (s) =>
-                                                    s.studentId !==
-                                                    student.studentId
-                                            )
-                                        );
-                                    }}
-                                    key={index}
-                                >
-                                    {/* Icon */}
-                                    <span className={`me-2`}>
-                                        <Icon icon="user" />
-                                    </span>
-                                    {`${student?.fullname} - ${student?.email}`}
-                                </div>
-                            ))}
-                        </>
-                    ) : (
-                        <div
-                            className={`d-flex align-items-center px-2 ${styles.chosen_item}`}
-                        >
-                            No students selected
-                        </div>
-                    )}
-                </div>
             </div>
             {/*  Button group */}
             <div className="d-flex justify-content-end align-items-center mt-3">
