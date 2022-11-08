@@ -23,24 +23,33 @@
     background-color: #ff5300;
 }
 
+.yellow{
+    background-color: #ffef09;
+}
+
 @media screen and (max-width: 768px) {
     .blue {
-        color: #3d5af1;
+        color: #3d5af1 !important;
         background-color: transparent;
     }
 
     .red {
-        color: var#FF2D2D;
+        color: #FF2D2D !important;
         background-color: transparent;
     }
 
     .green {
-        color: #00ff19;
+        color: #00ff19 !important;
         background-color: transparent;
     }
 
     .orange {
-        color: #ff5300;
+        color: #ff5300 !important;
+        background-color: transparent;
+    }
+
+    .yellow{
+        color: #ffef09 !important;
         background-color: transparent;
     }
 }
