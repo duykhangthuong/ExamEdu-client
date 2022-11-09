@@ -9,7 +9,6 @@
 .bodyModal {
     padding: 1rem;
     color: var(--color-blue);
-    font-size: 1.2rem;
     height: fit-content;
 }
 .input_select {
