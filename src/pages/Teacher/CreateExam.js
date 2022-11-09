@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 import Loading from "pages/Loading";
 import Swal from "sweetalert2";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { useWindowSize } from "utilities/useWindowSize";
 
 const CreateExam = ({ isFinalExam = false }) => {
     const [formStep, setFormStep] = useState(0);
@@ -185,9 +186,6 @@ const CreateExam = ({ isFinalExam = false }) => {
             }
         });
     }
-    console.log(
-        moment(values.examDate).isBefore(moment().subtract(10, "minutes"))
-    );
 
     //----------------------------------------------- End Handles posting exam information ------------------------------------------------
 
@@ -225,8 +223,24 @@ const CreateExam = ({ isFinalExam = false }) => {
         }
     ];
 
+    const { width, height } = useWindowSize();
+
     if (postExamResult.loading) {
         return <Loading />;
+    }
+
+    if (width < 1400) {
+        return (
+            <Wrapper className="d-flex">
+                <h2
+                    className="m-auto font-weight-bolder text-center p-3"
+                    style={{ fontFamily: "monospace" }}
+                >
+                    This page not support mobile device. Please switch to
+                    computer to use this function!
+                </h2>
+            </Wrapper>
+        );
     }
 
     return (
@@ -502,8 +516,6 @@ const ClassAndTraineeFormContent = ({
     //true for Class, false for Student
     return (
         <div>
-            {console.log(selectedStudents)}
-            {console.log(fetchStudentsResult)}
             {/* Title */}
             <Heading size={2} style={{ color: "var(--color-blue)" }}>
                 Assign Class or Students
