@@ -88,3 +88,17 @@
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     padding: 0.3rem;
 }
+@media screen and (max-width: 768px) {
+    .moduleContainer {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .moduleWrap {
+        width: 40vw;
+        flex-direction: column;
+    }
+    .basicDiv {
+        width: 70vw;
+    }
+}
