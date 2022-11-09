@@ -8,6 +8,11 @@
     box-shadow: var(--shadow-heavy);
     width: 85%;
 }
+.horizontal_line {
+    background-color: black;
+    height: 1px;
+    width: 100%;
+}
 .progressbar {
     height: 10px;
     width: 90%;

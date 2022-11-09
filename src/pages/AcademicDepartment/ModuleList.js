@@ -19,6 +19,7 @@ import Heading from "components/Heading";
 import { useForm } from "utilities/useForm";
 import Swal from "sweetalert2";
 import Loading from "pages/Loading";
+import moment from "moment";
 
 const ModuleList = () => {
     const [keyword, setKeyword] = useState("");
@@ -226,7 +227,7 @@ const ModuleList = () => {
                                 style={{
                                     width: "100%",
                                     height: "2.5rem",
-                                    borderRadius: "20px",
+                                    borderRadius: "10px",
                                     fontSize: "1.2rem",
                                     fontWeight: "bold"
                                 }}
@@ -246,6 +247,7 @@ const ModuleList = () => {
                     onAddButtonClick={handleToggleModal}
                     onSubmit={handleSearch}
                     placeholder={"Search by module code or module name"}
+                    toolTipTitle={"Add new module"}
                 ></SearchBar>
                 <Table
                     columns={columns}
@@ -253,7 +255,9 @@ const ModuleList = () => {
                         id: module.moduleId,
                         moduleCode: module.moduleCode,
                         moduleName: module.moduleName,
-                        createdAt: module.createdAt,
+                        createdAt: moment(module.createdAt).format(
+                            "HH:MM DD/MM/YYYY"
+                        ),
                         action: (
                             <div
                                 className={
@@ -276,6 +280,7 @@ const ModuleList = () => {
 
                                         updateModal.setIsClicked(true);
                                     }}
+                                    titleTooltip={"Edit module"}
                                 >
                                     <Icon icon="edit" />
                                 </Button>

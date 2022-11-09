@@ -2,7 +2,6 @@ import { useParams, useHistory } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useFetch, useLazyFetch } from "utilities/useFetch";
 import { API } from "utilities/constants";
-import Heading from "components/Heading";
 import Wrapper from "components/Wrapper";
 import SearchBar from "components/SearchBar";
 import styles from "../../styles/ClassList.module.css";
@@ -35,6 +34,7 @@ function ClassList() {
             <SearchBar
                 pageName={"Class List"}
                 onAddButtonClick={onAddButtonClick}
+                toolTipTitle="Add new class"
             />
             <div className={styles.class_card_container}>
                 {fetchResult.data?.payload.map((classes, index) => {
@@ -68,7 +68,6 @@ function ClassCard({ className, classId }) {
                 <div
                     className={`m-3 ${styles.go_to_class}`}
                     onClick={() => history.push(`class/${classId}`)}
-                    
                 >
                     Go to class detail
                     <Icon icon="arrow-right" className="ms-2" />

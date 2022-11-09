@@ -25,7 +25,8 @@ const SearchBar = ({
     setFilterValue,
     filterOptions,
     placeholder = "Search...",
-    onAddButtonClick
+    onAddButtonClick,
+    toolTipTitle = "Add new"
 }) => {
     return (
         <div className="mb-2">
@@ -38,6 +39,9 @@ const SearchBar = ({
                     <button
                         className={`d-none d-md-block shadow-light ${styles.btn_add}`}
                         onClick={onAddButtonClick}
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="top"
+                        title={toolTipTitle}
                     >
                         <Icon icon="plus"></Icon>
                     </button>
@@ -55,6 +59,7 @@ const SearchBar = ({
                 {setKeyWord && (
                     <>
                         <input
+                            autoFocus
                             type="text"
                             id="search"
                             value={keyWord}

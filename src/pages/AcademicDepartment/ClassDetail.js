@@ -35,9 +35,13 @@ const ClassDetail = () => {
             endDay: moment(fetchDataResult.data?.endDay).format("YYYY-MM-DD")
         },
         validationSchema: Yup.object({
-            className: Yup.string().required("Class name is required"),
+            className: Yup.string()
+                .required("Class name is required")
+                .matches(/^(?!\s+$).*/, "Class name cannot be blank"),
             startDay: Yup.date().required("Start day is required"),
-            endDay: Yup.date().required("End day is required")
+            endDay: Yup.date()
+                .required("End day is required")
+                .min(Yup.ref("startDay"), "End date must be after start year")
         }),
         enableReinitialize: true,
         onSubmit: () => {
@@ -67,6 +71,12 @@ const ClassDetail = () => {
                 endDay: formik.values.endDay
             },
             onCompletes: () => {
+                Swal.fire({
+                    title: "Update Successfully",
+                    text: "Press OK to continue",
+                    icon: "success",
+                    confirmButtonText: "Yes"
+                });
                 setIsClicked(false);
                 fetchData();
             }
@@ -131,6 +141,7 @@ const ClassDetail = () => {
                     modalRef={modalRef}
                     isClicked={isClicked}
                     setIsClicked={setIsClicked}
+                    style={{ height: "fit-content" }}
                 >
                     <header
                         className={`${styles.heading} d-flex justify-content-between`}
@@ -147,49 +158,55 @@ const ClassDetail = () => {
                     <div className={styles.bodyModal}>
                         <form onSubmit={formik.handleSubmit}>
                             <div className={styles.inputGroup}>
-                                <label>Class name</label>
-                                <input
-                                    type="text"
-                                    id="className"
-                                    name="className"
-                                    value={formik.values.className}
-                                    onChange={formik.handleChange}
-                                />
+                                <div className="d-flex justify-content-between">
+                                    <label>Class name</label>
+                                    <input
+                                        type="text"
+                                        id="className"
+                                        name="className"
+                                        value={formik.values.className}
+                                        onChange={formik.handleChange}
+                                    />
+                                </div>
                                 {formik.errors.className &&
                                     formik.touched.className && (
-                                        <p className="text-danger ms-3">
+                                        <p className="text-danger mb-0 text-end">
                                             {formik.errors.className}
                                         </p>
                                     )}
                             </div>
                             <div className={styles.inputGroup}>
-                                <label>Start Day</label>
-                                <input
-                                    type="date"
-                                    id="startDay"
-                                    name="startDay"
-                                    value={formik.values.startDay}
-                                    onChange={formik.handleChange}
-                                />
+                                <div className="d-flex justify-content-between">
+                                    <label>Start Day</label>
+                                    <input
+                                        type="date"
+                                        id="startDay"
+                                        name="startDay"
+                                        value={formik.values.startDay}
+                                        onChange={formik.handleChange}
+                                    />
+                                </div>
                                 {formik.errors.startDay &&
                                     formik.touched.startDay && (
-                                        <p className="text-danger ms-3">
+                                        <p className="text-danger mb-0 text-end">
                                             {formik.errors.startDay}
                                         </p>
                                     )}
                             </div>
                             <div className={styles.inputGroup}>
-                                <label>End Day</label>
-                                <input
-                                    type="date"
-                                    id="endDay"
-                                    name="endDay"
-                                    value={formik.values.endDay}
-                                    onChange={formik.handleChange}
-                                />
+                                <div className="d-flex justify-content-between">
+                                    <label>End Day</label>
+                                    <input
+                                        type="date"
+                                        id="endDay"
+                                        name="endDay"
+                                        value={formik.values.endDay}
+                                        onChange={formik.handleChange}
+                                    />
+                                </div>
                                 {formik.errors.endDay &&
                                     formik.touched.endDay && (
-                                        <p className="text-danger ms-3">
+                                        <p className="text-danger mb-0 text-end">
                                             {formik.errors.endDay}
                                         </p>
                                     )}

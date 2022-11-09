@@ -145,7 +145,11 @@ const CreateExamPaper = () => {
                 );
             },
             onError: (error) => {
-                Swal.fire("Error", error.message, "error");
+                Swal.fire("Error", error.message, "error").then((result) => {
+                    if (result.isConfirmed) {
+                        setQuestionListInfor([]);
+                    }
+                });
             }
         }
     );
@@ -184,7 +188,11 @@ const CreateExamPaper = () => {
                 );
             },
             onError: (error) => {
-                Swal.fire("Error", error.message, "error");
+                Swal.fire("Error", error.message, "error").then((result) => {
+                    if (result.isConfirmed) {
+                        setQuestionListInfor([]);
+                    }
+                });
             }
         }
     );

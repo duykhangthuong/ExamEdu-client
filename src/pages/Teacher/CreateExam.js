@@ -173,7 +173,7 @@ const CreateExam = ({ isFinalExam = false }) => {
                     ? history.push(
                           `/AcademicDepartment/exam/create/question/${
                               data.examId
-                          }/${selectedModule.moduleId}/${false}`
+                          }/${selectedModule.moduleId}/${true}`
                       )
                     : history.push(
                           `/teacher/exam/create/question/${data.examId}/${
@@ -186,6 +186,9 @@ const CreateExam = ({ isFinalExam = false }) => {
             }
         });
     }
+    console.log(
+        moment(values.examDate).isBefore(moment().subtract(10, "minutes"))
+    );
 
     //----------------------------------------------- End Handles posting exam information ------------------------------------------------
 

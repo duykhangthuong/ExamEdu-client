@@ -9,14 +9,13 @@ import { useFetch, useLazyFetch } from "utilities/useFetch";
 import InputBox from "../../components/InputBox";
 import Swal from "sweetalert2";
 import styles from "../../styles/UpdateExam.module.css";
-import moment from "moment";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import Heading from "components/Heading";
-
+import { useHistory } from "react-router-dom";
 const UpdateExam = ({ isFinalExam }) => {
     //Get id from url
     const param = useParams();
-
+    const history = useHistory();
     //Load exam information
     const { data, loading, error } = useFetch(
         `${API}/Exam/update-exam-info/${param.examId}`
@@ -31,6 +30,10 @@ const UpdateExam = ({ isFinalExam }) => {
     //Load module list
     const moduleFetchResult = useFetch(`${API}/Module`);
 
+    //Get the role of the current user
+    const currentUrl = useLocation();
+    const urlSections = currentUrl.pathname.split("/");
+    const userRole = urlSections[urlSections.length - 6];
     const formik = useFormik({
         enableReinitialize: true,
         initialValues: {
@@ -70,6 +73,8 @@ const UpdateExam = ({ isFinalExam }) => {
                 studentIds: [0]
             },
             onCompletes: () => {
+                history.push(`/${userRole}/exam/${param.examId}`);
+                console.log(`/${userRole}/exam/${param.examId}`);
                 Swal.fire("Update exam successfully!", "", "success");
             },
             onError: (error) => {
@@ -91,8 +96,6 @@ const UpdateExam = ({ isFinalExam }) => {
     ) {
         return <Loading></Loading>;
     }
-
-    console.log(formik.values);
 
     return (
         <Wrapper>
@@ -257,11 +260,6 @@ const validate = (values) => {
         errors.duration = "Duration is required";
     } else if (values.duration <= 0) {
         errors.duration = "Duration must be greater than 0";
-    }
-
-    //Room validation
-    if (!values.room) {
-        errors.room = "Room is required";
     }
 
     return errors;
