@@ -84,9 +84,9 @@ const CreateAccount = () => {
         if (selectedFile == null) {
             Swal.fire("Error", "Please select a file", "error");
         } else if (
-            selectedFile.type !=
+            selectedFile.type !==
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" &&
-            selectedFile.type != "application/vnd.ms-excel"
+            selectedFile.type !== "application/vnd.ms-excel"
         ) {
             Swal.fire("Error", "File type is not supported", "error");
         } else {
