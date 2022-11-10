@@ -43,6 +43,7 @@ const ExamList = () => {
                     history.push("/AcademicDepartment/exam/create/info");
                 }}
                 placeholder="Search by exam name or module code"
+                toolTipTitle="Add new exam"
             />
             <Table
                 columns={columns}
@@ -64,6 +65,9 @@ const ExamList = () => {
                                     paddingBottom: "0.2rem",
                                     paddingTop: "0.2rem"
                                 }}
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="top"
+                                title="Exam detail"
                             >
                                 Detail
                                 <Icon

@@ -48,10 +48,14 @@ const RequestAddQuestionBank = () => {
                 customClass: {
                     popup: "roundCorner"
                 }
+            }).then((result) => {
+                //nếu người dùng nhấn OK
+                if (result.isConfirmed) {
+                    setSelectedTeacherId();
+                    fetchData();
+                    setIsClicked(false);
+                }
             });
-            setSelectedTeacherId();
-            setIsClicked(false);
-            fetchData();
         },
         //Khi fetch ko được
         onError: (error) => {
@@ -66,13 +70,13 @@ const RequestAddQuestionBank = () => {
         }
     });
 
-    ///api/Teacher/idName
+    ///api/Teacher/idName - Get name of all teacher
     const { data, loading, error } = useFetch(`${API}/Teacher/idName`);
 
     const columns = [
         "Requested by",
         "Module",
-        "No. of questions",
+        "No. questions",
         "Requested time",
         "Status",
         size.width > 768 ? "Assign" : ""
@@ -108,6 +112,19 @@ const RequestAddQuestionBank = () => {
             }
         });
     }
+    //Check if teacher is a head of department
+    if (fetchResult.error !== undefined && fetchResult.error.status == 404)
+        return (
+            <Wrapper className="text-center">
+                <h4 className="fw-bold">
+                    You need permission to use this feature
+                </h4>
+                <h5>
+                    Please use a Head of Department account to access this
+                    feature
+                </h5>
+            </Wrapper>
+        );
     return (
         <Wrapper>
             <SearchBar
@@ -168,6 +185,7 @@ const RequestAddQuestionBank = () => {
                         icon="times"
                         className="me-2 fs-3"
                         onClick={() => setIsClicked(false)}
+                        style={{ cursor: "pointer" }}
                     ></Icon>
                 </header>
                 <div className={style.bodyModal}>
@@ -202,7 +220,9 @@ const RequestAddQuestionBank = () => {
                                 }
                             }}
                         >
-                            <option value={"-1"}>Select Teacher</option>
+                            <option value={"-1"} style={{ cursor: "pointer" }}>
+                                Select Teacher
+                            </option>
                             {data?.map((teacher, index) => {
                                 return (
                                     <option

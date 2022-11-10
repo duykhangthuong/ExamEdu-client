@@ -2,6 +2,7 @@ import Button from "components/Button";
 import Heading from "components/Heading";
 import Icon from "components/Icon";
 import Pagination from "components/Pagination";
+import Pill from "components/Pill";
 import SearchBar from "components/SearchBar";
 import Table from "components/Table";
 import Wrapper from "components/Wrapper";
@@ -28,6 +29,11 @@ const ExamProctorList = () => {
         "Description",
         ""
     ];
+    const pillStyle={
+        fontWeight: "bold",
+        color: "darkblue",
+        padding: "5%"
+    }
     const [searchName, setSearchName] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 8;
@@ -94,25 +100,22 @@ const ExamProctorList = () => {
                         columns={columns}
                         data={fetchResult.data?.payload.map((exam) => ({
                             status: exam.isCancelled ? (
-                                <Icon
-                                    icon="times-circle"
-                                    className={styles.times_icon}
-                                    styles={{
-                                        color: "var(--color-orange)"
-                                    }}
-                                />
+                                <Pill
+                                    content="Cancelled"
+                                    defaultColor="red"
+                                    style={pillStyle}/>
                             ) : moment(exam.examDay).isSameOrAfter(
                                   moment().toDate()
                               ) ? (
-                                <Icon
-                                    icon="clock"
-                                    className={styles.clock_icon}
-                                />
+                                <Pill
+                                    content="Upcoming"
+                                    defaultColor="yellow"
+                                    style={pillStyle}/>
                             ) : (
-                                <Icon
-                                    icon="check-circle"
-                                    className={styles.check_icon}
-                                />
+                                <Pill
+                                    content="Finished"
+                                    defaultColor="green"
+                                    style={pillStyle}/>
                             ),
                             examName: <b>{exam.examName}</b>,
                             moduleCode: exam.moduleCode,
@@ -130,22 +133,7 @@ const ExamProctorList = () => {
                                         .add(exam.durationInMinute, "minutes")
                                         .isBefore(moment().toDate())
                                         || exam.isCancelled)? (
-                                        <Button
-                                            onClick={() => {
-                                                onClickInvigilate(exam.examId);
-                                            }}
-                                            className="mr-2"
-                                            style={{
-                                                backgroundColor: "var(--color-orange)"
-                                            }}
-                                            disabled
-                                        >
-                                            Start
-                                            <Icon
-                                                icon="arrow-right"
-                                                className="ms-2"
-                                            />
-                                        </Button>
+                                        <div/>
                                     ) : (
                                         <Button
                                             onClick={() => {
@@ -153,7 +141,7 @@ const ExamProctorList = () => {
                                             }}
                                             className="mr-2"
                                             style={{
-                                                backgroundColor: "var(--color-green)"
+                                                backgroundColor: "var(--color-blue)"
                                             }}
                                         >
                                             Start

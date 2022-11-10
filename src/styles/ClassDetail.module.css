@@ -79,7 +79,7 @@
 .inputGroup {
     margin: 1rem 7rem 1rem 1rem;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
 }
 .inputGroup input {
     width: 20rem;
@@ -87,4 +87,18 @@
     border: 1px solid var(--color-gray);
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     padding: 0.3rem;
+}
+@media screen and (max-width: 768px) {
+    .moduleContainer {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .moduleWrap {
+        width: 40vw;
+        flex-direction: column;
+    }
+    .basicDiv {
+        width: 70vw;
+    }
 }
