@@ -25,6 +25,7 @@
     border-radius: 6px;
 }
 .answerOptionBlock {
+    margin-top: 1rem;
 }
 .answerOption {
     margin: 0.5rem;
@@ -46,4 +47,5 @@
 .imgQuestion {
     width: 80%;
     height: auto;
+    margin-top: 0.5rem;
 }
