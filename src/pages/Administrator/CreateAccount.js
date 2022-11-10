@@ -59,10 +59,10 @@ const CreateAccount = () => {
                 });
                 console.log(listError);
                 Swal.fire({
-                    title: "Error",
-                    html: listError.join("<br/>"),
-                    icon: "error",
-                    confirmButtonText: "OK",
+                    title: 'Error',
+                    html: listError.join('<br/>'),
+                    icon: 'error',
+                    confirmButtonText: 'OK',
                     width: "36rem",
                     allowOutsideClick: false
                 });
@@ -299,9 +299,7 @@ const CreateAccount = () => {
                 modalClassName="d-none d-xl-block w-25"
                 style={{ height: "33%" }}
             >
-                <div
-                    className={`h-100 d-flex flex-column align-items-center justify-content-around`}
-                >
+                <div className={`h-100 d-flex flex-column align-items-center justify-content-around`}>
                     <div className="text-center h-25">
                         <Heading size={2}>Upload File</Heading>
                         <label
