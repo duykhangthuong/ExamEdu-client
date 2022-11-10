@@ -8,6 +8,15 @@ import { useLazyFetch } from "utilities/useFetch";
 import styles from "../../styles/PrejoinRoom.module.css";
 import { useParams } from "react-router-dom";
 const PrejoinRoom = () => {
+    const [headers, setHeaders] = useState();
+    useEffect(() => {
+        var req = new XMLHttpRequest();
+        req.open('GET', document.location, false);
+        req.send(null);
+        setHeaders((req.getAllResponseHeaders()));
+    }
+        , []);
+
     const param = useParams();
     const examId = param.examId;
     const local_stream = useRef();
@@ -19,9 +28,11 @@ const PrejoinRoom = () => {
         {
             onCompletes: (data) => {
                 setRoomID(data.roomId);
+
             }
         }
     );
+
 
     useEffect(() => {
         navigator.mediaDevices
@@ -34,7 +45,7 @@ const PrejoinRoom = () => {
                     video.srcObject = local_stream.current;
                     video.muted = true;
                     video.play();
-                } catch (error) {}
+                } catch (error) { }
             });
         fetchRoomId();
         const newConnection = new HubConnectionBuilder()
@@ -68,6 +79,7 @@ const PrejoinRoom = () => {
         <div
             className={`${styles.container} d-flex flex-column flex-md-row justify-content-center align-items-center `}
         >
+            {headers}
             <div className={styles.videoContainer}>
                 <video
                     id="local-video"
