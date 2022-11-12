@@ -9,6 +9,7 @@ import { useFetch, useLazyFetch } from "utilities/useFetch";
 import { useSelector } from "react-redux";
 import { API } from "utilities/constants";
 import Loading from "pages/Loading";
+import { useWindowSize } from "utilities/useWindowSize";
 function AddQuestionRequest() {
     const user = useSelector((state) => state.user.accountId);
     const fetchModuleResult = useFetch(`${API}/Module/teacher/${user}`);
@@ -322,6 +323,8 @@ function AddQuestionRequest() {
         });
         setQuestionList(updateList);
     }, [fetchResultCheck.loading]);
+
+    const { width, height } = useWindowSize();
 
     if (
         fetchModuleResult.loading ||
@@ -698,13 +701,6 @@ function AddQuestionRequest() {
                     </button>
                 </div>
                 <div className="d-flex justify-content-end mt-4">
-                    {/* <button
-                        className="btn btn-warning"
-                        onClick={() => fetchDataCheck()}
-                        disabled={questionList.length === 0}
-                    >
-                        Check for duplicate
-                    </button> */}
                     <button
                         className="btn btn-primary"
                         onClick={() => {
