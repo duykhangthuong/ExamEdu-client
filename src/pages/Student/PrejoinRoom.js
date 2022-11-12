@@ -4,18 +4,20 @@ import Loading from "pages/Loading";
 import { useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { API, HUB } from "utilities/constants";
-import { useLazyFetch } from "utilities/useFetch";
+import { useLazyFetch, useFetch } from "utilities/useFetch";
 import styles from "../../styles/PrejoinRoom.module.css";
 import { useParams } from "react-router-dom";
 const PrejoinRoom = () => {
     const [headers, setHeaders] = useState();
-    useEffect(() => {
-        var req = new XMLHttpRequest();
-        req.open('GET', document.location, false);
-        req.send(null);
-        setHeaders((req.getAllResponseHeaders()));
-    }
-        , []);
+
+    const checkSEB = useFetch(
+        `${API}/exam/SEB`,
+        {
+            onCompletes: (data) => {
+                setHeaders(data["User-Agent"].toString());
+            }
+        }
+    );
 
     const param = useParams();
     const examId = param.examId;
@@ -75,11 +77,15 @@ const PrejoinRoom = () => {
         history.push(`/exam/${examId}`); //nho doi link nay
     };
 
+    if (headers !== undefined && !headers.includes("SEB")) {
+        return <div className="d-flex justify-content-center"><h1 >Please use Safe Exam Browser to take exam</h1></div>
+
+    }
+
     return (
         <div
             className={`${styles.container} d-flex flex-column flex-md-row justify-content-center align-items-center `}
         >
-            {headers}
             <div className={styles.videoContainer}>
                 <video
                     id="local-video"

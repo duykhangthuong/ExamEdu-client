@@ -330,7 +330,19 @@ function AddQuestionRequest() {
     ) {
         return <Loading />;
     }
-
+    if (width < 1400) {
+        return (
+            <Wrapper className="d-flex">
+                <h2
+                    className="m-auto font-weight-bolder text-center p-3"
+                    style={{ fontFamily: "monospace" }}
+                >
+                    This page not support mobile device. Please switch to
+                    computer to use this function!
+                </h2>
+            </Wrapper>
+        );
+    }
     return (
         <Wrapper>
             <Heading>Request Add New Question</Heading>
