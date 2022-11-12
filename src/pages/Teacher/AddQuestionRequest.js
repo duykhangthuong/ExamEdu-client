@@ -9,6 +9,7 @@ import { useFetch, useLazyFetch } from "utilities/useFetch";
 import { useSelector } from "react-redux";
 import { API } from "utilities/constants";
 import Loading from "pages/Loading";
+import { useWindowSize } from "utilities/useWindowSize";
 function AddQuestionRequest() {
     const user = useSelector((state) => state.user.accountId);
     const fetchModuleResult = useFetch(`${API}/Module/teacher/${user}`);
@@ -323,6 +324,8 @@ function AddQuestionRequest() {
         setQuestionList(updateList);
     }, [fetchResultCheck.loading]);
 
+    const { width, height } = useWindowSize();
+
     if (
         fetchModuleResult.loading ||
         postDataResult.loading ||
@@ -330,7 +333,19 @@ function AddQuestionRequest() {
     ) {
         return <Loading />;
     }
-
+    if (width < 1400) {
+        return (
+            <Wrapper className="d-flex">
+                <h2
+                    className="m-auto font-weight-bolder text-center p-3"
+                    style={{ fontFamily: "monospace" }}
+                >
+                    This page not support mobile device. Please switch to
+                    computer to use this function!
+                </h2>
+            </Wrapper>
+        );
+    }
     return (
         <Wrapper>
             <Heading>Request Add New Question</Heading>
@@ -686,13 +701,6 @@ function AddQuestionRequest() {
                     </button>
                 </div>
                 <div className="d-flex justify-content-end mt-4">
-                    {/* <button
-                        className="btn btn-warning"
-                        onClick={() => fetchDataCheck()}
-                        disabled={questionList.length === 0}
-                    >
-                        Check for duplicate
-                    </button> */}
                     <button
                         className="btn btn-primary"
                         onClick={() => {
