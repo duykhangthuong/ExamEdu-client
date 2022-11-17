@@ -19,6 +19,7 @@ const CallWindow = ({
 }) => {
     const [isSpeaking, setIsSpeaking] = useState(false);
     const [audioState, setAudioState] = useState(true);
+    const [isWarning,setIsWarning]=useState(true);
     const [isOpenReportForm, setIsOpenReportForm] = useState(false); //Modal boostrap state
     const { values, onChange, onSubmit, errors } = useForm(
         form,
@@ -93,21 +94,13 @@ const CallWindow = ({
                     <Pill 
                         content="CHEATING WARNING"
                         className={
-                            warningDisplay == true
+                            warningDisplay == true && isWarning == true
                                 ? `${style.cheating_warning} mx-3 p-2`
                                 : `${style.hide_cheating_warning}`
                         }
+                        onClick={()=>setIsWarning(false)}
                         defaultColor="red"
                     />
-                    {/* <div
-                        className={
-                            warningDisplay == true
-                                ? `${style.cheating_warning}`
-                                : `${style.hide_cheating_warning}`
-                        }
-                    >
-                        CHEATING WARNING
-                    </div> */}
 
                     <div
                         className={`${style.media_button} me-2`}

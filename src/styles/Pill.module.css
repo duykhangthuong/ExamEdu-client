@@ -12,7 +12,7 @@
 }
 
 .red {
-    background-color: #ff2d2d;
+    background-color: #ff0000;
 }
 
 .green {
@@ -20,7 +20,7 @@
 }
 
 .orange {
-    background-color: #ff5300;
+    background-color: #ff6315;
 }
 
 .yellow{
@@ -34,7 +34,7 @@
     }
 
     .red {
-        color: #FF2D2D !important;
+        color: #ff0000 !important;
         background-color: transparent;
     }
 

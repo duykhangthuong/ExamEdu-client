@@ -99,7 +99,7 @@ const StudentCall = ({ examId }) => {
     };
 
     const [fetchAI, fetchAIResult] = useLazyFetch(
-        `https://ml-api-cheatingdetector.herokuapp.com/predict`
+        `https://ml-api-cheatingdetector.herokuapp.com/predict/`
     );
     const captureVideo = () => {
         let canvas = document.querySelector("#canvas");
@@ -114,6 +114,9 @@ const StudentCall = ({ examId }) => {
             formData.append("file", blob);
 
             fetchAI("", {
+                headers:{
+                    "Content-Type": "multipart/form-data"
+                },
                 method: "POST",
                 body: formData,
                 onCompletes: () => {
