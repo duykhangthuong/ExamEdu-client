@@ -6,7 +6,7 @@ import Heading from "components/Heading";
 import InputBox from "components/InputBox";
 import Button from "components/Button";
 import Icon from "components/Icon";
-import { API, REQUIRED } from "../../utilities/constants";
+import { API, DATETIME_EXAM, REQUIRED } from "../../utilities/constants";
 import { useState } from "react";
 import { useForm } from "utilities/useForm";
 import moment from "moment";
@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 import Loading from "pages/Loading";
 import Swal from "sweetalert2";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { useWindowSize } from "utilities/useWindowSize";
 
 const CreateExam = ({ isFinalExam = false }) => {
     const [formStep, setFormStep] = useState(0);
@@ -172,7 +173,7 @@ const CreateExam = ({ isFinalExam = false }) => {
                     ? history.push(
                           `/AcademicDepartment/exam/create/question/${
                               data.examId
-                          }/${selectedModule.moduleId}/${false}`
+                          }/${selectedModule.moduleId}/${true}`
                       )
                     : history.push(
                           `/teacher/exam/create/question/${data.examId}/${
@@ -185,6 +186,9 @@ const CreateExam = ({ isFinalExam = false }) => {
             }
         });
     }
+    console.log(
+        moment(values.examDate).isBefore(moment().subtract(10, "minutes"))
+    );
 
     //----------------------------------------------- End Handles posting exam information ------------------------------------------------
 
@@ -222,8 +226,24 @@ const CreateExam = ({ isFinalExam = false }) => {
         }
     ];
 
+    const { width, height } = useWindowSize();
+
     if (postExamResult.loading) {
         return <Loading />;
+    }
+
+    if (width < 1400) {
+        return (
+            <Wrapper className="d-flex">
+                <h2
+                    className="m-auto font-weight-bolder text-center p-3"
+                    style={{ fontFamily: "monospace" }}
+                >
+                    This page not support mobile device. Please switch to
+                    computer to use this function!
+                </h2>
+            </Wrapper>
+        );
     }
 
     return (
@@ -349,7 +369,7 @@ const ExamInformationFormContent = ({
                 />
                 {/* minvalue format: YYYY-MM-DDTHH:MM */}
                 <InputBox
-                    label="Date *"
+                    label="Date * (No later than now)"
                     orientation_vertical={true}
                     name="examDate"
                     type="datetime-local"
@@ -379,7 +399,10 @@ const ExamInformationFormContent = ({
                     onClick={() => setFormStep(formStep + 1)}
                     {...((values.examName &&
                         values.duration &&
-                        values.examDate) || { disabled: true })}
+                        values.examDate &&
+                        moment(values.examDate).isAfter(
+                            moment().subtract(10, "minutes")
+                        )) || { disabled: true })}
                 >
                     <Icon icon="angle-double-right" className="me-2" />
                     Next
@@ -496,8 +519,6 @@ const ClassAndTraineeFormContent = ({
     //true for Class, false for Student
     return (
         <div>
-            {console.log(selectedStudents)}
-            {console.log(fetchStudentsResult)}
             {/* Title */}
             <Heading size={2} style={{ color: "var(--color-blue)" }}>
                 Assign Class or Students
@@ -867,7 +888,7 @@ const fields = {
         errorMessage: "Duration is required"
     },
     examDate: {
-        validate: REQUIRED,
+        validate: DATETIME_EXAM,
         errorMessage: "Exam date is required"
     },
     room: {},

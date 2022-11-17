@@ -27,6 +27,10 @@
     background-color: #ffef09;
 }
 
+.yellow{
+    background-color: #ffef09;
+}
+
 @media screen and (max-width: 768px) {
     .blue {
         color: #3d5af1 !important;

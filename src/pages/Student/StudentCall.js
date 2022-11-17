@@ -188,7 +188,7 @@ const StudentCall = ({ examId }) => {
                 autoPlay
             ></video>
 
-            <Button
+            {/* <Button
                 onClick={() => {
                     captureVideo();
                 }}
@@ -238,7 +238,6 @@ const StudentCall = ({ examId }) => {
                     ></i>
                 </div>
             </div>
-        </div>
     );
 };
 

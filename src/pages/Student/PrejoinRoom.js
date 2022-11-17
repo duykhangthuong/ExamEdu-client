@@ -4,10 +4,21 @@ import Loading from "pages/Loading";
 import { useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { API, HUB } from "utilities/constants";
-import { useLazyFetch } from "utilities/useFetch";
+import { useLazyFetch, useFetch } from "utilities/useFetch";
 import styles from "../../styles/PrejoinRoom.module.css";
 import { useParams } from "react-router-dom";
 const PrejoinRoom = () => {
+    const [headers, setHeaders] = useState();
+
+    const checkSEB = useFetch(
+        `${API}/exam/SEB`,
+        {
+            onCompletes: (data) => {
+                setHeaders(data["User-Agent"].toString());
+            }
+        }
+    );
+
     const param = useParams();
     const examId = param.examId;
     const local_stream = useRef();
@@ -19,9 +30,11 @@ const PrejoinRoom = () => {
         {
             onCompletes: (data) => {
                 setRoomID(data.roomId);
+
             }
         }
     );
+
 
     useEffect(() => {
         navigator.mediaDevices
@@ -34,7 +47,7 @@ const PrejoinRoom = () => {
                     video.srcObject = local_stream.current;
                     video.muted = true;
                     video.play();
-                } catch (error) {}
+                } catch (error) { }
             });
         fetchRoomId();
         const newConnection = new HubConnectionBuilder()
@@ -63,6 +76,11 @@ const PrejoinRoom = () => {
     const joinRoom = () => {
         history.push(`/exam/${examId}`); //nho doi link nay
     };
+
+    if (headers !== undefined && !headers.includes("SEB")) {
+        return <div className="d-flex justify-content-center"><h1 >Please use Safe Exam Browser to take exam</h1></div>
+
+    }
 
     return (
         <div

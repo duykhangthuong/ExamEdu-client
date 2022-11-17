@@ -9,7 +9,6 @@ import {
     useEffect,
     useRef,
     useCallback,
-    useLayoutEffect
 } from "react";
 import { useLazyFetch, useFetch } from "utilities/useFetch";
 import useOutsideClick from "utilities/useOutsideClick";
@@ -18,7 +17,6 @@ import Loading from "pages/Loading";
 import Swal from "sweetalert2";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import StudentCall from "./StudentCall";
-import ErrorPage from "pages/ErrorPage";
 
 //Exam header include Exam name, module and time
 function ExamHeader({ examId, result, submitAnswer }) {
@@ -388,69 +386,10 @@ function Exam() {
         }
     };
 
-    const [isfullScreen, setIsFullScreen] = useState(false);
-    // useEffect(() => {
-    //     if (document.fullscreenElement !== null) setIsFullScreen(true);
-    //     else setIsFullScreen(false);
-    // }, [document.fullscreenElement ===null]);
     // Loading when fetch API
     if (loading || postAnswerResult.loading) {
         return <Loading />;
     }
-    // document.onkeydown = function (e) {
-    //     switch (e.keyCode) {
-    //         case 122:
-    //             //f11 button to full screen
-    //             if (isfullScreen === false) {
-    //                 console.log("bat full screen");
-    //                 setIsFullScreen(true);
-    //             } else {
-    //                 console.log("tat full screen");
-    //                 setIsFullScreen(false);
-    //             }
-    //             break;
-    //     }
-    // };
-    document.addEventListener("keydown", function (e) {
-        if (e.keyCode === 122) {
-            if (isfullScreen === false) {
-                console.log("bat full screen");
-                console.log(document.fullscreenElement);
-                setIsFullScreen(true);
-            } else if (isfullScreen === true) {
-                console.log("tat full screen");
-                console.log(document.fullscreenElement);
-                setIsFullScreen(false);
-            }
-        }
-    });
-    // make exam page full screen
-    if (isfullScreen === false) {
-        // let element = document.getElementById("root");
-        // element.addEventListener("click", function (e) {
-        //     console.log(document.fullscreenElement);
-        //     element
-        //         .requestFullscreen()
-        //         .then(function () {
-        //             // element has entered fullscreen mode successfully
-        //             // prevent user press f11
-        //             console.log("da full screen");
-        //             document.addEventListener("keydown", function (e) {
-        //                 if (e.keyCode === 122 || e.keyCode === 27) {
-        //                     console.log("da bam f11");
-        //                     setIsFullScreen(!isfullScreen);
-        //                 }
-        //             });
-        //         })
-        //         .catch(function (error) {
-        //             // element could not enter fullscreen mode
-        //             // error message
-        //             console.log(error.message);
-        //         });
-        // });
-        return <h1>hello</h1>;
-    }
-    // element.click();
     else
         return (
             <>
