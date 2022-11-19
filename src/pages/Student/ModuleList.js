@@ -19,6 +19,16 @@ const ModuleList = () => {
     }
     if (loading) {
         return <Loading />;
+    } else if (data?.totalRecords == 0) {
+        return (
+            <Wrapper className="text-center">
+                <h3>You don't have any module at the moment</h3>
+                <h5>
+                    Please contact Academic Department or your Teacher for more
+                    information
+                </h5>
+            </Wrapper>
+        );
     }
     return (
         <Wrapper>

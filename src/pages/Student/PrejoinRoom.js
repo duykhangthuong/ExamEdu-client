@@ -1,6 +1,4 @@
 import { HubConnectionBuilder } from "@microsoft/signalr";
-import Wrapper from "components/Wrapper";
-import Loading from "pages/Loading";
 import { useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { API, HUB } from "utilities/constants";

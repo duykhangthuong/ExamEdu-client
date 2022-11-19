@@ -18,7 +18,6 @@ import Loading from "pages/Loading";
 import Swal from "sweetalert2";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import StudentCall from "./StudentCall";
-import ErrorPage from "pages/ErrorPage";
 
 //Exam header include Exam name, module and time
 function ExamHeader({ examId, result, submitAnswer }) {
