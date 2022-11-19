@@ -13,7 +13,6 @@ import { useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 import { API } from "utilities/constants";
 import { useLazyFetch } from "utilities/useFetch";
-import { useWindowSize } from "utilities/useWindowSize";
 import styles from "../../styles/ExamProctorList.module.css";
 
 const ExamProctorList = () => {
@@ -29,11 +28,11 @@ const ExamProctorList = () => {
         "Description",
         ""
     ];
-    const pillStyle={
+    const pillStyle = {
         fontWeight: "bold",
         color: "darkblue",
         padding: "5%"
-    }
+    };
     const [searchName, setSearchName] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 8;
@@ -103,19 +102,22 @@ const ExamProctorList = () => {
                                 <Pill
                                     content="Cancelled"
                                     defaultColor="red"
-                                    style={pillStyle}/>
+                                    style={pillStyle}
+                                />
                             ) : moment(exam.examDay).isSameOrAfter(
                                   moment().toDate()
                               ) ? (
                                 <Pill
                                     content="Upcoming"
                                     defaultColor="yellow"
-                                    style={pillStyle}/>
+                                    style={pillStyle}
+                                />
                             ) : (
                                 <Pill
                                     content="Finished"
                                     defaultColor="green"
-                                    style={pillStyle}/>
+                                    style={pillStyle}
+                                />
                             ),
                             examName: <b>{exam.examName}</b>,
                             moduleCode: exam.moduleCode,
@@ -129,11 +131,11 @@ const ExamProctorList = () => {
                             description: exam.description,
                             action: (
                                 <div className={styles.btn_container}>
-                                    {(moment(exam.examDay)
+                                    {moment(exam.examDay)
                                         .add(exam.durationInMinute, "minutes")
-                                        .isBefore(moment().toDate())
-                                        || exam.isCancelled)? (
-                                        <div/>
+                                        .isBefore(moment().toDate()) ||
+                                    exam.isCancelled ? (
+                                        <div />
                                     ) : (
                                         <Button
                                             onClick={() => {
@@ -141,7 +143,8 @@ const ExamProctorList = () => {
                                             }}
                                             className="mr-2"
                                             style={{
-                                                backgroundColor: "var(--color-blue)"
+                                                backgroundColor:
+                                                    "var(--color-blue)"
                                             }}
                                         >
                                             Start

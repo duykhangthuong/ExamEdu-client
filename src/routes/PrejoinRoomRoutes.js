@@ -1,7 +1,5 @@
 import { Route, Switch, Redirect } from "react-router-dom";
-
 import React from "react";
-
 import { useUserAuthorization } from "utilities/useAuthorization";
 import PrejoinRoom from "pages/Student/PrejoinRoom";
 const PrejoinRoomRoutes = () => {
