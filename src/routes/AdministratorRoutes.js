@@ -2,7 +2,6 @@ import React from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import AccountList from "pages/Administrator/AccountList";
 import CreateAccount from "pages/Administrator/CreateAccount";
-import DeactivateAccount from "pages/Administrator/DeactivateAccount";
 import DeactivatedAccountList from "pages/Administrator/DeactivatedAccountList";
 
 import HorizontalNavBar from "components/HorizontalNavBar";
@@ -22,10 +21,6 @@ const AdministratorRoutes = () => {
             <Switch>
                 <Route path="/administrator/accounts/create" exact>
                     <CreateAccount />
-                </Route>
-
-                <Route path="/administrator/accounts/deactivate" exact>
-                    <DeactivateAccount />
                 </Route>
 
                 <Route path="/administrator/accounts/deactivated" exact>
