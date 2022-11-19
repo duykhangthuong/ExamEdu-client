@@ -9,6 +9,7 @@ import { useFetch, useLazyFetch } from "utilities/useFetch";
 import { useSelector } from "react-redux";
 import { API } from "utilities/constants";
 import Loading from "pages/Loading";
+import { useWindowSize } from "utilities/useWindowSize";
 function AddQuestionRequest() {
     const user = useSelector((state) => state.user.accountId);
     const fetchModuleResult = useFetch(`${API}/Module/teacher/${user}`);
@@ -323,6 +324,8 @@ function AddQuestionRequest() {
         setQuestionList(updateList);
     }, [fetchResultCheck.loading]);
 
+    const { width, height } = useWindowSize();
+
     if (
         fetchModuleResult.loading ||
         postDataResult.loading ||
@@ -330,7 +333,19 @@ function AddQuestionRequest() {
     ) {
         return <Loading />;
     }
-
+    if (width < 1400) {
+        return (
+            <Wrapper className="d-flex">
+                <h2
+                    className="m-auto font-weight-bolder text-center p-3"
+                    style={{ fontFamily: "monospace" }}
+                >
+                    This page not support mobile device. Please switch to
+                    computer to use this function!
+                </h2>
+            </Wrapper>
+        );
+    }
     return (
         <Wrapper>
             <Heading>Request Add New Question</Heading>
@@ -478,7 +493,7 @@ function AddQuestionRequest() {
                                             rows="5"
                                             className="mt-2 p-3 fs-5"
                                         ></textarea>
-                                        <div className="text-danger mt-2">
+                                        {/* <div className="text-danger mt-2">
                                             {question.duplicatedQuestion ? (
                                                 <>
                                                     <Icon
@@ -495,7 +510,7 @@ function AddQuestionRequest() {
                                             ) : (
                                                 " "
                                             )}
-                                        </div>
+                                        </div> */}
                                     </div>
                                     <div
                                         className={`${styles.answerOptionBlock}`}
@@ -560,7 +575,7 @@ function AddQuestionRequest() {
                                         })}
                                     </div>
                                     <button
-                                        className="btn btn-secondary"
+                                        className="btn btn-secondary mt-3"
                                         onClick={() => addNewAnswer(index)}
                                     >
                                         Add new answer
@@ -634,10 +649,9 @@ function AddQuestionRequest() {
                                             }
                                             cols="73"
                                             rows="5"
+                                            className="mt-2 p-3 fs-5"
                                         ></textarea>
-                                        <div className="text-danger">
-                                            {question.duplicatedQuestion}
-                                        </div>
+                                        
                                     </div>
                                     <div
                                         className={`${styles.answerOptionBlock}`}
@@ -645,9 +659,9 @@ function AddQuestionRequest() {
                                         {question.answers.map((ans, i) => {
                                             return (
                                                 <>
-                                                    <p>Your score barem</p>
+                                                    <div>Your score barem</div>
                                                     <div
-                                                        className={`${styles.answerOption} d-flex justify-content-between`}
+                                                        className={`${styles.answerOption} d-flex justify-content-center`}
                                                         key={i}
                                                     >
                                                         <textarea
@@ -664,6 +678,7 @@ function AddQuestionRequest() {
                                                             }}
                                                             cols="73"
                                                             rows="5"
+                                                            className="mt-2 p-3 fs-5"
                                                         ></textarea>
                                                     </div>
                                                 </>
@@ -686,13 +701,6 @@ function AddQuestionRequest() {
                     </button>
                 </div>
                 <div className="d-flex justify-content-end mt-4">
-                    {/* <button
-                        className="btn btn-warning"
-                        onClick={() => fetchDataCheck()}
-                        disabled={questionList.length === 0}
-                    >
-                        Check for duplicate
-                    </button>*/}
                     <button
                         className="btn btn-primary"
                         onClick={() => {
@@ -728,7 +736,7 @@ const ImageUpload = ({ questionIndex, listImg, addImgToList }) => {
     };
 
     return (
-        <div>
+        <div className="">
             <input type="file" accept="image/*" onChange={onSelectFile} />
             {selectedImg && (
                 <img

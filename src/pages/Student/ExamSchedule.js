@@ -84,7 +84,7 @@ const Schedule = ({
                 //If Start Exam button is clicked then check if password is correct
                 if (result.isConfirmed) {
                     if (result.value === password) {
-                        history.push(`/exam/${examId}`);
+                        history.push(`/prejoin/${examId}`);
                     } else {
                         Swal.fire("Wrong password", "", "error");
                     }
