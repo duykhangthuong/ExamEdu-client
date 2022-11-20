@@ -7,6 +7,7 @@ import { API, HUB } from "utilities/constants";
 import { useLazyFetch, useFetch } from "utilities/useFetch";
 import styles from "../../styles/PrejoinRoom.module.css";
 import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 const PrejoinRoom = () => {
     const [headers, setHeaders] = useState();
 
@@ -18,7 +19,7 @@ const PrejoinRoom = () => {
             }
         }
     );
-
+    const user = useSelector((state) => state.user);
     const param = useParams();
     const examId = param.examId;
     const local_stream = useRef();
@@ -35,6 +36,11 @@ const PrejoinRoom = () => {
         }
     );
 
+    const [updateMaxTime, updateMaxTimeResult] = useLazyFetch(`${API}/exam/maxFinishTime?examId=${examId}&studentId=${user.accountId}`,
+        {
+            method: "PUT"
+        }
+    );
 
     useEffect(() => {
         navigator.mediaDevices
@@ -75,6 +81,7 @@ const PrejoinRoom = () => {
     }, [connection]);
     const joinRoom = () => {
         history.push(`/exam/${examId}`); //nho doi link nay
+        updateMaxTime();
     };
 
     if (headers !== undefined && !headers.includes("SEB")) {
@@ -95,19 +102,20 @@ const PrejoinRoom = () => {
                 ></video>
             </div>
             {/* cái check này tao biến thành cái component riêng ở dưới đó, có gì đổi tên lại dùm */}
-            <Check roomID={roomID} />
+            <Check roomID={roomID} updateMaxTime={updateMaxTime} />
         </div>
     );
 };
 
 export default PrejoinRoom;
 
-const Check = ({ roomID }) => {
+const Check = ({ roomID,updateMaxTime }) => {
     const param = useParams();
     const examId = param.examId;
     const history = useHistory();
     const joinRoom = () => {
         history.push(`/exam/${examId}`); //nho doi link nay
+        updateMaxTime();
     };
     return (
         <div>
