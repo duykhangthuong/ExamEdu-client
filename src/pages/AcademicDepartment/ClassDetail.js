@@ -38,10 +38,10 @@ const ClassDetail = () => {
             className: Yup.string()
                 .required("Class name is required")
                 .matches(/^(?!\s+$).*/, "Class name cannot be blank"),
-            startDay: Yup.date().required("Start day is required"),
+            startDay: Yup.date().required("Start date is required"),
             endDay: Yup.date()
                 .required("End day is required")
-                .min(Yup.ref("startDay"), "End date must be after start year")
+                .min(Yup.ref("startDay"), "End date must be after start date")
         }),
         enableReinitialize: true,
         onSubmit: () => {
