@@ -13,7 +13,6 @@ import { useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 import { API } from "utilities/constants";
 import { useLazyFetch } from "utilities/useFetch";
-import { useWindowSize } from "utilities/useWindowSize";
 import styles from "../../styles/ExamProctorList.module.css";
 
 const ExamProctorList = () => {
@@ -113,6 +112,7 @@ const ExamProctorList = () => {
                                     defaultColor="yellow"
                                     style={pillStyle}
                                 />
+<<<<<<< HEAD
                             ) : moment(exam.examDay)
                                   .add(exam.durationInMinute, "minutes")
                                   .isSameOrAfter(moment().toDate()) ? (
@@ -121,6 +121,8 @@ const ExamProctorList = () => {
                                     defaultColor="orange"
                                     style={pillStyle}
                                 />
+=======
+>>>>>>> f08799eef7c78ef3e9706d608384e036d87c8afc
                             ) : (
                                 <Pill
                                     content="Finished"

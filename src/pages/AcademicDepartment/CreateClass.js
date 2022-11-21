@@ -3,20 +3,23 @@ import Heading from "components/Heading";
 import Icon from "components/Icon";
 import InputBox from "components/InputBox";
 import MultiStepFormProgressBar from "components/MultiStepFormProgressBar";
+import OurModal from "components/OurModal";
 import Pagination from "components/Pagination";
 import SearchBar from "components/SearchBar";
 import Table from "components/Table";
 import Wrapper from "components/Wrapper";
 import moment from "moment";
 import Loading from "pages/Loading";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import Swal from "sweetalert2";
 import { API, REQUIRED } from "utilities/constants";
 import { useLazyFetch } from "utilities/useFetch";
 import { useForm } from "utilities/useForm";
+import useOutsideClick from "utilities/useOutsideClick";
 import { useWindowSize } from "utilities/useWindowSize";
 import styles from "../../styles/CreateClass.module.css";
+import * as XLSX from "xlsx";
 
 const CreateClass = () => {
     const [formStep, setFormStep] = useState(0);
@@ -25,20 +28,85 @@ const CreateClass = () => {
     const { width, height } = useWindowSize();
 
     //----------------------------------------------- Handles selecting students ------------------------------------------------
-    const [selectedStudents, setSelectedStudents] = useState([]);
-    const [searchName, setSearchName] = useState("");
-    const [currentPage, setCurrentPage] = useState(1);
-    const pageSize = 8;
-    //Lazy fetch for students of a teacher in a module
-    const [fetchStudents, fetchStudentsResult] = useLazyFetch();
 
-    //Fetch students in the background
-    useEffect(() => {
-        fetchStudents(
-            `${API}/Student?pageNumber=${currentPage}&pageSize=${pageSize}&searchName=${searchName}`
-        );
-        // setSelectedStudents([...selectedStudents]);
-    }, [searchName]);
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [selectedStudents, setSelectedStudents] = useState([]);
+
+    const [fetchExcel, fetchExcelResult] = useLazyFetch(
+        `${API}/Student/ConvertExcelToEmailList`
+    );
+    const submitExcel = () => {
+        const formData = new FormData();
+
+        formData.append("excelFile", selectedFile);
+        // formData.append("roleId", selectedRole);
+        fetchExcel("", {
+            method: "GET",
+            body: formData,
+            onCompletes: () => {
+                Swal.fire(
+                    "Success",
+                    "Student list upload successfully",
+                    "success"
+                );
+            },
+            onError: (error) => {
+                // const listError = error.map((err) => {
+                //     return `${err.errorDetail} in row ${err.rowIndex} and column ${err.columnIndex}`;
+                // });
+                console.log(error);
+                if (error.status == 400) {
+                    Swal.fire("Error", error.message, "error");
+                }
+                // Swal.fire({
+                //     title: "Error",
+                //     html: listError.join("<br/>"),
+                //     icon: "error",
+                //     confirmButtonText: "OK",
+                //     width: "36rem",
+                //     allowOutsideClick: false
+                // });
+            }
+        });
+    };
+
+    function downloadTemplate() {
+        const aoaData = [["Email"]];
+        const workSheet = XLSX.utils.aoa_to_sheet(aoaData);
+        const workBook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workBook, workSheet, "Sheet 1");
+        XLSX.writeFile(workBook, "Template.xlsx");
+    }
+
+    function handleSubmitFile() {
+        if (selectedFile == null) {
+            Swal.fire("Error", "Please select a file", "error");
+        } else if (
+            selectedFile.type !=
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" &&
+            selectedFile.type != "application/vnd.ms-excel"
+        ) {
+            Swal.fire("Error", "File type is not supported", "error");
+        } else {
+            submitExcel();
+            // setFormStep(formStep + 1);
+        }
+    }
+
+    // const [searchName, setSearchName] = useState("");
+    // const [currentPage, setCurrentPage] = useState(1);
+    // const pageSize = 8;
+    // //Lazy fetch for students of a teacher in a module
+    // const [fetchStudents, fetchStudentsResult] = useLazyFetch(
+    //     `${API}/Student?pageNumber=${currentPage}&pageSize=${pageSize}&searchName=${searchName}`
+    // );
+
+    // //Fetch students in the background
+    // useEffect(() => {
+    //     fetchStudents();
+    //     // setSelectedStudents([...selectedStudents]);
+    // }, [currentPage, searchName]);
+
     //----------------------------------------------- END Handles selecting students ------------------------------------------------
 
     //----------------------------------------------- Handles selecting modules ------------------------------------------------
@@ -167,15 +235,19 @@ const CreateClass = () => {
                         <StudentFormContent
                             formStep={formStep}
                             setFormStep={setFormStep}
-                            fetchStudents={fetchStudents}
-                            fetchStudentsResult={fetchStudentsResult}
                             selectedStudents={selectedStudents}
-                            setSelectedStudents={setSelectedStudents}
-                            searchName={searchName}
-                            setSearchName={setSearchName}
-                            currentPage={currentPage}
-                            setCurrentPage={setCurrentPage}
-                            pageSize={pageSize}
+                            downloadTemplate={downloadTemplate}
+                            selectedFile={selectedFile}
+                            setSelectedFile={setSelectedFile}
+                            handleSubmitFile={handleSubmitFile}
+                            // fetchStudents={fetchStudents}
+                            // fetchStudentsResult={fetchStudentsResult}
+                            // setSelectedStudents={setSelectedStudents}
+                            // searchName={searchName}
+                            // setSearchName={setSearchName}
+                            // currentPage={currentPage}
+                            // setCurrentPage={setCurrentPage}
+                            // pageSize={pageSize}
                         />
                     )}
                     {formStep === 2 && (
@@ -271,21 +343,29 @@ const ClassInforFormContent = ({
 const StudentFormContent = ({
     formStep,
     setFormStep,
-    fetchStudents,
-    fetchStudentsResult,
     selectedStudents = [],
-    setSelectedStudents,
-    searchName,
-    setSearchName,
-    currentPage,
-    setCurrentPage,
-    pageSize
+    downloadTemplate,
+    selectedFile,
+    setSelectedFile,
+    handleSubmitFile
+    // fetchStudents,
+    // fetchStudentsResult,
+    // setSelectedStudents,
+    // searchName,
+    // setSearchName,
+    // currentPage,
+    // setCurrentPage,
+    // pageSize
 }) => {
-    if (fetchStudentsResult.loading) {
-        return <Loading />;
-    }
+    // if (fetchStudentsResult.loading) {
+    //     return <Loading />;
+    // }
 
-    const columns = ["Full name", "Email"];
+    // const columns = ["Full name", "Email"];
+
+    // function handleStudentSearch() {
+    //     fetchStudents();
+    // }
 
     return (
         <div>
@@ -293,20 +373,80 @@ const StudentFormContent = ({
             <Heading size={2} style={{ color: "var(--color-blue)" }}>
                 Student
             </Heading>
+
             {/* Horizontal line */}
             <div className={styles.horizontal_line}></div>
 
-            {/* Tab content container */}
+            {/* Upload file container */}
             <div className={` ${styles.tab_content_container}`}>
-                <div>
-                    <SearchBar
-                        onSubmit={() => fetchStudents}
+                <div className={` ${styles.chosen_item_container} col-6`}>
+                    <button
+                        className={`btn btn-info mb-2 ${styles.btn_file}`}
+                        onClick={downloadTemplate}
+                    >
+                        <Icon icon="file-download" className="me-2" />
+                        Download template
+                    </button>
+                </div>
+
+                <div
+                    className={` ${styles.chosen_item_container} col-6 flex-column pt-4`}
+                >
+                    {/* <button
+                        className={`btn btn-success mb-2 ${styles.btn_file}`}
+                        onClick={() => {
+                            setIsClicked(true);
+                        }}
+                    >
+                        <Icon icon="file-excel" className="me-2" />
+                        Upload Excel file
+                    </button> */}
+                    <label
+                        className={`btn btn-success btn-file mb-2 pt-5 ${styles.btn_file}`}
+                    >
+                        <Icon icon="file-excel" className="me-2" />
+                        Upload Excel file
+                        <input
+                            type="file"
+                            style={{ display: "none" }}
+                            onChange={(e) => {
+                                setSelectedFile(e.target.files[0]);
+                            }}
+                            required
+                            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                        />
+                    </label>
+                    {/* If file is null, don't show anything (prevent null reference exception) */}
+                    <p>
+                        {selectedFile && selectedFile.name}{" "}
+                        <span>
+                            {selectedFile && (
+                                <Icon
+                                    icon="times"
+                                    className="fs-6"
+                                    onClick={() => setSelectedFile()}
+                                    style={{ cursor: "pointer" }}
+                                    data-bs-toggle="tooltip"
+                                    data-bs-placement="right"
+                                    title="Remove file"
+                                ></Icon>
+                            )}
+                        </span>
+                    </p>
+                </div>
+            </div>
+
+            {/* Tab content container */}
+            {/* <div className={` ${styles.tab_content_container}`}> */}
+            {/* <div> */}
+            {/* <SearchBar
+                        onSubmit={handleStudentSearch}
                         keyWord={searchName}
                         setKeyWord={setSearchName}
                         placeholder="Search student by name"
-                    />
-                    {/* Select student container */}
-                    <Table
+                    ></SearchBar> */}
+            {/* Select student container */}
+            {/* <Table
                         isSelectable={true}
                         columns={columns}
                         data={fetchStudentsResult.data?.payload
@@ -329,52 +469,16 @@ const StudentFormContent = ({
                         //     ]);
                         //     styles = { backgroundColor: "red" };
                         // }}
-                    />
-                    <Pagination
+                    /> */}
+            {/* <Pagination
                         totalRecords={fetchStudentsResult.data?.totalRecords}
                         currentPage={currentPage}
                         onPageChange={setCurrentPage}
                         pageSize={pageSize}
-                    />
-                    {/* <div
-                        className={`px-3 py-1 ${styles.chosen_item_container}`}
-                    >
-                        {fetchStudentsResult.data?.payload
-                            .filter(
-                                (student) => !selectedStudents.includes(student)
-                            )
-                            .map((student, index) => {
-                                return (
-                                    <div
-                                        key={index}
-                                        className={`d-flex align-items-center px-2 ${styles.chosen_item}  ${styles.select_student}`}
-                                        onClick={() => {
-                                            setSelectedStudents([
-                                                ...selectedStudents,
-                                                fetchStudentsResult.data?.payload.find(
-                                                    (s) => {
-                                                        return (
-                                                            String(
-                                                                s.studentId
-                                                            ) ===
-                                                            String(
-                                                                student.studentId
-                                                            )
-                                                        );
-                                                    }
-                                                )
-                                            ]);
-                                        }}
-                                    >
-                                        {`${student.fullname} - ${student.email}`}
-                                    </div>
-                                );
-                            })}
-                    </div> */}
-                </div>
+                    /> */}
+            {/* </div> */}
+            {/* </div> */}
 
-                {/* Chosen item container */}
-            </div>
             {/*  Button group */}
             <div className="d-flex justify-content-end align-items-center mt-3">
                 <Button
@@ -386,8 +490,8 @@ const StudentFormContent = ({
                 </Button>
 
                 <Button
-                    onClick={() => setFormStep(formStep + 1)}
-                    {...(selectedStudents.length > 0 || { disabled: true })}
+                    onClick={() => handleSubmitFile()}
+                    {...(selectedFile == null ? { disabled: true } : {})}
                 >
                     <Icon icon="angle-double-right" className="me-2" />
                     Next

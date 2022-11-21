@@ -16,7 +16,7 @@ const ForgotPassword = () => {
     const [fetchData, { loading }] = useLazyFetch(
         `${API}/Authentication/forgot-password`,
         {
-            headers: {'Content-Type': 'application/json'},
+            headers: { "Content-Type": "application/json" },
             method: "PUT",
             body: JSON.stringify(values.email),
             // Dispatch user to redux store
@@ -59,9 +59,9 @@ const ForgotPassword = () => {
             </div>
             <form onSubmit={onSubmit}>
                 <div className={style.mainDiv}>
-                    <h1 className={style.loginText}>Forgot Password</h1>
+                    <h2 className={style.loginText}>Forgot Password</h2>
                     <div className={style.inputSection}>
-                        <div className="text-center">
+                        <div className="text-center ">
                             <b>
                                 Please enter your email address. You will
                                 receive an email message with new password.
@@ -74,6 +74,7 @@ const ForgotPassword = () => {
                             value={values.email}
                             onChange={onChange}
                             id="email"
+                            autoFocus
                         />
                         {errors.email && (
                             <ValidateMessage message={errors.email} />

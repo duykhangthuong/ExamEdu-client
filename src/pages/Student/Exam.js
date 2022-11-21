@@ -2,7 +2,7 @@ import OurModal from "components/OurModal";
 import { API } from "utilities/constants";
 import styles from "../../styles/Exam.module.css";
 import Icon from "components/Icon";
-
+import moment from "moment";
 import { useParams } from "react-router-dom";
 import {
     useState,
@@ -20,8 +20,8 @@ import StudentCall from "./StudentCall";
 
 //Exam header include Exam name, module and time
 function ExamHeader({ examId, result, submitAnswer }) {
-    let time = result?.durationInMinute;
-    const [minutes, setMinutes] = useState(time);
+    
+    const [minutes, setMinutes] = useState(moment(result?.maxFinishTime).diff(moment(), "minutes"));
     const [seconds, setSeconds] = useState(0);
     useEffect(() => {
         let myInterval = setInterval(() => {
@@ -141,6 +141,18 @@ function NumberQuestion({ number, onClick, color }) {
 }
 
 function Exam() {
+
+    const [headers, setHeaders] = useState();
+
+    const checkSEB = useFetch(
+        `${API}/exam/SEB`,
+        {
+            onCompletes: (data) => {
+                setHeaders(data["User-Agent"].toString());
+            }
+        }
+    );
+
     const history = useHistory();
     const param = useParams();
     const examId = param.examId;
@@ -174,15 +186,15 @@ function Exam() {
 
     //Load lần đầu lấy data câu trả lời cũ lên từ local Storage
     useEffect(() => {
-        if (localStorage.getItem("ExamEduKey") !== null) {
-            const oldAnswerKey = localStorage.getItem("ExamEduKey");
+        if (localStorage.getItem(`ExamEduKey/${examId}`) !== null) {
+            const oldAnswerKey = localStorage.getItem(`ExamEduKey/${examId}`);
             setListAnswer(JSON.parse(oldAnswerKey));
         }
     }, []);
 
     //Cập nhật lại local Storage mỗi khi chọn xong 1 câu
     useEffect(() => {
-        localStorage.setItem("ExamEduKey", JSON.stringify(listAnswer));
+        localStorage.setItem(`ExamEduKey/${examId}`, JSON.stringify(listAnswer));
     }, [listAnswer]);
 
     const [studentDisconnect, studentDisconnectResponse] = useLazyFetch(
@@ -358,7 +370,7 @@ function Exam() {
                 }
             });
             //Xóa file các câu trả lời của bài thi khi submit bài xong
-            localStorage.removeItem("ExamEduKey");
+            localStorage.removeItem(`ExamEduKey/${examId}`);
         },
         onError: (error) => {
             Swal.fire("Error", error.message, "error");
@@ -386,31 +398,80 @@ function Exam() {
         }
     };
 
+        if (headers !== undefined && !headers.includes("SEB")) {
+            return <div className="d-flex justify-content-center"><h1 >Please use Safe Exam Browser to take exam</h1></div>
+
+        }
+
     // Loading when fetch API
     if (loading || postAnswerResult.loading) {
         return <Loading />;
     }
-    else
-        return (
-            <>
-                <div id="ExamPage" className="overflow-auto ">
-                    <ExamHeader
-                        examId={examId}
-                        result={data}
-                        submitAnswer={submitAnswer}
-                    />
 
-                    <NumberQuestionModal>
+    return (
+        <>
+            <div id="ExamPage" className="overflow-auto ">
+                <ExamHeader
+                    examId={examId}
+                    result={data}
+                    submitAnswer={submitAnswer}
+                />
+
+                <NumberQuestionModal>
+                    {data?.questionAnswer.map((number, index) => {
+                        //boolean check nếu examQuestionId nằm trong list answer
+                        let isDone = listAnswer.some(
+                            (r) =>
+                                r.examQuestionId === number.examQuestionId
+                        );
+                        let toBeReView = reviewQuestion.some(
+                            (r) => r === number.examQuestionId
+                        );
+                        let currentQuestion = question + 1 === index + 1;
+
+                        return (
+                            <NumberQuestion
+                                key={index}
+                                number={index + 1}
+                                onClick={() => {
+                                    addEssayAnswerToList(
+                                        essayAnswer,
+                                        data?.questionAnswer[question]
+                                            .examQuestionId
+                                    );
+                                    setQuestion(index);
+                                }}
+                                color={
+                                    currentQuestion
+                                        ? "#000000"
+                                        : toBeReView
+                                            ? "var(--color-blue)"
+                                            : isDone
+                                                ? "#7AE765"
+                                                : "var(--color-gray)"
+                                }
+                            />
+                        );
+                    })}
+                </NumberQuestionModal>
+                <div className={`d-md-flex ${styles.wrapper}`}>
+                    <div
+                        className={`d-none d-md-block ${styles.questionBlock}`}
+                    >
                         {data?.questionAnswer.map((number, index) => {
                             //boolean check nếu examQuestionId nằm trong list answer
                             let isDone = listAnswer.some(
                                 (r) =>
-                                    r.examQuestionId === number.examQuestionId
+                                    r.examQuestionId ===
+                                    number.examQuestionId
                             );
+                            //boolean check nếu examQuestionId nằm trong list review question
                             let toBeReView = reviewQuestion.some(
                                 (r) => r === number.examQuestionId
                             );
-                            let currentQuestion = question + 1 === index + 1;
+                            //boolean check nếu question hiện tại là question đang hiển thị
+                            let currentQuestion =
+                                question + 1 === index + 1;
 
                             return (
                                 <NumberQuestion
@@ -428,95 +489,51 @@ function Exam() {
                                         currentQuestion
                                             ? "#000000"
                                             : toBeReView
-                                            ? "var(--color-blue)"
-                                            : isDone
-                                            ? "#7AE765"
-                                            : "var(--color-gray)"
+                                                ? "var(--color-blue)"
+                                                : isDone
+                                                    ? "#7AE765"
+                                                    : "var(--color-gray)"
                                     }
                                 />
                             );
                         })}
-                    </NumberQuestionModal>
-                    <div className={`d-md-flex ${styles.wrapper}`}>
-                        <div
-                            className={`d-none d-md-block ${styles.questionBlock}`}
-                        >
-                            {data?.questionAnswer.map((number, index) => {
-                                //boolean check nếu examQuestionId nằm trong list answer
-                                let isDone = listAnswer.some(
-                                    (r) =>
-                                        r.examQuestionId ===
-                                        number.examQuestionId
-                                );
-                                //boolean check nếu examQuestionId nằm trong list review question
-                                let toBeReView = reviewQuestion.some(
-                                    (r) => r === number.examQuestionId
-                                );
-                                //boolean check nếu question hiện tại là question đang hiển thị
-                                let currentQuestion =
-                                    question + 1 === index + 1;
-
-                                return (
-                                    <NumberQuestion
-                                        key={index}
-                                        number={index + 1}
-                                        onClick={() => {
-                                            addEssayAnswerToList(
-                                                essayAnswer,
-                                                data?.questionAnswer[question]
-                                                    .examQuestionId
-                                            );
-                                            setQuestion(index);
-                                        }}
-                                        color={
-                                            currentQuestion
-                                                ? "#000000"
-                                                : toBeReView
-                                                ? "var(--color-blue)"
-                                                : isDone
-                                                ? "#7AE765"
-                                                : "var(--color-gray)"
-                                        }
-                                    />
-                                );
-                            })}
-                            <div>
-                                <Icon
-                                    icon="circle"
-                                    className="me-2 ms-2"
-                                    style={{ color: "#7AE765" }}
-                                ></Icon>
-                                Attempted
-                            </div>
-                            <div>
-                                <Icon
-                                    icon="circle"
-                                    className="me-2 ms-2"
-                                    style={{ color: "var(--color-blue)" }}
-                                ></Icon>
-                                To be review
-                            </div>
+                        <div>
+                            <Icon
+                                icon="circle"
+                                className="me-2 ms-2"
+                                style={{ color: "#7AE765" }}
+                            ></Icon>
+                            Attempted
                         </div>
-                        <div className={styles.page_container}>
-                            <form
-                                onSubmit={(e) => {
-                                    e.preventDefault();
-                                    showModalConfirmSubmit();
-                                }}
-                            >
-                                <div className={`${styles.exam_question}`}>
-                                    <div style={{ color: "var(--color-gray)" }}>
-                                        <b>Question {question + 1}</b>
-                                    </div>
-                                    <p>
-                                        {
-                                            data?.questionAnswer[question]
-                                                .questionContent
-                                        }
-                                    </p>
-                                    {/* Image of question */}
-                                    {data?.questionAnswer[question]
-                                        .questionImageURL && ( //Check if image url is null, don't render image
+                        <div>
+                            <Icon
+                                icon="circle"
+                                className="me-2 ms-2"
+                                style={{ color: "var(--color-blue)" }}
+                            ></Icon>
+                            To be review
+                        </div>
+                    </div>
+                    <div className={styles.page_container}>
+                        <form
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                showModalConfirmSubmit();
+                            }}
+                        >
+                            <div className={`${styles.exam_question}`}>
+                                <div style={{ color: "var(--color-gray)" }}>
+                                    <b>Question {question + 1}</b>
+                                </div>
+                                <p>
+                                    {
+                                        data?.questionAnswer[question]
+                                            .questionContent
+                                    }
+                                </p>
+                                {/* Image of question */}
+                                {data?.questionAnswer[question]
+                                    .questionImageURL && ( //Check if image url is null, don't render image
                                         <img
                                             id={`${styles.imgQuestion}`}
                                             src={
@@ -527,98 +544,164 @@ function Exam() {
                                             border="0"
                                         />
                                     )}
-                                    {/* Horizontal line */}
-                                    <div
-                                        className={`${styles.horizontal_line} mb-2`}
-                                    ></div>
-                                    {/* Answer option */}
-                                    <div>
-                                        {data?.questionAnswer[question].answers
-                                            .length > 1 ? (
-                                            data?.questionAnswer[
-                                                question
-                                            ].answers.map((answer) => (
-                                                <div
-                                                    className={`${styles.answer_option}`}
-                                                    key={answer.answerId}
-                                                >
-                                                    <input
-                                                        className="ms-2"
-                                                        type="radio"
-                                                        id={answer.answerId}
-                                                        checked={listAnswer
-                                                            .map(
-                                                                (a) =>
-                                                                    a.studentAnswerContent
-                                                            )
-                                                            .includes(
-                                                                String(
-                                                                    answer.answerId
-                                                                ) // Check answer if answer in included in listAnswer
-                                                            )}
-                                                        onChange={() => {
-                                                            setAnswerChecked(
+                                {/* Horizontal line */}
+                                <div
+                                    className={`${styles.horizontal_line} mb-2`}
+                                ></div>
+                                {/* Answer option */}
+                                <div>
+                                    {data?.questionAnswer[question].answers
+                                        .length > 1 ? (
+                                        data?.questionAnswer[
+                                            question
+                                        ].answers.map((answer) => (
+                                            <div
+                                                className={`${styles.answer_option}`}
+                                                key={answer.answerId}
+                                            >
+                                                <input
+                                                    className="ms-2"
+                                                    type="radio"
+                                                    id={answer.answerId}
+                                                    checked={listAnswer
+                                                        .map(
+                                                            (a) =>
+                                                                a.studentAnswerContent
+                                                        )
+                                                        .includes(
+                                                            String(
                                                                 answer.answerId
-                                                            );
-                                                            addAnswerToList(
-                                                                answer.answerId,
-                                                                data
-                                                                    ?.questionAnswer[
-                                                                    question
-                                                                ].examQuestionId
-                                                            );
-                                                            // changeBackGroundQuestionNumber();
-                                                        }}
-                                                        value={answer.id}
-                                                    />
-                                                    <label
-                                                        className="ms-2"
-                                                        htmlFor={
+                                                            ) // Check answer if answer in included in listAnswer
+                                                        )}
+                                                    onChange={() => {
+                                                        setAnswerChecked(
                                                             answer.answerId
-                                                        }
-                                                    >
-                                                        {answer.answerContent}
-                                                    </label>
-                                                </div>
-                                            ))
-                                        ) : (
-                                            <textarea
-                                                defaultValue={
-                                                    listAnswer.filter(
-                                                        (r) =>
-                                                            r.examQuestionId ===
+                                                        );
+                                                        addAnswerToList(
+                                                            answer.answerId,
                                                             data
                                                                 ?.questionAnswer[
                                                                 question
                                                             ].examQuestionId
-                                                    )[0]?.studentAnswerContent
-                                                }
-                                                name="answer"
-                                                cols={
-                                                    window.innerWidth < 1180
-                                                        ? "84"
-                                                        : "135"
-                                                }
-                                                rows="16"
-                                                onChange={(e) =>
-                                                    setEssayAnswer(
-                                                        e.target.value
-                                                    )
-                                                }
-                                            ></textarea>
-                                        )}
-                                    </div>
+                                                        );
+                                                        // changeBackGroundQuestionNumber();
+                                                    }}
+                                                    value={answer.id}
+                                                />
+                                                <label
+                                                    className="ms-2"
+                                                    htmlFor={
+                                                        answer.answerId
+                                                    }
+                                                >
+                                                    {answer.answerContent}
+                                                </label>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <textarea
+                                            defaultValue={
+                                                listAnswer.filter(
+                                                    (r) =>
+                                                        r.examQuestionId ===
+                                                        data
+                                                            ?.questionAnswer[
+                                                            question
+                                                        ].examQuestionId
+                                                )[0]?.studentAnswerContent
+                                            }
+                                            name="answer"
+                                            cols={
+                                                window.innerWidth < 1180
+                                                    ? "84"
+                                                    : "135"
+                                            }
+                                            rows="16"
+                                            onChange={(e) =>
+                                                setEssayAnswer(
+                                                    e.target.value
+                                                )
+                                            }
+                                        ></textarea>
+                                    )}
+                                </div>
+                            </div>
+
+                            <footer
+                                className={`d-md-flex justify-content-md-between mt-3`}
+                            >
+                                <div className="d-flex justify-content-between">
+                                    {/* Button for previous question */}
+                                    <button
+                                        type="button"
+                                        disabled={question === 0} //If question is the first one
+                                        className={`btn shadow-light ${styles.btn_gray} ${styles.exam_btn}`}
+                                        onClick={() => {
+                                            addEssayAnswerToList(
+                                                essayAnswer,
+                                                data?.questionAnswer[
+                                                    question
+                                                ].examQuestionId
+                                            );
+                                            setQuestion(question - 1);
+                                        }}
+                                    >
+                                        <Icon
+                                            icon="arrow-circle-left"
+                                            className="me-2"
+                                        ></Icon>
+                                        Previous
+                                    </button>
+                                    {/* Button for next question */}
+                                    <button
+                                        type="button"
+                                        disabled={
+                                            question ===
+                                            data?.questionAnswer.length - 1
+                                        } //if question is the last one
+                                        className={`btn shadow-light ${styles.btn_gray} ${styles.exam_btn}`}
+                                        onClick={() => {
+                                            addEssayAnswerToList(
+                                                essayAnswer,
+                                                data?.questionAnswer[
+                                                    question
+                                                ].examQuestionId
+                                            );
+                                            setQuestion(question + 1);
+                                        }}
+                                    >
+                                        Next
+                                        <Icon
+                                            icon="arrow-circle-right"
+                                            className="ms-2"
+                                        ></Icon>
+                                    </button>
                                 </div>
 
-                                <footer
-                                    className={`d-md-flex justify-content-md-between mt-3`}
+                                <div
+                                    className={`d-md-flex justify-content-md-between text-center`}
                                 >
-                                    <div className="d-flex justify-content-between">
-                                        {/* Button for previous question */}
+                                    <div>
+                                        {/* Button for review later */}
                                         <button
                                             type="button"
-                                            disabled={question === 0} //If question is the first one
                                             className={`btn shadow-light ${styles.btn_gray} ${styles.exam_btn}`}
+                                            onClick={() =>
+                                                addToReviewLaterList(
+                                                    data?.questionAnswer[
+                                                        question
+                                                    ].examQuestionId
+                                                )
+                                            }
+                                        >
+                                            Review later
+                                        </button>
+                                    </div>
+                                    <div>
+                                        {/* Finish button */}
+                                        <button
+                                            type="submit"
+                                            className={`btn ${styles.btn_finish}`}
                                             onClick={() => {
                                                 addEssayAnswerToList(
                                                     essayAnswer,
@@ -626,84 +709,18 @@ function Exam() {
                                                         question
                                                     ].examQuestionId
                                                 );
-                                                setQuestion(question - 1);
                                             }}
                                         >
-                                            <Icon
-                                                icon="arrow-circle-left"
-                                                className="me-2"
-                                            ></Icon>
-                                            Previous
-                                        </button>
-                                        {/* Button for next question */}
-                                        <button
-                                            type="button"
-                                            disabled={
-                                                question ===
-                                                data?.questionAnswer.length - 1
-                                            } //if question is the last one
-                                            className={`btn shadow-light ${styles.btn_gray} ${styles.exam_btn}`}
-                                            onClick={() => {
-                                                addEssayAnswerToList(
-                                                    essayAnswer,
-                                                    data?.questionAnswer[
-                                                        question
-                                                    ].examQuestionId
-                                                );
-                                                setQuestion(question + 1);
-                                            }}
-                                        >
-                                            Next
-                                            <Icon
-                                                icon="arrow-circle-right"
-                                                className="ms-2"
-                                            ></Icon>
+                                            Finish
                                         </button>
                                     </div>
-
-                                    <div
-                                        className={`d-md-flex justify-content-md-between text-center`}
-                                    >
-                                        <div>
-                                            {/* Button for review later */}
-                                            <button
-                                                type="button"
-                                                className={`btn shadow-light ${styles.btn_gray} ${styles.exam_btn}`}
-                                                onClick={() =>
-                                                    addToReviewLaterList(
-                                                        data?.questionAnswer[
-                                                            question
-                                                        ].examQuestionId
-                                                    )
-                                                }
-                                            >
-                                                Review later
-                                            </button>
-                                        </div>
-                                        <div>
-                                            {/* Finish button */}
-                                            <button
-                                                type="submit"
-                                                className={`btn ${styles.btn_finish}`}
-                                                onClick={() => {
-                                                    addEssayAnswerToList(
-                                                        essayAnswer,
-                                                        data?.questionAnswer[
-                                                            question
-                                                        ].examQuestionId
-                                                    );
-                                                }}
-                                            >
-                                                Finish
-                                            </button>
-                                        </div>
-                                    </div>
-                                </footer>
-                            </form>
-                        </div>
+                                </div>
+                            </footer>
+                        </form>
                     </div>
                 </div>
-            </>
-        );
+            </div>
+        </>
+    );
 }
 export default Exam;

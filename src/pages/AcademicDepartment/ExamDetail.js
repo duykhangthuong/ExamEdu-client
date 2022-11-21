@@ -12,7 +12,6 @@ import Swal from "sweetalert2";
 import Loading from "pages/Loading";
 import moment from "moment";
 import { useSelector } from "react-redux";
-import AcademicRoutes from "./../../routes/AcademicRoutes";
 const ExamDetail = () => {
     const column = ["Student ID", "Student Name", "Email", "Mark"];
 

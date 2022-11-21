@@ -14,8 +14,8 @@ const StudentCall = ({ examId }) => {
     const local_stream = useRef();
     const [fetchSate, setFetchSate] = useState(false);
     const [AISuccessState, setAISuccessState] = useState(false);
-    const width=384;
-    const height=288;
+    const width = 384;
+    const height = 288;
     const changeLocalVideoState = () => {
         local_stream.current.getVideoTracks()[0].enabled =
             !local_stream.current.getVideoTracks()[0].enabled;
@@ -86,7 +86,7 @@ const StudentCall = ({ examId }) => {
                             let video = document.getElementById("remote-video"); //Khong xai dom thi cai video no bi chop chop (flickering)
                             video.srcObject = stream;
                             video.play();
-                        } catch (error) {}
+                        } catch (error) { }
                     });
                 });
         });
@@ -104,8 +104,8 @@ const StudentCall = ({ examId }) => {
     const captureVideo = () => {
         let canvas = document.querySelector("#canvas");
         let video = document.querySelector("#local-video");
-        canvas.width=width;
-        canvas.height=height;
+        canvas.width = width;
+        canvas.height = height;
         canvas
             .getContext("2d")
             .drawImage(video, 0, 0, width, height);
@@ -195,12 +195,12 @@ const StudentCall = ({ examId }) => {
             >
                 Capture Video
             </Button>
-            <canvas id="canvas" width="384" height="288" style={{display: "none"}}></canvas>
+            <canvas id="canvas" width="384" height="288" style={{display: "none"}}></canvas> */}
 
             <div
                 className={`${style.buttons_group} d-flex justify-content-center`}
             >
-                {/* Button Micro */}
+                {/* /* Button Micro */}
                 <div
                     className={
                         audioState
@@ -238,6 +238,7 @@ const StudentCall = ({ examId }) => {
                     ></i>
                 </div>
             </div>
+        </div>
     );
 };
 
