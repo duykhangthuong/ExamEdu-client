@@ -27,8 +27,12 @@
     background-color: #ffef09;
 }
 
-.yellow{
+.yellow {
     background-color: #ffef09;
+}
+
+.purple {
+    background-color: #a800ff;
 }
 
 @media screen and (max-width: 768px) {
@@ -52,7 +56,7 @@
         background-color: transparent;
     }
 
-    .yellow{
+    .yellow {
         color: #ffef09 !important;
         background-color: transparent;
     }
