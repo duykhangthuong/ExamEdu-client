@@ -59,10 +59,10 @@ const CreateAccount = () => {
                 });
                 console.log(listError);
                 Swal.fire({
-                    title: 'Error',
-                    html: listError.join('<br/>'),
-                    icon: 'error',
-                    confirmButtonText: 'OK',
+                    title: "Error",
+                    html: listError.join("<br/>"),
+                    icon: "error",
+                    confirmButtonText: "OK",
                     width: "36rem",
                     allowOutsideClick: false
                 });
@@ -144,7 +144,7 @@ const CreateAccount = () => {
                                 >
                                     <Icon
                                         icon="user-graduate"
-                                        className="me-1"
+                                        className="me-3"
                                     />
                                     Student
                                 </div>
@@ -158,7 +158,7 @@ const CreateAccount = () => {
                                         setSelectedRole(ACADEMIC_DEPARTMENT)
                                     }
                                 >
-                                    <Icon icon="school" className="me-1" />
+                                    <Icon icon="school" className="me-3" />
                                     Academic Department
                                 </div>
                                 {/* </div> */}
@@ -171,7 +171,7 @@ const CreateAccount = () => {
                                     }`}
                                     onClick={() => setSelectedRole(TEACHER)}
                                 >
-                                    <Icon icon="briefcase" className="me-1" />
+                                    <Icon icon="briefcase" className="me-3" />
                                     Teacher
                                 </div>
 
@@ -184,7 +184,7 @@ const CreateAccount = () => {
                                         setSelectedRole(HEAD_OF_DEPARTMENT)
                                     }
                                 >
-                                    <Icon icon="gem" className="me-1" />
+                                    <Icon icon="gem" className="me-3" />
                                     Head of Department
                                 </div>
                                 {/* </div> */}
@@ -273,11 +273,11 @@ const CreateAccount = () => {
                             className={`d-flex flex-column justify-content-center`}
                         >
                             <button
-                                className={`btn btn-info mb-3 ${styles.btn_file}`}
+                                className={`mb-3 ${styles.btn_file}`}
                                 onClick={downloadTemplate}
                             >
                                 <Icon icon="file-download" className="me-2" />
-                                Download template
+                                <span>Download template</span>
                             </button>
                             <button
                                 className={`btn btn-success mb-3 ${styles.btn_file}`}
@@ -286,7 +286,7 @@ const CreateAccount = () => {
                                 }}
                             >
                                 <Icon icon="file-excel" className="me-2" />
-                                Create by excel
+                                <span>Create by excel</span>
                             </button>
                         </div>
                     </div>
@@ -299,7 +299,9 @@ const CreateAccount = () => {
                 modalClassName="d-none d-xl-block w-25"
                 style={{ height: "33%" }}
             >
-                <div className={`h-100 d-flex flex-column align-items-center justify-content-around`}>
+                <div
+                    className={`h-100 d-flex flex-column align-items-center justify-content-around`}
+                >
                     <div className="text-center h-25">
                         <Heading size={2}>Upload File</Heading>
                         <label
