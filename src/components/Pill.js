@@ -24,7 +24,11 @@ function Pill({
             case "academicdepartment":
                 setColor("red");
                 break;
+<<<<<<< HEAD
             case "head of department":
+=======
+            case "headofdepartment":
+>>>>>>> d79d080c9a92fb9bc3333392e127f721b12f1e20
                 setColor("purple");
                 break;
             default:
