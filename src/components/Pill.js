@@ -6,7 +6,7 @@ function Pill({
     defaultColor = "",
     type = "",
     style = {},
-    className = "",
+    className = ""
 }) {
     const [color, setColor] = useState(defaultColor);
 
@@ -23,6 +23,9 @@ function Pill({
                 break;
             case "academicdepartment":
                 setColor("red");
+                break;
+            case "headofdepartment":
+                setColor("purple");
                 break;
             default:
                 break;
