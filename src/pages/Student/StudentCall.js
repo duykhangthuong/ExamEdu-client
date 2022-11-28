@@ -99,7 +99,7 @@ const StudentCall = ({ examId }) => {
     };
 
     const [fetchAI, fetchAIResult] = useLazyFetch(
-        `https://ml-api-cheatingdetector.herokuapp.com/predict`
+        `https://ml-api-cheatingdetector.herokuapp.com/predict/`
     );
     const captureVideo = () => {
         let canvas = document.querySelector("#canvas");
@@ -114,8 +114,11 @@ const StudentCall = ({ examId }) => {
             formData.append("file", blob);
 
             fetchAI("", {
+                headers:{
+                    "Content-Type": "multipart/form-data"
+                },
                 method: "POST",
-                body: formData,
+                body: formData, 
                 onCompletes: () => {
                     console.log(fetchAIResult.data);
                     setAISuccessState(!AISuccessState);
@@ -129,17 +132,17 @@ const StudentCall = ({ examId }) => {
     };
 
     //Capture video of student every 3 seconds
-    // useEffect(() => {
-    //     const timerId = setInterval(() => {
-    //         captureVideo();
-    //     }, 3000);
+    useEffect(() => {
+        const timerId = setInterval(() => {
+            captureVideo();
+        }, 3000);
 
-    //     return () => clearInterval(timerId);
-    // }, []);
+        return () => clearInterval(timerId);
+    }, []);
 
     useEffect(() => {
-        if (fetchAIResult.data != undefined) {
-            if (fetchAIResult.data.isNotCheating == 0) {
+        if (fetchAIResult.data !== undefined) {
+            if (fetchAIResult.data.isNotCheating === 0) {
                 studentCheatingNotify();
             }
         }
@@ -191,8 +194,8 @@ const StudentCall = ({ examId }) => {
                 }}
             >
                 Capture Video
-            </Button>
-            <canvas id="canvas" width="384" height="288" style={{display: "none"}}></canvas> */}
+            </Button> */}
+            <canvas id="canvas" width="384" height="288" style={{display: "none"}}></canvas>
 
             <div
                 className={`${style.buttons_group} d-flex justify-content-center`}

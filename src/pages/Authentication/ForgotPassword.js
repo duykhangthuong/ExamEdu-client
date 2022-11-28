@@ -59,7 +59,7 @@ const ForgotPassword = () => {
             </div>
             <form onSubmit={onSubmit}>
                 <div className={style.mainDiv}>
-                    <h2 className={style.loginText}>Forgot Password</h2>
+                    <h2 className={style.forgotPasswordText}>Forgot Password</h2>
                     <div className={style.inputSection}>
                         <div className="text-center ">
                             <b>
@@ -106,15 +106,14 @@ const ForgotPassword = () => {
                     </button>
                     <p>
                         Already have an account?{" "}
-                        <a
-                            href=""
+                        <span
                             onClick={() => {
                                 goToLogin();
                             }}
-                            className="mb-3"
+                            className={`${style.loginText} mb-3`}
                         >
                             Login
-                        </a>
+                        </span>
                     </p>
                 </div>
             </form>

@@ -6,6 +6,7 @@ function Pill({
     defaultColor = "",
     type = "",
     style = {},
+    onClick=()=>{},
     className = ""
 }) {
     const [color, setColor] = useState(defaultColor);
@@ -36,6 +37,7 @@ function Pill({
         <span
             style={style}
             className={`${className} ${styles.pill} ${styles[color]}`}
+            onClick={onClick}
         >
             {content}
         </span>

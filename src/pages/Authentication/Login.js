@@ -111,15 +111,14 @@ const Login = () => {
                         {/* {loading && <span className="mt-0"></span>} */}
                         {!loading && <span>Login</span>}
                     </button>
-                    <a
-                        href=""
+                    <span
                         onClick={() => {
                             goToForgotPassword();
                         }}
-                        className="mb-3"
+                        className={`${style.forgotPasswordText} mb-3`}
                     >
                         Forgot Password?
-                    </a>
+                    </span>
                 </div>
             </form>
         </div>
