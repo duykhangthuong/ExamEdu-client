@@ -112,6 +112,14 @@ const ExamProctorList = () => {
                                     defaultColor="yellow"
                                     style={pillStyle}
                                 />
+                            ) : moment(exam.examDay)
+                                  .add(exam.durationInMinute, "minutes")
+                                  .isSameOrAfter(moment().toDate()) ? (
+                                <Pill
+                                    content="In Progress"
+                                    defaultColor="orange"
+                                    style={pillStyle}
+                                />
                             ) : (
                                 <Pill
                                     content="Finished"
