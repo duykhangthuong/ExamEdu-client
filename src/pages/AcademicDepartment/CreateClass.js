@@ -31,7 +31,6 @@ const CreateClass = () => {
 
     const [selectedFile, setSelectedFile] = useState(null);
     const [selectedStudents, setSelectedStudents] = useState([]);
-
     const [fetchExcel, fetchExcelResult] = useLazyFetch(
         `${API}/Student/ConvertExcelToEmailList`
     );
@@ -39,33 +38,29 @@ const CreateClass = () => {
         const formData = new FormData();
 
         formData.append("excelFile", selectedFile);
-        // formData.append("roleId", selectedRole);
+
         fetchExcel("", {
-            method: "GET",
+            method: "POST",
             body: formData,
-            onCompletes: () => {
-                Swal.fire(
-                    "Success",
-                    "Student list upload successfully",
-                    "success"
-                );
+            onCompletes: (emailList) => {
+                setSelectedStudents(emailList);
+                setFormStep(formStep + 1);
             },
             onError: (error) => {
-                // const listError = error.map((err) => {
-                //     return `${err.errorDetail} in row ${err.rowIndex} and column ${err.columnIndex}`;
-                // });
-                console.log(error);
-                if (error.status == 400) {
+                if (error.status == 409) {
                     Swal.fire("Error", error.message, "error");
                 }
-                // Swal.fire({
-                //     title: "Error",
-                //     html: listError.join("<br/>"),
-                //     icon: "error",
-                //     confirmButtonText: "OK",
-                //     width: "36rem",
-                //     allowOutsideClick: false
-                // });
+                const listError = error.map((err) => {
+                    return `${err.errorDetail} in row ${err.rowIndex} and column ${err.columnIndex}`;
+                });
+                Swal.fire({
+                    title: "Error",
+                    html: listError.join("<br/>"),
+                    icon: "error",
+                    confirmButtonText: "OK",
+                    width: "36rem",
+                    allowOutsideClick: false
+                });
             }
         });
     };
@@ -89,7 +84,6 @@ const CreateClass = () => {
             Swal.fire("Error", "File type is not supported", "error");
         } else {
             submitExcel();
-            // setFormStep(formStep + 1);
         }
     }
 
@@ -240,6 +234,7 @@ const CreateClass = () => {
                             selectedFile={selectedFile}
                             setSelectedFile={setSelectedFile}
                             handleSubmitFile={handleSubmitFile}
+                            fetchExcelResult={fetchExcelResult}
                             // fetchStudents={fetchStudents}
                             // fetchStudentsResult={fetchStudentsResult}
                             // setSelectedStudents={setSelectedStudents}
@@ -347,7 +342,8 @@ const StudentFormContent = ({
     downloadTemplate,
     selectedFile,
     setSelectedFile,
-    handleSubmitFile
+    handleSubmitFile,
+    fetchExcelResult
     // fetchStudents,
     // fetchStudentsResult,
     // setSelectedStudents,
@@ -366,6 +362,10 @@ const StudentFormContent = ({
     // function handleStudentSearch() {
     //     fetchStudents();
     // }
+
+    if (fetchExcelResult.loading) {
+        return <Loading className={`px-0 w-50`} />;
+    }
 
     return (
         <div>
@@ -392,15 +392,6 @@ const StudentFormContent = ({
                 <div
                     className={` ${styles.chosen_item_container} col-6 flex-column pt-4`}
                 >
-                    {/* <button
-                        className={`btn btn-success mb-2 ${styles.btn_file}`}
-                        onClick={() => {
-                            setIsClicked(true);
-                        }}
-                    >
-                        <Icon icon="file-excel" className="me-2" />
-                        Upload Excel file
-                    </button> */}
                     <label
                         className={`btn btn-success btn-file mb-2 pt-5 ${styles.btn_file}`}
                     >
@@ -523,10 +514,12 @@ const ModuleFormContent = ({
 
             {/* Tab content container */}
             <div
-                className={`${styles.input_container_grid} ${styles.tab_content_container}`}
+                className={`${styles.input_container_grid} ${styles.tab_content_container_module}`}
             >
                 {/* Select student container */}
-                <div className={`px-3 pt-2 ${styles.chosen_item_container}`}>
+                <div
+                    className={`px-3 pt-2 ${styles.chosen_item_container_module}`}
+                >
                     {fetchModulesResult.data?.payload
                         .filter((module) => !selectedModules.includes(module))
                         .map((module, index) => {
@@ -555,7 +548,9 @@ const ModuleFormContent = ({
                 </div>
 
                 {/* Chosen item container */}
-                <div className={`px-3 pt-2 ${styles.chosen_item_container}`}>
+                <div
+                    className={`px-3 pt-2 ${styles.chosen_item_container_module}`}
+                >
                     {selectedModules.length > 0 &&
                     selectedModules !== undefined ? (
                         <>

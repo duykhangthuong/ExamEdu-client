@@ -3,23 +3,24 @@ import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import style from "styles/CallWindow.module.css";
 import Swal from "sweetalert2";
-import { API, REQUIRED } from "utilities/constants";
+import { API, REQUIRED, HUB } from "utilities/constants";
 import { useLazyFetch } from "utilities/useFetch";
 import { useForm } from "utilities/useForm";
 import ValidateMessage from "./ValidateMessage";
 import Pill from "components/Pill";
+import { HubConnectionBuilder } from "@microsoft/signalr";
 
 const CallWindow = ({
     stream,
     userEmail,
     index,
     examId,
-    cheatingTypeList,
-    warningDisplay = false
+    cheatingTypeList
 }) => {
+    const [connection, setConnection] = useState(null);
     const [isSpeaking, setIsSpeaking] = useState(false);
     const [audioState, setAudioState] = useState(true);
-    const [isWarning,setIsWarning]=useState(true);
+    const [isWarning, setIsWarning] = useState(false);
     const [isOpenReportForm, setIsOpenReportForm] = useState(false); //Modal boostrap state
     const { values, onChange, onSubmit, errors } = useForm(
         form,
@@ -80,6 +81,32 @@ const CallWindow = ({
             !stream.getAudioTracks()[0].enabled;
         setAudioState(stream.getAudioTracks()[0].enabled);
     };
+
+    useEffect(() => {
+        const newConnection = new HubConnectionBuilder()
+            .withUrl(`${HUB}/notification`)
+            .withAutomaticReconnect()
+            .build();
+
+        setConnection(newConnection);
+    }, []);
+
+    useEffect(() => {
+        if (connection) {
+            connection
+                .start()
+                .then(() => {
+                    // Define User
+                    connection.send("CreateName", `teacher${examId}`);
+                    connection.on("StudentCheatingNotify", (email) => {
+                        setIsWarning(userEmail === email);
+                        console.log("Cheating email: ", email);
+                    });
+                })
+                .catch((error) => console.log(error));
+        }
+    }, [connection]);
+
     return (
         <>
             <div
@@ -91,14 +118,16 @@ const CallWindow = ({
                     <div className={`${style.content_name} me-auto`}>
                         {userEmail}
                     </div>
-                    <Pill 
+                    <Pill
                         content="CHEATING WARNING"
                         className={
-                            warningDisplay == true && isWarning == true
+                            isWarning == true
                                 ? `${style.cheating_warning} mx-3 p-2`
                                 : `${style.hide_cheating_warning}`
                         }
-                        onClick={()=>setIsWarning(false)}
+                        onClick={() => {
+                            setIsWarning(false);
+                        }}
                         defaultColor="red"
                     />
 

@@ -4,12 +4,7 @@ import styles from "../../styles/Exam.module.css";
 import Icon from "components/Icon";
 import moment from "moment";
 import { useParams } from "react-router-dom";
-import {
-    useState,
-    useEffect,
-    useRef,
-    useCallback,
-} from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useLazyFetch, useFetch } from "utilities/useFetch";
 import useOutsideClick from "utilities/useOutsideClick";
 import { useSelector } from "react-redux";
@@ -20,8 +15,9 @@ import StudentCall from "./StudentCall";
 
 //Exam header include Exam name, module and time
 function ExamHeader({ examId, result, submitAnswer }) {
-    
-    const [minutes, setMinutes] = useState(moment(result?.maxFinishTime).diff(moment(), "minutes"));
+    const [minutes, setMinutes] = useState(
+        moment(result?.maxFinishTime).diff(moment(), "minutes")
+    );
     const [seconds, setSeconds] = useState(0);
     useEffect(() => {
         let myInterval = setInterval(() => {
@@ -141,17 +137,13 @@ function NumberQuestion({ number, onClick, color }) {
 }
 
 function Exam() {
-
     const [headers, setHeaders] = useState();
 
-    const checkSEB = useFetch(
-        `${API}/exam/SEB`,
-        {
-            onCompletes: (data) => {
-                setHeaders(data["User-Agent"].toString());
-            }
+    const checkSEB = useFetch(`${API}/exam/SEB`, {
+        onCompletes: (data) => {
+            setHeaders(data["User-Agent"].toString());
         }
-    );
+    });
 
     const history = useHistory();
     const param = useParams();
@@ -194,7 +186,10 @@ function Exam() {
 
     //Cập nhật lại local Storage mỗi khi chọn xong 1 câu
     useEffect(() => {
-        localStorage.setItem(`ExamEduKey/${examId}`, JSON.stringify(listAnswer));
+        localStorage.setItem(
+            `ExamEduKey/${examId}`,
+            JSON.stringify(listAnswer)
+        );
     }, [listAnswer]);
 
     const [studentDisconnect, studentDisconnectResponse] = useLazyFetch(
@@ -398,10 +393,9 @@ function Exam() {
         }
     };
 
-        if (headers !== undefined && !headers.includes("SEB")) {
-            return <div className="d-flex justify-content-center"><h1 >Please use Safe Exam Browser to take exam</h1></div>
-
-        }
+    if (headers !== undefined && !headers.includes("SEB")) {
+        return <div className="d-flex justify-content-center"><h1 >Please use Safe Exam Browser to take exam</h1></div>
+    }
 
     // Loading when fetch API
     if (loading || postAnswerResult.loading) {
@@ -421,8 +415,7 @@ function Exam() {
                     {data?.questionAnswer.map((number, index) => {
                         //boolean check nếu examQuestionId nằm trong list answer
                         let isDone = listAnswer.some(
-                            (r) =>
-                                r.examQuestionId === number.examQuestionId
+                            (r) => r.examQuestionId === number.examQuestionId
                         );
                         let toBeReView = reviewQuestion.some(
                             (r) => r === number.examQuestionId
@@ -445,10 +438,10 @@ function Exam() {
                                     currentQuestion
                                         ? "#000000"
                                         : toBeReView
-                                            ? "var(--color-blue)"
-                                            : isDone
-                                                ? "#7AE765"
-                                                : "var(--color-gray)"
+                                        ? "var(--color-blue)"
+                                        : isDone
+                                        ? "#7AE765"
+                                        : "var(--color-gray)"
                                 }
                             />
                         );
@@ -462,16 +455,14 @@ function Exam() {
                             //boolean check nếu examQuestionId nằm trong list answer
                             let isDone = listAnswer.some(
                                 (r) =>
-                                    r.examQuestionId ===
-                                    number.examQuestionId
+                                    r.examQuestionId === number.examQuestionId
                             );
                             //boolean check nếu examQuestionId nằm trong list review question
                             let toBeReView = reviewQuestion.some(
                                 (r) => r === number.examQuestionId
                             );
                             //boolean check nếu question hiện tại là question đang hiển thị
-                            let currentQuestion =
-                                question + 1 === index + 1;
+                            let currentQuestion = question + 1 === index + 1;
 
                             return (
                                 <NumberQuestion
@@ -489,10 +480,10 @@ function Exam() {
                                         currentQuestion
                                             ? "#000000"
                                             : toBeReView
-                                                ? "var(--color-blue)"
-                                                : isDone
-                                                    ? "#7AE765"
-                                                    : "var(--color-gray)"
+                                            ? "var(--color-blue)"
+                                            : isDone
+                                            ? "#7AE765"
+                                            : "var(--color-gray)"
                                     }
                                 />
                             );
@@ -534,16 +525,16 @@ function Exam() {
                                 {/* Image of question */}
                                 {data?.questionAnswer[question]
                                     .questionImageURL && ( //Check if image url is null, don't render image
-                                        <img
-                                            id={`${styles.imgQuestion}`}
-                                            src={
-                                                data?.questionAnswer[question]
-                                                    .questionImageURL
-                                            }
-                                            alt="L0-5-1"
-                                            border="0"
-                                        />
-                                    )}
+                                    <img
+                                        id={`${styles.imgQuestion}`}
+                                        src={
+                                            data?.questionAnswer[question]
+                                                .questionImageURL
+                                        }
+                                        alt="L0-5-1"
+                                        border="0"
+                                    />
+                                )}
                                 {/* Horizontal line */}
                                 <div
                                     className={`${styles.horizontal_line} mb-2`}
@@ -590,9 +581,7 @@ function Exam() {
                                                 />
                                                 <label
                                                     className="ms-2"
-                                                    htmlFor={
-                                                        answer.answerId
-                                                    }
+                                                    htmlFor={answer.answerId}
                                                 >
                                                     {answer.answerContent}
                                                 </label>
@@ -604,8 +593,7 @@ function Exam() {
                                                 listAnswer.filter(
                                                     (r) =>
                                                         r.examQuestionId ===
-                                                        data
-                                                            ?.questionAnswer[
+                                                        data?.questionAnswer[
                                                             question
                                                         ].examQuestionId
                                                 )[0]?.studentAnswerContent
@@ -618,9 +606,7 @@ function Exam() {
                                             }
                                             rows="16"
                                             onChange={(e) =>
-                                                setEssayAnswer(
-                                                    e.target.value
-                                                )
+                                                setEssayAnswer(e.target.value)
                                             }
                                         ></textarea>
                                     )}
@@ -639,9 +625,8 @@ function Exam() {
                                         onClick={() => {
                                             addEssayAnswerToList(
                                                 essayAnswer,
-                                                data?.questionAnswer[
-                                                    question
-                                                ].examQuestionId
+                                                data?.questionAnswer[question]
+                                                    .examQuestionId
                                             );
                                             setQuestion(question - 1);
                                         }}
@@ -663,9 +648,8 @@ function Exam() {
                                         onClick={() => {
                                             addEssayAnswerToList(
                                                 essayAnswer,
-                                                data?.questionAnswer[
-                                                    question
-                                                ].examQuestionId
+                                                data?.questionAnswer[question]
+                                                    .examQuestionId
                                             );
                                             setQuestion(question + 1);
                                         }}
