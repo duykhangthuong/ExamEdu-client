@@ -98,6 +98,7 @@ const StudentCall = ({ examId }) => {
         });
     };
 
+    //LINK AI
     const [fetchAI, fetchAIResult] = useLazyFetch(
         `https://ml-api-cheatingdetector.herokuapp.com/predict/`
     );
@@ -119,8 +120,7 @@ const StudentCall = ({ examId }) => {
                 },
                 method: "POST",
                 body: formData, 
-                onCompletes: () => {
-                    console.log(fetchAIResult.data);
+                onCompletes: (data) => {
                     setAISuccessState(!AISuccessState);
                 }
             });
@@ -141,8 +141,9 @@ const StudentCall = ({ examId }) => {
     }, []);
 
     useEffect(() => {
-        if (fetchAIResult.data !== undefined) {
-            if (fetchAIResult.data.isNotCheating === 0) {
+        if (fetchAIResult.data != undefined) {
+            if (fetchAIResult.data.isNotCheating == 0) {
+                console.log(fetchAIResult.data);
                 studentCheatingNotify();
             }
         }
