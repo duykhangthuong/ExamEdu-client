@@ -35,6 +35,10 @@
     font-weight: bold;
 }
 
+.cheating_warning:hover{
+    cursor: pointer;
+}
+
 .hide_cheating_warning{
     display: none;
 }

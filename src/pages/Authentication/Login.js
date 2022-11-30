@@ -11,7 +11,6 @@ import { login } from "store/action";
 import background from "static/background-login-page.jpg";
 import style from "styles/login.module.css";
 import logo from "static/logo-ExamEdu.png";
-import Button from "components/Button";
 
 const Login = () => {
     const dispatch = useDispatch();
@@ -43,7 +42,7 @@ const Login = () => {
         fetchData();
     }
 
-    function goToForgotPassword(){
+    function goToForgotPassword() {
         history.push(`/forgot_password`);
     }
 
@@ -112,9 +111,14 @@ const Login = () => {
                         {/* {loading && <span className="mt-0"></span>} */}
                         {!loading && <span>Login</span>}
                     </button>
-                    <a href="" onClick={()=>{goToForgotPassword()}} className="mb-3">
+                    <span
+                        onClick={() => {
+                            goToForgotPassword();
+                        }}
+                        className={`${style.forgotPasswordText} mb-3`}
+                    >
                         Forgot Password?
-                    </a>
+                    </span>
                 </div>
             </form>
         </div>

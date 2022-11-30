@@ -59,6 +59,11 @@
     background-color: #2345ef;
 }
 
+.forgotPasswordText{    
+    color: blue;
+    cursor:pointer;
+}
+
 @media screen and (max-width: 768px) {
     .mainDiv {
         width: 60%;
@@ -70,5 +75,10 @@
 
     .buttonLogin {
         width: 80%;
+    }
+
+    .forgotPasswordText{    
+        color: var(--color-blue);
+        cursor:pointer;
     }
 }
