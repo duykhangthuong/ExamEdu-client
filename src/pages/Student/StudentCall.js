@@ -120,7 +120,12 @@ const StudentCall = ({ examId }) => {
                 },
                 method: "POST",
                 body: formData, 
+<<<<<<< HEAD
                 onCompletes: (data) => {
+=======
+                onCompletes: () => {
+                    console.log(fetchAIResult.data);
+>>>>>>> 1c81094116f8c94bd43edf8ca2e22f71594943bb
                     setAISuccessState(!AISuccessState);
                 }
             });
@@ -141,9 +146,14 @@ const StudentCall = ({ examId }) => {
     }, []);
 
     useEffect(() => {
+<<<<<<< HEAD
         if (fetchAIResult.data != undefined) {
             if (fetchAIResult.data.isNotCheating == 0) {
                 console.log(fetchAIResult.data);
+=======
+        if (fetchAIResult.data !== undefined) {
+            if (fetchAIResult.data.isNotCheating === 0) {
+>>>>>>> 1c81094116f8c94bd43edf8ca2e22f71594943bb
                 studentCheatingNotify();
             }
         }

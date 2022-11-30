@@ -54,6 +54,10 @@
     cursor: pointer;
 }
 
+.cheating_warning:hover{
+    cursor: pointer;
+}
+
 .hide_cheating_warning{
     display: none;
 }
