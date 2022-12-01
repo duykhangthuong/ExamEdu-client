@@ -10,6 +10,9 @@ import ValidateMessage from "./ValidateMessage";
 import Pill from "components/Pill";
 import { HubConnectionBuilder } from "@microsoft/signalr";
 
+<<<<<<< HEAD
+const CallWindow = ({ stream, userEmail, index, examId, cheatingTypeList }) => {
+=======
 const CallWindow = ({
     stream,
     userEmail,
@@ -17,6 +20,7 @@ const CallWindow = ({
     examId,
     cheatingTypeList
 }) => {
+>>>>>>> 1c81094116f8c94bd43edf8ca2e22f71594943bb
     const [connection, setConnection] = useState(null);
     const [isSpeaking, setIsSpeaking] = useState(false);
     const [audioState, setAudioState] = useState(true);
@@ -113,11 +117,28 @@ const CallWindow = ({
                 style={isSpeaking ? { border: "solid 3px #0044ff" } : {}}
                 className={`${style.wrapper_general}`}
             >
+                <Pill
+                    content="CHEATING WARNING"
+                    className={
+                        `${style.warning_pill_style} 
+                        ${isWarning == true
+                            ? `${style.cheating_warning} mx-3 p-2`
+                            : `${style.hide_cheating_warning}`}
+                        `
+                    }
+                    onClick={() => {
+                        setIsWarning(false);
+                    }}
+                    defaultColor="red"
+                />
+
                 {/* nho style lai cai nay, t de style vay cho de hieu thoi */}
                 <div className={`${style.infor_wrapper} d-flex`}>
                     <div className={`${style.content_name} me-auto`}>
                         {userEmail}
                     </div>
+<<<<<<< HEAD
+=======
                     <Pill
                         content="CHEATING WARNING"
                         className={
@@ -130,6 +151,7 @@ const CallWindow = ({
                         }}
                         defaultColor="red"
                     />
+>>>>>>> 1c81094116f8c94bd43edf8ca2e22f71594943bb
 
                     <div
                         className={`${style.media_button} me-2`}
