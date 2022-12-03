@@ -86,7 +86,7 @@ const StudentCall = ({ examId }) => {
                             let video = document.getElementById("remote-video"); //Khong xai dom thi cai video no bi chop chop (flickering)
                             video.srcObject = stream;
                             video.play();
-                        } catch (error) { }
+                        } catch (error) {}
                     });
                 });
         });
@@ -107,26 +107,26 @@ const StudentCall = ({ examId }) => {
         let video = document.querySelector("#local-video");
         canvas.width = width;
         canvas.height = height;
-        canvas
-            .getContext("2d")
-            .drawImage(video, 0, 0, width, height);
+        canvas.getContext("2d").drawImage(video, 0, 0, width, height);
         canvas.toBlob(function (blob) {
             const formData = new FormData();
             formData.append("file", blob);
 
             fetchAI("", {
-                headers:{
+                headers: {
                     "Content-Type": "multipart/form-data"
                 },
                 method: "POST",
-                body: formData, 
-<<<<<<< HEAD
+                body: formData,
                 onCompletes: (data) => {
-=======
-                onCompletes: () => {
-                    console.log(fetchAIResult.data);
->>>>>>> 1c81094116f8c94bd43edf8ca2e22f71594943bb
-                    setAISuccessState(!AISuccessState);
+                    console.log(data);
+                    // setAISuccessState(!AISuccessState);
+                    if (data !== undefined) {
+                        if (data.isNotCheating === 0) {
+                            console.log("STUDENT CHEATING!");
+                            studentCheatingNotify();
+                        }
+                    }
                 }
             });
         });
@@ -145,19 +145,13 @@ const StudentCall = ({ examId }) => {
         return () => clearInterval(timerId);
     }, []);
 
-    useEffect(() => {
-<<<<<<< HEAD
-        if (fetchAIResult.data != undefined) {
-            if (fetchAIResult.data.isNotCheating == 0) {
-                console.log(fetchAIResult.data);
-=======
-        if (fetchAIResult.data !== undefined) {
-            if (fetchAIResult.data.isNotCheating === 0) {
->>>>>>> 1c81094116f8c94bd43edf8ca2e22f71594943bb
-                studentCheatingNotify();
-            }
-        }
-    }, [AISuccessState]);
+    // useEffect(() => {
+    //     if (fetchAIResult.data !== undefined) {
+    //         if (fetchAIResult.data.isNotCheating === 0) {
+    //             studentCheatingNotify();
+    //         }
+    //     }
+    // }, [AISuccessState]);
 
     useEffect(() => {
         fetchRoomId();
@@ -206,7 +200,12 @@ const StudentCall = ({ examId }) => {
             >
                 Capture Video
             </Button> */}
-            <canvas id="canvas" width="384" height="288" style={{display: "none"}}></canvas>
+            <canvas
+                id="canvas"
+                width="384"
+                height="288"
+                style={{ display: "none" }}
+            ></canvas>
 
             <div
                 className={`${style.buttons_group} d-flex justify-content-center`}
