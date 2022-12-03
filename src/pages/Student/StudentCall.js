@@ -118,9 +118,15 @@ const StudentCall = ({ examId }) => {
                 },
                 method: "POST",
                 body: formData,
-                onCompletes: () => {
-                    console.log(fetchAIResult.data);
-                    setAISuccessState(!AISuccessState);
+                onCompletes: (data) => {
+                    console.log(data);
+                    // setAISuccessState(!AISuccessState);
+                    if (data !== undefined) {
+                        if (data.isNotCheating === 0) {
+                            console.log("STUDENT CHEATING!");
+                            studentCheatingNotify();
+                        }
+                    }
                 }
             });
         });
@@ -139,13 +145,13 @@ const StudentCall = ({ examId }) => {
         return () => clearInterval(timerId);
     }, []);
 
-    useEffect(() => {
-        if (fetchAIResult.data !== undefined) {
-            if (fetchAIResult.data.isNotCheating === 0) {
-                studentCheatingNotify();
-            }
-        }
-    }, [AISuccessState]);
+    // useEffect(() => {
+    //     if (fetchAIResult.data !== undefined) {
+    //         if (fetchAIResult.data.isNotCheating === 0) {
+    //             studentCheatingNotify();
+    //         }
+    //     }
+    // }, [AISuccessState]);
 
     useEffect(() => {
         fetchRoomId();
