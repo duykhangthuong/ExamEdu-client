@@ -20,7 +20,6 @@ const Invigilate = () => {
     const [videoState, setVideoState] = useState(true);
     const [audioState, setAudioState] = useState(true);
     const [numberOfGridColumn, setNumberOfGridColumn] = useState(1);
-    const [cheatingEmailState,setCheatingEmailState]=useState("");
     const [createRoomId, createRoomIdResponse] = useLazyFetch(
         `${API}/invigilate/GenerateRoomId`,
         {
@@ -64,13 +63,13 @@ const Invigilate = () => {
     );
 
     const notifyLeaveRoom = (email) => {
-        console.log(email + "Have leave room");
+        console.log(email + "have leave room");
     };
 
     useEffect(() => {
         window.addEventListener("beforeunload", (ev) => {
             ev.preventDefault();
-            return (ev.returnValue = "Are you sure you want to closeeeeee?");
+            return (ev.returnValue = "Are you sure you want to close?");
         });
 
         const newConnection = new HubConnectionBuilder()
@@ -98,10 +97,10 @@ const Invigilate = () => {
                         notifyLeaveRoom(email); //nho custom ham nay cho thanh cai hop thong bao
                         setForceRender(Math.random());
                     });
-                    connection.on("StudentCheatingNotify", (email)=>{
-                        console.log("Cheating warning: ",email)
-                        setCheatingEmailState(email);
-                    })
+                    // connection.on("StudentCheatingNotify", (email) => {
+                    //     setCheatingEmailState(email);
+                    //     console.log("Notify!!!");
+                    // });
                 })
                 .catch((error) => console.log(error));
         }
@@ -187,7 +186,6 @@ const Invigilate = () => {
                                     fetchCheatingTypeListResponse.data
                                 }
                                 examId={examId}
-                                warningDisplay={stream.userEmail==cheatingEmailState}
                             />
                         </div>
                     );

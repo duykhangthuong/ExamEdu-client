@@ -85,7 +85,9 @@ const AccountList = () => {
             email: accounts?.email
         },
         validationSchema: Yup.object({
-            fullName: Yup.string().required("Full Name is required"),
+            fullName: Yup.string()
+                .required("Full Name is required")
+                .matches(/^(?!\s+$).*/, "Full name cannot be blank"),
             email: Yup.string().required("Email is required")
         }),
         enableReinitialize: true,

@@ -10,7 +10,8 @@
     width: 100%;
     border-radius: 15px;
 }
-.infor_wrapper {
+
+.warning_pill_style {
     position: absolute;
     width: 100%;
     justify-content: space-between;
@@ -19,6 +20,19 @@
     padding: 0.4rem;
     font-size: 15px;
     top: 0.3rem;
+    z-index: 10;
+    right: 0rem;
+}
+
+.infor_wrapper {
+    position: absolute;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    /* margin: 0.2vw; */
+    padding: 0.4rem;
+    font-size: 15px;
+    bottom: 0.3rem;
     z-index: 10;
 }
 .content_name {
@@ -33,6 +47,15 @@
     color: white;
     font-size: 1rem;
     font-weight: bold;
+    width: 1rem;
+}
+
+.cheating_warning:hover{
+    cursor: pointer;
+}
+
+.cheating_warning:hover{
+    cursor: pointer;
 }
 
 .hide_cheating_warning{
@@ -62,5 +85,10 @@
 
 .media_button:hover {
     background-color: black;
+    cursor: pointer;
+}
+
+.media_button_off:hover {
+    background-color: darkred;
     cursor: pointer;
 }

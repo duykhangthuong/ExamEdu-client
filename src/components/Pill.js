@@ -6,7 +6,8 @@ function Pill({
     defaultColor = "",
     type = "",
     style = {},
-    className = "",
+    onClick=()=>{},
+    className = ""
 }) {
     const [color, setColor] = useState(defaultColor);
 
@@ -24,6 +25,9 @@ function Pill({
             case "academicdepartment":
                 setColor("red");
                 break;
+            case "head of department":
+                setColor("purple");
+                break;
             default:
                 break;
         }
@@ -33,6 +37,7 @@ function Pill({
         <span
             style={style}
             className={`${className} ${styles.pill} ${styles[color]}`}
+            onClick={onClick}
         >
             {content}
         </span>

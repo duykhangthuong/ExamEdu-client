@@ -12,7 +12,7 @@
 }
 
 .red {
-    background-color: #ff2d2d;
+    background-color: #ff0000;
 }
 
 .green {
@@ -20,11 +20,19 @@
 }
 
 .orange {
-    background-color: #ff5300;
+    background-color: #ff6315;
 }
 
 .yellow{
     background-color: #ffef09;
+}
+
+.yellow {
+    background-color: #ffef09;
+}
+
+.purple {
+    background-color: #a800ff;
 }
 
 @media screen and (max-width: 768px) {
@@ -34,7 +42,7 @@
     }
 
     .red {
-        color: #FF2D2D !important;
+        color: #ff0000 !important;
         background-color: transparent;
     }
 
@@ -48,7 +56,7 @@
         background-color: transparent;
     }
 
-    .yellow{
+    .yellow {
         color: #ffef09 !important;
         background-color: transparent;
     }
