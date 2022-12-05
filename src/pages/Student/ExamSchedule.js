@@ -122,7 +122,7 @@ const Schedule = ({
 
                     <div className={`${styles.container_bell_time}`}>
                         <Icon icon="bell"></Icon>
-                        <p className="mb-0">{moment(time).format("hh:mm")}</p>
+                        <p className="mb-0">{moment(time).format("HH:mm")}</p>
                     </div>
 
                     {/* Bigger container */}

@@ -10,13 +10,7 @@ import ValidateMessage from "./ValidateMessage";
 import Pill from "components/Pill";
 import { HubConnectionBuilder } from "@microsoft/signalr";
 
-const CallWindow = ({
-    stream,
-    userEmail,
-    index,
-    examId,
-    cheatingTypeList
-}) => {
+const CallWindow = ({ stream, userEmail, index, examId, cheatingTypeList }) => {
     const [connection, setConnection] = useState(null);
     const [isSpeaking, setIsSpeaking] = useState(false);
     const [audioState, setAudioState] = useState(true);
