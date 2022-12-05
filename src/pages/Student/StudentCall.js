@@ -100,7 +100,7 @@ const StudentCall = ({ examId }) => {
 
     //LINK AI
     const [fetchAI, fetchAIResult] = useLazyFetch(
-        `https://ml-api-cheatingdetector.herokuapp.com/predict/`
+        `https://callidusexam.live/ml/predict/`
     );
     const captureVideo = () => {
         let canvas = document.querySelector("#canvas");
