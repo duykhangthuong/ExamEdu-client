@@ -109,13 +109,13 @@ const CallWindow = ({ stream, userEmail, index, examId, cheatingTypeList }) => {
             >
                 <Pill
                     content="CHEATING WARNING"
-                    className={`${style.warning_pill_style} 
-                        ${
-                            isWarning == true
-                                ? `${style.cheating_warning} mx-3 p-2`
-                                : `${style.hide_cheating_warning}`
-                        }
-                        `}
+                    className={
+                        `${style.warning_pill_style} 
+                        ${isWarning == true
+                            ? `${style.cheating_warning} mx-3 p-2`
+                            : `${style.hide_cheating_warning}`}
+                        `
+                    }
                     onClick={() => {
                         setIsWarning(false);
                     }}
@@ -127,18 +127,6 @@ const CallWindow = ({ stream, userEmail, index, examId, cheatingTypeList }) => {
                     <div className={`${style.content_name} me-auto`}>
                         {userEmail}
                     </div>
-                    <Pill
-                        content="CHEATING WARNING"
-                        className={
-                            isWarning == true
-                                ? `${style.cheating_warning} mx-3 p-2`
-                                : `${style.hide_cheating_warning}`
-                        }
-                        onClick={() => {
-                            setIsWarning(false);
-                        }}
-                        defaultColor="red"
-                    />
 
                     <div
                         className={`${style.media_button} me-2`}
