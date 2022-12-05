@@ -393,9 +393,9 @@ function Exam() {
         }
     };
 
-    if (headers !== undefined && !headers.includes("SEB")) {
-        return <div className="d-flex justify-content-center"><h1 >Please use Safe Exam Browser to take exam</h1></div>
-    }
+    // if (headers !== undefined && !headers.includes("SEB")) {
+    //     return <div className="d-flex justify-content-center"><h1 >Please use Safe Exam Browser to take exam</h1></div>
+    // }
 
     // Loading when fetch API
     if (loading || postAnswerResult.loading) {
