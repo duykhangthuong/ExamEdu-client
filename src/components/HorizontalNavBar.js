@@ -143,57 +143,80 @@ const HorizontalNavBar = () => {
             </div>
             {/* Welcome message */}
             <div className="d-none d-md-block me-2">Hi! {name}</div>
-            {/* Notification bell */}
-
+            {console.log("touch: " + showNotifiMobileNav)}
             {/* Notification Navbar */}
             {user?.role.toLowerCase() == "student" ? (
                 <div className={styles.showNotifi}>
                     {/* Notification Icon */}
-                    <div
-                        className="text-Color btn rounded-circle text-center justify-content-center align-items-center position-relative"
-                        // style={{ width: 40, height: 40 }}
-                        onTouchStart={() => {
-                            setShowNotifiMobileNav(!showNotifiMobileNav);
-                            handleSeen();
-                        }}
-                        onMouseOver={handleSeen}
-                    >
-                        <Icon
-                            className={
-                                showNotifiMobileNav
-                                    ? "iconClick-Color"
-                                    : "icon-Color "
-                            }
-                            icon="bell"
-                            style={{ fontSize: "1.5rem" }}
-                        />
-                        <span
-                            className="position-absolute start-100 translate-middle badge rounded-pill bg-danger"
-                            style={{ top: "15%" }}
+                    <div class="d-flex align-items-center">
+                        {/* Notification bell */}
+                        {/* Note for whomever that's going to fix this:
+                            onTouchStart is used to handle mobile use of the application
+                            onMouseOver is used to handle computer use of the application
+                        */}
+                        <div
+                            className="text-Color btn rounded-circle text-center justify-content-center align-items-center position-relative"
+                            // style={{ width: 40, height: 40 }}
+                            onTouchStart={() => {
+                                setShowNotifiMobileNav(!showNotifiMobileNav);
+                                handleSeen();
+                            }}
+                            onMouseOver={handleSeen}
                         >
-                            {notifications?.filter(
-                                (notification) => notification.isSeen === false
-                            ).length !== 0
-                                ? notifications.filter(
-                                      (notification) =>
-                                          notification.isSeen === false
-                                  ).length
-                                : ""}
-                        </span>
+                            <Icon
+                                className={
+                                    showNotifiMobileNav
+                                        ? "iconClick-Color"
+                                        : "icon-Color "
+                                }
+                                icon="bell"
+                                style={{ fontSize: "1.5rem" }}
+                            />
+                            <span
+                                className="position-absolute start-100 translate-middle badge rounded-pill bg-danger"
+                                style={{ top: "15%" }}
+                            >
+                                {notifications?.filter(
+                                    (notification) =>
+                                        notification.isSeen === false
+                                ).length !== 0
+                                    ? notifications.filter(
+                                          (notification) =>
+                                              notification.isSeen === false
+                                      ).length
+                                    : ""}
+                            </span>
+                        </div>
+                        {/* Log out button */}
+                        <div
+                            className={`shadow-light d-flex d-md-flex ${styles.icon_container}`}
+                            onClick={handleLogout}
+                        >
+                            <Icon
+                                icon="power-off"
+                                className={styles.log_out_btn}
+                            ></Icon>
+                        </div>
                     </div>
                     {/* Notification Menu */}
                     <div
                         className={
-                            showNotifiMobileNav
-                                ? `${styles.frameMobile_Notifi} d-flex justify-content-end position-absolute`
-                                : `${styles.frame_Notifi} d-flex justify-content-end position-absolute`
+                            `${
+                                showNotifiMobileNav
+                                    ? styles.frame_Notifi
+                                    : styles.frame_Notifi_hide
+                            } d-flex justify-content-end position-absolute`
+                            // ? `${styles.frameMobile_Notifi} d-flex justify-content-end position-absolute`
+                            // : `${styles.frame_Notifi} d-flex justify-content-end position-absolute`
                         }
                     >
                         <div
                             className={
-                                showNotifiMobileNav
-                                    ? `shadow-app ${styles.bodyMobile_Notifi} p-2`
-                                    : `shadow ${styles.body_Notifi} p-2`
+                                `${
+                                    showNotifiMobileNav && styles.body_Notifi
+                                } shadow p-2`
+                                // ? `shadow-app ${styles.bodyMobile_Notifi} p-2`
+                                // : `shadow ${styles.body_Notifi} p-2`
                             }
                         >
                             {/* Notification Header */}
@@ -288,12 +311,12 @@ const HorizontalNavBar = () => {
             </div> */}
 
             {/* Log out button */}
-            <div
-                className={`shadow-light d-none d-md-flex ${styles.icon_container}`}
+            {/* <div
+                className={`shadow-light d-flex d-md-flex ${styles.icon_container}`}
                 onClick={handleLogout}
             >
                 <Icon icon="power-off" className={styles.log_out_btn}></Icon>
-            </div>
+            </div> */}
 
             {/* </div> */}
         </nav>
