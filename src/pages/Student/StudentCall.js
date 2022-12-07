@@ -86,7 +86,7 @@ const StudentCall = ({ examId }) => {
                             let video = document.getElementById("remote-video"); //Khong xai dom thi cai video no bi chop chop (flickering)
                             video.srcObject = stream;
                             video.play();
-                        } catch (error) {}
+                        } catch (error) { }
                     });
                 });
         });
