@@ -62,7 +62,7 @@ const StudentCall = ({ examId }) => {
     const connectVideo = (roomId) => {
         var peer = new Peer();
         peer.on("open", (id) => {
-            console.log("Connected with Id: " + id);
+            // console.log("Connected with Id: " + id);
             navigator.mediaDevices
                 .getUserMedia({ video: true, audio: true })
                 .then((stream) => {
@@ -100,7 +100,7 @@ const StudentCall = ({ examId }) => {
 
     //LINK AI
     const [fetchAI, fetchAIResult] = useLazyFetch(
-        `https://ml-api-cheatingdetector.herokuapp.com/predict/`
+        `https://callidusexam.live/ml/predict/`
     );
     const captureVideo = () => {
         let canvas = document.querySelector("#canvas");
@@ -119,11 +119,11 @@ const StudentCall = ({ examId }) => {
                 method: "POST",
                 body: formData,
                 onCompletes: (data) => {
-                    console.log(data);
+                    // console.log(data);
                     // setAISuccessState(!AISuccessState);
                     if (data !== undefined) {
                         if (data.isNotCheating === 0) {
-                            console.log("STUDENT CHEATING!");
+                            // console.log("STUDENT CHEATING!");
                             studentCheatingNotify();
                         }
                     }

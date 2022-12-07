@@ -35,7 +35,7 @@
     background-color: #a800ff;
 }
 
-@media screen and (max-width: 768px) {
+/* @media screen and (max-width: 768px) {
     .blue {
         color: #3d5af1 !important;
         background-color: transparent;
@@ -60,4 +60,4 @@
         color: #ffef09 !important;
         background-color: transparent;
     }
-}
+} */

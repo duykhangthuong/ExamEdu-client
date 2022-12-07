@@ -14,6 +14,7 @@ const CallWindow = ({ stream, userEmail, index, examId, cheatingTypeList }) => {
     const [connection, setConnection] = useState(null);
     const [isSpeaking, setIsSpeaking] = useState(false);
     const [audioState, setAudioState] = useState(true);
+    const [cheatingEmailList, setCheatingEmailList] = useState([]);
     const [isWarning, setIsWarning] = useState(false);
     const [isOpenReportForm, setIsOpenReportForm] = useState(false); //Modal boostrap state
     const { values, onChange, onSubmit, errors } = useForm(
@@ -93,7 +94,8 @@ const CallWindow = ({ stream, userEmail, index, examId, cheatingTypeList }) => {
                     // Define User
                     connection.send("CreateName", `teacher${examId}`);
                     connection.on("StudentCheatingNotify", (email) => {
-                        setIsWarning(userEmail === email);
+                        // setIsWarning(userEmail === email);
+                        setCheatingEmailList((prev) => [...prev, email]);
                         console.log("Cheating email: ", email);
                     });
                 })
@@ -109,15 +111,15 @@ const CallWindow = ({ stream, userEmail, index, examId, cheatingTypeList }) => {
             >
                 <Pill
                     content="CHEATING WARNING"
-                    className={`${style.warning_pill_style} 
-                        ${
-                            isWarning == true
-                                ? `${style.cheating_warning} mx-3 p-2`
-                                : `${style.hide_cheating_warning}`
-                        }
-                        `}
+                    className={
+                        `${style.warning_pill_style} 
+                        ${cheatingEmailList.includes(userEmail)
+                            ? `${style.cheating_warning} mx-3 p-2`
+                            : `${style.hide_cheating_warning}`}
+                        `
+                    }
                     onClick={() => {
-                        setIsWarning(false);
+                        setCheatingEmailList(cheatingEmailList.filter((email) => email !== userEmail));
                     }}
                     defaultColor="red"
                 />
@@ -127,18 +129,6 @@ const CallWindow = ({ stream, userEmail, index, examId, cheatingTypeList }) => {
                     <div className={`${style.content_name} me-auto`}>
                         {userEmail}
                     </div>
-                    <Pill
-                        content="CHEATING WARNING"
-                        className={
-                            isWarning == true
-                                ? `${style.cheating_warning} mx-3 p-2`
-                                : `${style.hide_cheating_warning}`
-                        }
-                        onClick={() => {
-                            setIsWarning(false);
-                        }}
-                        defaultColor="red"
-                    />
 
                     <div
                         className={`${style.media_button} me-2`}
