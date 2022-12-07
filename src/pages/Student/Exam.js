@@ -1,4 +1,6 @@
 import OurModal from "components/OurModal";
+import Heading from "components/Heading";
+import Wrapper from "components/Wrapper";
 import { API } from "utilities/constants";
 import styles from "../../styles/Exam.module.css";
 import Icon from "components/Icon";
@@ -15,7 +17,7 @@ import StudentCall from "./StudentCall";
 
 //Exam header include Exam name, module and time
 function ExamHeader({ examId, result, submitAnswer }) {
-    
+
     const [minutes, setMinutes] = useState(moment(result?.maxFinishTime).diff(moment(), "minutes"));
     const [seconds, setSeconds] = useState(0);
     useEffect(() => {
@@ -390,7 +392,13 @@ function Exam() {
     };
 
     if (headers !== undefined && !headers.includes("SEB")) {
-        return <div className="d-flex justify-content-center"><h1 >Please use Safe Exam Browser to take exam</h1></div>
+        return <Wrapper className="d-flex justify-content-center align-items-center">
+            <div className={styles.notification_box}>
+                <Heading size="3">
+                    Please use Safe Exam Browser to take exam
+                </Heading>
+            </div>
+        </Wrapper>
     }
 
     // Loading when fetch API
@@ -434,10 +442,10 @@ function Exam() {
                                     currentQuestion
                                         ? "#000000"
                                         : toBeReView
-                                        ? "var(--color-blue)"
-                                        : isDone
-                                        ? "#7AE765"
-                                        : "var(--color-gray)"
+                                            ? "var(--color-blue)"
+                                            : isDone
+                                                ? "#7AE765"
+                                                : "var(--color-gray)"
                                 }
                             />
                         );
@@ -522,16 +530,16 @@ function Exam() {
                                 {/* Image of question */}
                                 {data?.questionAnswer[question]
                                     .questionImageURL && ( //Check if image url is null, don't render image
-                                    <img
-                                        id={`${styles.imgQuestion}`}
-                                        src={
-                                            data?.questionAnswer[question]
-                                                .questionImageURL
-                                        }
-                                        alt="L0-5-1"
-                                        border="0"
-                                    />
-                                )}
+                                        <img
+                                            id={`${styles.imgQuestion}`}
+                                            src={
+                                                data?.questionAnswer[question]
+                                                    .questionImageURL
+                                            }
+                                            alt="L0-5-1"
+                                            border="0"
+                                        />
+                                    )}
                                 {/* Horizontal line */}
                                 <div
                                     className={`${styles.horizontal_line} mb-2`}
