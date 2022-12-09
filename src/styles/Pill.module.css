@@ -12,7 +12,7 @@
 }
 
 .red {
-    background-color: #ff2d2d;
+    background-color: #ff0000;
 }
 
 .green {
@@ -20,7 +20,11 @@
 }
 
 .orange {
-    background-color: #ff5300;
+    background-color: #ff6315;
+}
+
+.yellow{
+    background-color: #ffef09;
 }
 
 .yellow {
@@ -31,14 +35,14 @@
     background-color: #a800ff;
 }
 
-@media screen and (max-width: 768px) {
+/* @media screen and (max-width: 768px) {
     .blue {
         color: #3d5af1 !important;
         background-color: transparent;
     }
 
     .red {
-        color: #ff2d2d !important;
+        color: #ff0000 !important;
         background-color: transparent;
     }
 
@@ -56,4 +60,4 @@
         color: #ffef09 !important;
         background-color: transparent;
     }
-}
+} */

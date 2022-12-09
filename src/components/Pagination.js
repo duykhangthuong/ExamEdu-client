@@ -36,12 +36,14 @@ const Pagination = ({ totalRecords, currentPage, pageSize, onPageChange }) => {
                             <button
                                 onClick={() => onPageChange(1)}
                                 className={style.pagination_Button}
+                                type="button"
                             >
                                 <FontAwesomeIcon icon="angle-double-left" />
                             </button>
                             <button
                                 onClick={() => onPageChange(currentPage - 1)}
                                 className={style.pagination_Button}
+                                type="button"
                             >
                                 <FontAwesomeIcon icon="angle-left" />
                             </button>
@@ -62,6 +64,7 @@ const Pagination = ({ totalRecords, currentPage, pageSize, onPageChange }) => {
                                     style={{ marginLeft: "0.5rem" }}
                                     onClick={() => onPageChange(pageNumber)}
                                     key={pageNumber}
+                                    type="button"
                                 >
                                     {pageNumber}
                                 </button>
@@ -83,6 +86,7 @@ const Pagination = ({ totalRecords, currentPage, pageSize, onPageChange }) => {
                                     style={{ marginRight: "0.5rem" }}
                                     onClick={() => onPageChange(pageNumber)}
                                     key={pageNumber}
+                                    type="button"
                                 >
                                     {pageNumber}
                                 </button>
@@ -99,6 +103,7 @@ const Pagination = ({ totalRecords, currentPage, pageSize, onPageChange }) => {
                                 }
                                 onClick={() => onPageChange(pageNumber)}
                                 key={pageNumber}
+                                type="button"
                             >
                                 {pageNumber}
                             </button>
@@ -110,12 +115,14 @@ const Pagination = ({ totalRecords, currentPage, pageSize, onPageChange }) => {
                             <button
                                 onClick={() => onPageChange(currentPage + 1)}
                                 className={style.pagination_Button}
+                                type="button"
                             >
                                 <FontAwesomeIcon icon="angle-right" />
                             </button>
                             <button
                                 onClick={() => onPageChange(totalPage)}
                                 className={style.pagination_Button}
+                                type="button"
                             >
                                 <FontAwesomeIcon icon="angle-double-right" />
                             </button>

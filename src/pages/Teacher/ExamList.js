@@ -63,7 +63,7 @@ const ExamList = () => {
             }
         }
     );
-    if (fetchResult.loading || loading) return <Loading />;
+    if (fetchResult.loading || loading || fetchReportDataResult.loading) return <Loading />;
 
     return (
         <Wrapper>

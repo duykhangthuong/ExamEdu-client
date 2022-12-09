@@ -62,7 +62,7 @@ const StudentCall = ({ examId }) => {
     const connectVideo = (roomId) => {
         var peer = new Peer();
         peer.on("open", (id) => {
-            console.log("Connected with Id: " + id);
+            // console.log("Connected with Id: " + id);
             navigator.mediaDevices
                 .getUserMedia({ video: true, audio: true })
                 .then((stream) => {
@@ -98,27 +98,35 @@ const StudentCall = ({ examId }) => {
         });
     };
 
+    //LINK AI
     const [fetchAI, fetchAIResult] = useLazyFetch(
-        `https://ml-api-cheatingdetector.herokuapp.com/predict`
+        `https://callidusexam.live/ml/predict/`
     );
     const captureVideo = () => {
         let canvas = document.querySelector("#canvas");
         let video = document.querySelector("#local-video");
         canvas.width = width;
         canvas.height = height;
-        canvas
-            .getContext("2d")
-            .drawImage(video, 0, 0, width, height);
+        canvas.getContext("2d").drawImage(video, 0, 0, width, height);
         canvas.toBlob(function (blob) {
             const formData = new FormData();
             formData.append("file", blob);
 
             fetchAI("", {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                },
                 method: "POST",
                 body: formData,
-                onCompletes: () => {
-                    console.log(fetchAIResult.data);
-                    setAISuccessState(!AISuccessState);
+                onCompletes: (data) => {
+                    // console.log(data);
+                    // setAISuccessState(!AISuccessState);
+                    if (data !== undefined) {
+                        if (data.isNotCheating === 0) {
+                            // console.log("STUDENT CHEATING!");
+                            studentCheatingNotify();
+                        }
+                    }
                 }
             });
         });
@@ -129,21 +137,21 @@ const StudentCall = ({ examId }) => {
     };
 
     //Capture video of student every 3 seconds
-    // useEffect(() => {
-    //     const timerId = setInterval(() => {
-    //         captureVideo();
-    //     }, 3000);
-
-    //     return () => clearInterval(timerId);
-    // }, []);
-
     useEffect(() => {
-        if (fetchAIResult.data != undefined) {
-            if (fetchAIResult.data.isNotCheating == 0) {
-                studentCheatingNotify();
-            }
-        }
-    }, [AISuccessState]);
+        const timerId = setInterval(() => {
+            captureVideo();
+        }, 3000);
+
+        return () => clearInterval(timerId);
+    }, []);
+
+    // useEffect(() => {
+    //     if (fetchAIResult.data !== undefined) {
+    //         if (fetchAIResult.data.isNotCheating === 0) {
+    //             studentCheatingNotify();
+    //         }
+    //     }
+    // }, [AISuccessState]);
 
     useEffect(() => {
         fetchRoomId();
@@ -191,8 +199,13 @@ const StudentCall = ({ examId }) => {
                 }}
             >
                 Capture Video
-            </Button>
-            <canvas id="canvas" width="384" height="288" style={{display: "none"}}></canvas> */}
+            </Button> */}
+            <canvas
+                id="canvas"
+                width="384"
+                height="288"
+                style={{ display: "none" }}
+            ></canvas>
 
             <div
                 className={`${style.buttons_group} d-flex justify-content-center`}
