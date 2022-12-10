@@ -72,6 +72,19 @@
 .readyText {
     margin-bottom: 1rem;
 }
+
+.notification_box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 50%;
+    height: 10rem;
+
+    border-radius: 8px;
+
+    box-shadow: var(--shadow-light);
+}
 @media screen and (max-width: 768px) {
     .videoContainer {
         height: 15rem;

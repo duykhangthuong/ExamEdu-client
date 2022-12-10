@@ -6,6 +6,8 @@ import { useLazyFetch, useFetch } from "utilities/useFetch";
 import styles from "../../styles/PrejoinRoom.module.css";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import Wrapper from "components/Wrapper";
+import Heading from "components/Heading";
 const PrejoinRoom = () => {
     const [headers, setHeaders] = useState();
 
@@ -82,10 +84,15 @@ const PrejoinRoom = () => {
         updateMaxTime();
     };
 
-    // if (headers !== undefined && !headers.includes("SEB")) {
-    //     return <div className="d-flex justify-content-center"><h1 >Please use Safe Exam Browser to take exam</h1></div>
-
-    // }
+    if (headers !== undefined && !headers.includes("SEB")) {
+        return <Wrapper className="d-flex justify-content-center align-items-center">
+            <div className={styles.notification_box}>
+                <Heading size="3">
+                    Please use Safe Exam Browser to take exam
+                </Heading>
+            </div>
+        </Wrapper>
+    }
 
     return (
         <div
