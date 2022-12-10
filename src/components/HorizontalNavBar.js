@@ -143,17 +143,18 @@ const HorizontalNavBar = () => {
             </div>
             {/* Welcome message */}
             <div className="d-none d-md-block me-2">Hi! {name}</div>
-            {console.log("touch: " + showNotifiMobileNav)}
+            {/* {console.log("touch: " + showNotifiMobileNav)} */}
             {/* Notification Navbar */}
-            {user?.role.toLowerCase() == "student" ? (
-                <div className={styles.showNotifi}>
-                    {/* Notification Icon */}
-                    <div class="d-flex align-items-center">
-                        {/* Notification bell */}
-                        {/* Note for whomever that's going to fix this:
+
+            <div className={styles.showNotifi}>
+                {/* Notification Icon */}
+                <div className="d-flex align-items-center">
+                    {/* Notification bell */}
+                    {/* Note for whomever that's going to fix this:
                             onTouchStart is used to handle mobile use of the application
                             onMouseOver is used to handle computer use of the application
                         */}
+                    {user?.role.toLowerCase() == "student" && (
                         <div
                             className="text-Color btn rounded-circle text-center justify-content-center align-items-center position-relative"
                             // style={{ width: 40, height: 40 }}
@@ -187,119 +188,109 @@ const HorizontalNavBar = () => {
                                     : ""}
                             </span>
                         </div>
-                        {/* Log out button */}
-                        <div
-                            className={`shadow-light d-flex d-md-flex ${styles.icon_container}`}
-                            onClick={handleLogout}
-                        >
-                            <Icon
-                                icon="power-off"
-                                className={styles.log_out_btn}
-                            ></Icon>
-                        </div>
+                    )}
+                    {/* Log out button */}
+                    <div
+                        className={`shadow-light d-flex d-md-flex ${styles.icon_container}`}
+                        onClick={handleLogout}
+                    >
+                        <Icon
+                            icon="power-off"
+                            className={styles.log_out_btn}
+                        ></Icon>
                     </div>
-                    {/* Notification Menu */}
+                </div>
+                {/* Notification Menu */}
+                <div
+                    className={
+                        `${
+                            showNotifiMobileNav
+                                ? styles.frame_Notifi
+                                : styles.frame_Notifi_hide
+                        } d-flex justify-content-end position-absolute`
+                        // ? `${styles.frameMobile_Notifi} d-flex justify-content-end position-absolute`
+                        // : `${styles.frame_Notifi} d-flex justify-content-end position-absolute`
+                    }
+                >
                     <div
                         className={
                             `${
-                                showNotifiMobileNav
-                                    ? styles.frame_Notifi
-                                    : styles.frame_Notifi_hide
-                            } d-flex justify-content-end position-absolute`
-                            // ? `${styles.frameMobile_Notifi} d-flex justify-content-end position-absolute`
-                            // : `${styles.frame_Notifi} d-flex justify-content-end position-absolute`
+                                showNotifiMobileNav && styles.body_Notifi
+                            } shadow p-2`
+                            // ? `shadow-app ${styles.bodyMobile_Notifi} p-2`
+                            // : `shadow ${styles.body_Notifi} p-2`
                         }
                     >
+                        {/* Notification Header */}
                         <div
-                            className={
-                                `${
-                                    showNotifiMobileNav && styles.body_Notifi
-                                } shadow p-2`
-                                // ? `shadow-app ${styles.bodyMobile_Notifi} p-2`
-                                // : `shadow ${styles.body_Notifi} p-2`
-                            }
+                            className="text-Color row mx-0 py-1"
+                            style={{ fontSize: "24px" }}
                         >
-                            {/* Notification Header */}
-                            <div
-                                className="text-Color row mx-0 py-1"
-                                style={{ fontSize: "24px" }}
-                            >
-                                <b>Notifications</b>
-                            </div>
-                            <div className="text-Color px-3">
-                                <hr className="my-1" />
-                            </div>
-                            {/* Notifications */}
-                            <div
-                                className={styles.scroll_Notifi}
-                                onScroll={handleScroll}
-                            >
-                                {notifications.length > 0 ? (
-                                    notifications?.map(
-                                        (notification, objIndex) => (
+                            <b>Notifications</b>
+                        </div>
+                        <div className="text-Color px-3">
+                            <hr className="my-1" />
+                        </div>
+                        {/* Notifications */}
+                        <div
+                            className={styles.scroll_Notifi}
+                            onScroll={handleScroll}
+                        >
+                            {notifications.length > 0 ? (
+                                notifications?.map((notification, objIndex) => (
+                                    <div
+                                        className={styles.notifi_list}
+                                        key={objIndex + "a"}
+                                    >
+                                        <div className="text-Color navbarSelect-Color row mx-0 p-2">
+                                            {/* Icon */}
                                             <div
-                                                className={styles.notifi_list}
-                                                key={objIndex + "a"}
+                                                className="shadow-app col-4 rounded-circle d-flex align-items-center px-0 ps-2"
+                                                style={{
+                                                    width: "2.5rem",
+                                                    height: "2.5rem"
+                                                }}
                                             >
-                                                <div className="text-Color navbarSelect-Color row mx-0 p-2">
-                                                    {/* Icon */}
-                                                    <div
-                                                        className="shadow-app col-4 rounded-circle d-flex align-items-center px-0 ps-2"
-                                                        style={{
-                                                            width: "2.5rem",
-                                                            height: "2.5rem"
-                                                        }}
-                                                    >
-                                                        <Icon
-                                                            icon="chalkboard-teacher"
-                                                            size="lg"
-                                                        />
-                                                    </div>
-                                                    {/* Sender */}
-                                                    <div className="col-8 text-start">
-                                                        <div>
-                                                            <b>
-                                                                {
-                                                                    notification.user
-                                                                }
-                                                            </b>
-                                                        </div>
-                                                        {/* Message */}
-                                                        <div className="text-break">
-                                                            {
-                                                                notification.message
-                                                            }
-                                                        </div>
-                                                        {/* Time Send */}
-                                                        <div
-                                                            style={{
-                                                                fontSize: "12px"
-                                                            }}
-                                                        >
-                                                            {moment(
-                                                                notification.createdAt
-                                                            ).fromNow()}
-                                                        </div>
-                                                    </div>
+                                                <Icon
+                                                    icon="chalkboard-teacher"
+                                                    size="lg"
+                                                />
+                                            </div>
+                                            {/* Sender */}
+                                            <div className="col-8 text-start">
+                                                <div>
+                                                    <b>{notification.user}</b>
                                                 </div>
-                                                <div className="text-Color px-4">
-                                                    <hr className="my-1" />
+                                                {/* Message */}
+                                                <div className="text-break">
+                                                    {notification.message}
+                                                </div>
+                                                {/* Time Send */}
+                                                <div
+                                                    style={{
+                                                        fontSize: "12px"
+                                                    }}
+                                                >
+                                                    {moment(
+                                                        notification.createdAt
+                                                    ).fromNow()}
                                                 </div>
                                             </div>
-                                        )
-                                    )
-                                ) : (
-                                    <div className="text-Color text-center">
-                                        No Notification
+                                        </div>
+                                        <div className="text-Color px-4">
+                                            <hr className="my-1" />
+                                        </div>
                                     </div>
-                                )}
-                            </div>
+                                ))
+                            ) : (
+                                <div className="text-Color text-center">
+                                    No Notification
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
-            ) : (
-                ""
-            )}
+            </div>
 
             {/* Avatar */}
             {/* <div className={`shadow-light me-md-3 ${styles.avatar_container}`}>
