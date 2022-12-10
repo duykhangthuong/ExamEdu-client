@@ -105,6 +105,10 @@
     transition: all 0.3s ease-in-out;
 }
 
+.frame_Notifi_hide {
+    visibility: hidden;
+}
+
 .body_Notifi {
     background-color: white;
     width: 20rem;
@@ -118,9 +122,26 @@
     background-color: white;
 }
 
-.notifi_list:hover{
+.notifi_list:hover {
     background-color: var(--bg);
 }
+
+/* Mobile Notification Styles */
+
+.frameMobile_Notifi {
+    padding: 1.5rem 0 0 0;
+    position: absolute;
+    right: 0;
+    left: 0;
+    transition: all 0.3s ease-in-out;
+}
+
+.bodyMobile_Notifi {
+    width: 100%;
+    background-color: var(--bg);
+    border-radius: 1rem;
+}
+
 /* Mobile User Menu Styles */
 .frameMobile_User {
     padding: 1.5rem 0 0 0;
@@ -142,5 +163,4 @@
         justify-content: flex-end;
         align-items: center;
     }
-
 }
