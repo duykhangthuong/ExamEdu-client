@@ -144,10 +144,14 @@ const ModuleList = () => {
                         onSubmit={createForm.onSubmit}
                     >
                         {/* Title */}
-                        <Heading size="3" className="text-center mb-3 mb-md-4">
+                        <Heading size="3" className="text-center mb-3 mb-md-3">
                             Create Module
                         </Heading>
                         {/* Module Code */}
+                        <small>
+                            Warning: You can not change a module's code nor can
+                            you delete a module after creating a module.
+                        </small>
                         <InputBox
                             label={"Module Code"}
                             name={"moduleCode"}
