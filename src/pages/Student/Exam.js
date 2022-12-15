@@ -17,9 +17,8 @@ import StudentCall from "./StudentCall";
 
 //Exam header include Exam name, module and time
 function ExamHeader({ examId, result, submitAnswer }) {
-    const [minutes, setMinutes] = useState(
-        moment(result?.maxFinishTime).diff(moment(), "minutes")
-    );
+
+    const [minutes, setMinutes] = useState(result?.maxFinishTime == null ? result?.durationInMinute : moment(result?.maxFinishTime).diff(moment(), "minutes"));
     const [seconds, setSeconds] = useState(0);
     useEffect(() => {
         let myInterval = setInterval(() => {
