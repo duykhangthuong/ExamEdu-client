@@ -156,9 +156,7 @@ const CreateExam = ({ isFinalExam = false }) => {
                 studentIds: examStudents.map((student) => student.studentId),
                 moduleId: selectedModule.moduleId,
                 proctorId: isFinalExam ? selectedProctor : teacher.accountId,
-                supervisorId: isFinalExam
-                    ? selectedSupervisor
-                    : teacher.accountId,
+                supervisorId: isFinalExam ? selectedSupervisor : 1,
                 graderId: isFinalExam ? selectedGrader : teacher.accountId
             },
             onCompletes: (data) => {
@@ -369,7 +367,7 @@ const ExamInformationFormContent = ({
                 />
                 {/* minvalue format: YYYY-MM-DDTHH:MM */}
                 <InputBox
-                    label="Date * (No later than now)"
+                    label="Date * (No earlier than now)"
                     orientation_vertical={true}
                     name="examDate"
                     type="datetime-local"
