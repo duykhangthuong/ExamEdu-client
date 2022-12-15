@@ -445,13 +445,13 @@ function AddQuestionRequest() {
                                                 }
                                             >
                                                 <option value={1}>
-                                                    Level 1
+                                                    Easy 
                                                 </option>
                                                 <option value={2}>
-                                                    Level 2
+                                                    Medium
                                                 </option>
                                                 <option value={3}>
-                                                    Level 3
+                                                    Hard
                                                 </option>
                                             </select>
 
@@ -608,13 +608,13 @@ function AddQuestionRequest() {
                                                 }
                                             >
                                                 <option value={1}>
-                                                    Level 1
+                                                    Easy
                                                 </option>
                                                 <option value={2}>
-                                                    Level 2
+                                                    Medium 
                                                 </option>
                                                 <option value={3}>
-                                                    Level 3
+                                                    Hard
                                                 </option>
                                             </select>
                                             <Button
