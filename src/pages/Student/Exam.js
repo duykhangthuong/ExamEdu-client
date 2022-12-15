@@ -395,15 +395,17 @@ function Exam() {
         }
     };
 
-    // if (headers !== undefined && !headers.includes("SEB")) {
-    //     return <Wrapper className="d-flex justify-content-center align-items-center">
-    //         <div className={styles.notification_box}>
-    //             <Heading size="3">
-    //                 Please use Safe Exam Browser to take exam
-    //             </Heading>
-    //         </div>
-    //     </Wrapper>
-    // }
+    if (headers !== undefined && !headers.includes("SEB")) {
+        return (
+            <Wrapper className="d-flex justify-content-center align-items-center">
+                <div className={styles.notification_box}>
+                    <Heading size="3">
+                        Please use Safe Exam Browser to take exam
+                    </Heading>
+                </div>
+            </Wrapper>
+        );
+    }
 
     // Loading when fetch API
     if (loading || postAnswerResult.loading) {
