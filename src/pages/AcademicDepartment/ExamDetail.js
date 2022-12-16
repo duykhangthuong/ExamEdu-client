@@ -13,7 +13,7 @@ import Loading from "pages/Loading";
 import moment from "moment";
 import { useSelector } from "react-redux";
 const ExamDetail = () => {
-    const column = ["Student ID", "Student Name", "Email", "Mark"];
+    const column = ["Student ID", "Student Name", "Email"];
 
     const param = useParams();
     const history = useHistory();
@@ -40,16 +40,16 @@ const ExamDetail = () => {
 
     //Fetch data exam result
     const fetchDataExamStudentResult = useFetch(
-        `${API}/Exam/result/${param.examId}`,
+        `${API}/Exam/student/${param.examId}`,
         {
-            // onError: (err) => {
-            //     Swal.fire({
-            //         title: "Error",
-            //         text: err.message,
-            //         icon: "error",
-            //         confirmButtonText: "OK"
-            //     });
-            // }
+            onError: (err) => {
+                Swal.fire({
+                    title: "Error",
+                    text: err.message,
+                    icon: "error",
+                    confirmButtonText: "OK"
+                });
+            }
         }
     );
 
@@ -255,22 +255,7 @@ const ExamDetail = () => {
                                 (item) => ({
                                     studentId: item.studentId,
                                     studentName: item.studentName,
-                                    email: item.studentEmail,
-                                    mark: (
-                                        <div
-                                            className={
-                                                item.mark >= 5
-                                                    ? styles["markPillPassed"]
-                                                    : styles[
-                                                          "markPillNotPassed"
-                                                      ]
-                                            }
-                                        >
-                                            {Number.isInteger(item.mark)
-                                                ? item.mark + ".0"
-                                                : item.mark}
-                                        </div>
-                                    )
+                                    email: item.studentEmail
                                 })
                             )}
                         />
